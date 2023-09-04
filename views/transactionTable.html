@@ -9,13 +9,15 @@
             <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
           </h6>
         </div>
-        <div class="flex items-center justify-end max-w-full px-3 dark:text-white/80 md:w-1/2 md:flex-none">
+        <div class="flex justify-end max-w-full px-3  sm:w-1/12 md:w-1/2 flex-none">
           <button hx-get="/ui/pairs/{{ .Pair.ID }}/transactions/table" hx-target="#transaction-table"
             hx-swap="outerHTML" type="button" class="mx-4">
-            <i class="fa-solid fa-arrows-rotate"></i>
+            <i class="fa-solid fa-arrows-rotate "></i>
           </button>
-          <i class="mr-2 far fa-calendar-alt" aria-hidden="true"></i>
-          <small>{{ .Today }}</small>
+          <div id="hideSmall">
+            <i class="mr-2 far fa-calendar-alt" aria-hidden="true"></i>
+            <small>{{ .Today }}</small>
+          </div>
         </div>
       </div>
     </div>
