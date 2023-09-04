@@ -9,7 +9,7 @@ A blazingly fast and user focused Opensrouce tool for contract management made w
 go install github.com/cosmtrek/air@latest 
 air -c air.toml
 ```
-and access [localhost:8000](http://localhost:8000)
+and access [localhost:8721](http://localhost:8721)
 
 ## Develop
 
