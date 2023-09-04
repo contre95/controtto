@@ -1,7 +1,6 @@
 {{define "navbar"}}
 <nav >
-  <div class=" flex animate__animate animate__fadeInUp">
-
+  <div class="flex flex-wrap animate__animate animate__fadeInUp">
     <div id="hideSmall" class="px-3 mb-6 flex-auto items-center">
         <button type="button"
             class="transition-all inline-block rounded-lg my-0 mx-2 cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
@@ -9,9 +8,8 @@
           <h3 class="inline-block ml-4 font-bold text-white transition-all duration-200">Controtto</h3>
         </button>
     </div>
-    <div id="hideSmall" class="px-3 mb-6 flex-auto items-center">
-    </div>
 
+    <div class="flex my-4">
     <div class="px-3 mb-6 flex-auto">
       <a hx-get="/dashboard" hx-swap="innerHTML" hx-target="#contenido"
         _="on click remove .font-semibold from .sidebarbtn then add .font-semibold on me"
@@ -35,6 +33,7 @@
         </button>
       </a>
     </div>
+  </div>
   </div>
 
 </nav>
