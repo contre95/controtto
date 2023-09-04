@@ -14,4 +14,3 @@ and access [localhost:8000](http://localhost:8000)
 ## Develop
 
 Check the [Admin dashboard](https://demos.creative-tim.com/argon-dashboard-tailwind/pages/dashboard) for UI
-# controtto

@@ -1,0 +1,78 @@
+<!-- table 1 -->
+<div class="flex flex-wrap -mx-3 animate__animated animate__fadeInUp animate__faster 500ms">
+  <div class="flex-none w-full max-w-full px-3">
+    <div
+      class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+      <div class="p-3 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex">
+        <div class="flex-none ml-1 justify px-3 py-2 font-bold text-center text-white">
+          <h6 class="dark:text-white">Trading Pairs</h6>
+        </div>
+        <div class="flex-1 w-64 ">
+        </div>
+        <div class=" flex flex-row flex-row-reverse">
+          <button
+            class="inline-block ml-4 justify px-3 font-bold text-center text-white uppercase transition-all rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
+            0 hx-get="/ui/assets/form" hx-target="#modals-here" hx-trigger="click" data-bs-toggle="modal"
+            data-bs-target="#modals-here">New asset</button>
+          <button
+            class="inline-block ml-4 justify px-3 font-bold text-center text-white uppercase transition-all rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
+            hx-get="/ui/pairs/form" hx-target="#modals-here" hx-trigger="click" data-bs-toggle="modal"
+            data-bs-target="#modals-here">New pair</button>
+        </div>
+      </div>
+      <div class="flex-none w-full max-w-full">
+        <div id="modals-here"></div>
+        <!-- <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"> -->
+      </div>
+      <div class="flex-auto px-0 pt-0 pb-0">
+        <div class="p-0 overflow-x-auto">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- card 2 -->
+
+<div class="flex flex-wrap -mx-3 animate__animated animate__fadeInUp animate__faster">
+  <div class="flex-none w-full max-w-full px-3">
+    <div
+      class="relative flex flex-col min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+      <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
+        <h6 class="dark:text-white">{{ .Title }}</h6>
+      </div>
+      <div class="flex-auto px-0 pt-0 pb-2">
+        <div class="p-0 overflow-x-auto">
+          <table
+            class="items-center justify-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
+            <thead class="align-bottom">
+              <tr>
+                <th
+                  class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                  Pair</th>
+                <th
+                  class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                  Base</th>
+                <th
+                  class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
+                  Quote</th>
+                <th
+                  class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap">
+                  <button 
+                  hx-get="/ui/pairs/table"
+                  hx-target="#tbody"
+                  hx-swap="outerHTML"
+                    type="button">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="border-t" id="tbody" hx-get="/ui/pairs/table" hx-target="this" hx-trigger="revealed,newPair from:body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

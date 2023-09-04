@@ -1,0 +1,131 @@
+<div class="flex flex-wrap -mx-3">
+
+  <div
+    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInUp animate__fast">
+    <div
+      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+      <div class="flex-auto p-4">
+        <div class="flex flex-row -mx-3">
+          <div class="flex-none w-2/3 max-w-full px-3">
+            <div>
+              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
+                You have </p>
+              <h5 class="mb-2 font-bold dark:text-white">
+                {{ printf "%.2f" .Pair.TotalBase }}
+                <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+              </h5>
+              <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
+              <!--   <span class="font-bold leading-normal text-sm text-emerald-500">+0%</span> -->
+              <!--   since last week -->
+              <!-- </p> -->
+            </div>
+          </div>
+          <div class="px-3 text-right basis-1/3">
+            <div class="inline-block w-12 h-12 text-center rounded-circle"
+              style="background-color:#{{ .Pair.BaseAsset.Color }};">
+              <i
+                class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInUp animate__fast">
+    <div
+      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+      <div class="flex-auto p-4">
+        <div class="flex flex-row -mx-3">
+          <div class="flex-none w-2/3 max-w-full px-3">
+            <div>
+              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
+                You spent </p>
+              <h5 class="mb-2 font-bold dark:text-white">
+                {{ printf "%.2f" .Pair.TotalQuoteSpent }}
+                <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
+              </h5>
+              <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
+              <!--   <span class="font-bold leading-normal text-sm text-emerald-500">+0%</span> -->
+              <!--   since last week -->
+              <!-- </p> -->
+            </div>
+          </div>
+          <div class="px-3 text-right basis-1/3">
+            <div class="inline-block w-12 h-12 text-center rounded-circle"
+              style="background-color:#{{ .Pair.QuoteAsset.Color }};">
+              <i
+                class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInUp animate__faster">
+    <div
+      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+      <div class="flex-auto p-4">
+        <div class="flex flex-row -mx-3">
+          <div class="flex-none w-2/3 max-w-full px-3">
+            <div>
+              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
+                Avg. Buy Price
+              </p>
+              <h5 class="mb-2 font-bold dark:text-white">
+                {{ printf "%.2f" .Pair.AvgBuyPrice }}
+                <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}
+                </span>
+              </h5>
+              <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
+              <!--   <span class="font-bold leading-normal text-sm text-emerald-500">+0%</span> -->
+              <!--   1 BTC = 1 BTC -->
+              <!-- </p> -->
+            </div>
+          </div>
+          <div class="px-3 text-right basis-1/3">
+            <div class="cursor-pointer inline-block w-12 h-12 text-center rounded-circle"
+              style="background-color:#619BC6;">
+              <i class="leading-none fa-solid fa-coins text-lg relative top-3.5 text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInUp animate__faster">
+    <div
+      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+      <div class="flex-auto p-4">
+        <div class="flex flex-row -mx-3">
+          <div class="flex-none w-2/3 max-w-full px-3">
+            <div>
+              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
+              --
+              </p>
+              <h5 class="mb-2 font-bold dark:text-white">
+                --
+              </h5>
+              <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
+              <!--   <span class="font-bold leading-normal text-sm text-emerald-500">--</span> -->
+              <!--   -- -->
+              <!-- </p> -->
+            </div>
+          </div>
+          <div class="px-3 text-right basis-1/3">
+            <div class="cursor-pointer inline-block w-12 h-12 text-center rounded-circle"
+              style="background-color:#619BC6;">
+              <i class="leading-none fa-solid fa-coins text-lg relative top-3.5 text-white"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

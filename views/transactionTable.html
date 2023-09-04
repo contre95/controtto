@@ -1,0 +1,131 @@
+<div id="transaction-table" class="w-full max-w-full mt-6 animate__animated animate__fadeInUp animate__faster shadow">
+  <div
+    class="relative flex flex-col h-full min-w-0 mb-6 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+    <div class="p-6 px-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
+      <div class="flex flex-wrap -mx-3">
+        <div class="max-w-full px-3 md:w-1/2 md:flex-none">
+          <h6 class="mb-0 dark:text-white">Transactions for
+            <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span> and
+            <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
+          </h6>
+        </div>
+        <div class="flex items-center justify-end max-w-full px-3 dark:text-white/80 md:w-1/2 md:flex-none">
+          <button hx-get="/ui/pairs/{{ .Pair.ID }}/transactions/table" hx-target="#transaction-table"
+            hx-swap="outerHTML" type="button" class="mx-4">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
+          <i class="mr-2 far fa-calendar-alt" aria-hidden="true"></i>
+          <small>{{ .Today }}</small>
+        </div>
+      </div>
+    </div>
+    <div class="flex-auto p-4 pt-6">
+      <h6 class="mb-4 text-xs font-bold leading-tight uppercase dark:text-white text-slate-500">
+      </h6>
+      <button
+        class="ml-2 inline-block px-3 py-2 font-bold text-center bg-gradient-to-tl from-emerald-500 uppercase to-teal-400 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md text-white"
+        hx-get="/ui/pairs/{{ .Pair.ID }}/transactions/form" hx-swap="innerHTML" hx-target="#transaction-form"
+        hx-trigger="click">
+        <i class="fa-solid fa-plus"> </i> Record new transaction
+      </button>
+      <ul class="flex flex-col pl-0 mb-0 rounded-lg py-4"  id="ul">
+        <li
+          class="relative flex flex-row justify-between px-4 py-2 pl-0 mb-2 border-0 rounded-t-inherit text-inherit rounded-xl">
+          <div class="flex items-center">
+            <span
+              class="leading-pro ease-in text-xs bg-150 w-6.5 h-6.5 p-1.2 rounded-3.5xl tracking-tight-rem bg-x-25 mr-4 mb-0 flex cursor-pointer items-center justify-center border border-solid border-slate-700 border-transparent bg-transparent text-center align-middle font-bold uppercase text-slate-600 transition-all hover:opacity-75">
+              <i class="fa-solid fa-chart-simple"></i>
+            </span>
+            <div class="flex flex-col ">
+              <h6 class="mb-1 text-sm leading-normal text-slate-700">Type</h6>
+              <span class="text-xs leading-tight text-white/80 ">Transaction type (buy/sell)</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
+              <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span>
+            </p>
+          </div>
+          <div class="flex flex-col items-center justify-center ">
+            <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
+              <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
+            </p>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
+            <h6 class="mb-1 text-sm leading-normal text-slate-700">
+              Price (<span class="mb-1 text-sm leading-normal dark:text-white text-slate-700"
+                style="color:#{{ $.Pair.QuoteAsset.Color }}">
+                {{ $.Pair.QuoteAsset.Name }}
+              </span>)</h6>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
+            <h6 class="mb-1 text-sm leading-normal text-slate-700">Action</h6>
+          </div>
+
+        </li>
+        <hr class="h-px my-0 bg-slate-700 border-1">
+        {{ range .Pair.Transactions }}
+        <li
+          class="relative flex flex-row justify-between px-4 py-2 pl-0 mb-2 border-0 rounded-t-inherit text-inherit rounded-xl">
+          <div class="flex items-center basis-1/4">
+            {{ if eq .TransactionType "Buy" }}
+            <button
+              class="leading-pro ease-in text-xs bg-150 w-6.5 h-6.5 p-1.2 rounded-3.5xl tracking-tight-rem bg-x-25 mr-4 mb-0 flex cursor-pointer items-center justify-center border border-solid border-emerald-500 border-transparent bg-transparent text-center align-middle font-bold uppercase text-emerald-500 transition-all hover:opacity-75"><i
+                class="fas fa-arrow-up text-3xs" aria-hidden="true"></i></button>
+            {{ else }}
+            <button
+              class="leading-pro ease-in text-xs bg-150 w-6.5 h-6.5 p-1.2 rounded-3.5xl tracking-tight-rem bg-x-25 mr-4 mb-0 flex cursor-pointer items-center justify-center border border-solid border-red-600 border-transparent bg-transparent text-center align-middle font-bold uppercase text-red-600 transition-all hover:opacity-75"><i
+                class="fas fa-arrow-down text-3xs" aria-hidden="true"></i></button>
+            {{ end }}
+            <div class="flex flex-col">
+              <h6 class="mb-1 text-sm leading-normal dark:text-white text-slate-700">{{ .TransactionType }}</h6>
+              <span class="text-xs leading-tight dark:text-white/80">27 March 2020, at 12:30 PM</span>
+            </div>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p
+              class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
+              {{ .BaseAmount }}
+              <span class="mb-1 text-sm leading-normal dark:text-white text-slate-700">
+                {{ $.Pair.BaseAsset.Symbol }}
+              </span>
+              <i class="fa-solid fa-arrow-trend-up  text-emerald-500"> </i>
+            </p>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p
+              class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
+              {{ .QuoteAmount }} <span class="mb-1 text-sm leading-normal dark:text-white text-slate-700">
+                {{ $.Pair.QuoteAsset.Symbol }}
+              </span>
+              <i class="fa-solid fa-arrow-trend-down  text-red-500"> </i>
+            </p>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p
+              class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
+              {{ printf "%.2f" .Price }}
+              <span class="mb-1 text-sm leading-normal dark:text-white text-slate-700"
+                style="color:#{{ $.Pair.QuoteAsset.Color }}">
+                {{ $.Pair.QuoteAsset.Symbol }}
+              </span>
+            </p>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <button hx-target="this" hx-swap="outerHTML swap:1s" hx-delete="/transactions/{{ .ID }}"
+              class="inline-block px-5 py-2.5 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
+              _="on htmx:confirm(issueRequest)
+             halt the event
+             call Swal.fire({title: 'Confirm', text:'Al transaction associated will be deleted. Are you sure ?'})
+             if result.isConfirmed issueRequest()">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </li>
+        {{ end }}
+      </ul>
+    </div>
+  </div>
+</div>

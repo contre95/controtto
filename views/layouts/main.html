@@ -1,0 +1,31 @@
+{{define "main"}}
+<!DOCTYPE html>
+<html>
+
+<head>
+  {{template "head"}}
+</head>
+
+<body
+  class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-gray-50 text-slate-500 overflow-none">
+    <div class="absolute w-full bg-gradient-to-tl from-blue-500 to-violet-500  min-h-75"></div>
+    <!-- sidenav  -->
+    <!-- {{template "sidebar" .}} -->
+    <!-- end sidenav -->
+
+    <main class="relative h-full max-h-screen transition-all duration-200 ease-in-out rounded-xl">
+      <!-- Navbar -->
+      {{template "navbar" .}}
+      <!-- end Navbar -->
+      <!-- cards -->
+      <div class="w-full w-1/6 px-6 py-6 mx-auto">
+        <div id="contenido" class="tab-content">
+        </div>
+      </div>
+      <!-- end cards -->
+    </main>
+</body>
+{{template "scripts" .}}
+
+</html>
+{{end}}

@@ -1,0 +1,10 @@
+<div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body"
+  class="">
+</div>
+<!-- Starts below section-->
+<div id="transaction-form" class="rounded-lg bg-white p-8 shadow-lg lg:col-span-3  animate__animated animate__flipInX animate__faster">
+</div>
+
+<div hx-get="/ui/pairs/{{ .PairID }}/transactions/table" hx-target="this" hx-trigger="revealed,newTransaction from:body"
+  class="animate__animated animate__fadeInUp animate__faster shadow-xl">
+</div>
