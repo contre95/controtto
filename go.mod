@@ -3,7 +3,6 @@ module controtto
 go 1.21
 
 require (
-	github.com/JulianToledano/goingecko v1.0.1
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/google/uuid v1.3.0
