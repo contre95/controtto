@@ -17,12 +17,12 @@ func main() {
 		panic("Bye")
 	}
 
-	coinGecko := markets.NewCoinGeckoAPI()
+	binanceAPI := markets.NewBinanceAPI()
 	ac := managing.NewAssetCreator(sqlite)
 	tpc := managing.NewTradingPairManager(sqlite, sqlite)
 	aq := querying.NewAssetQuerier(sqlite)
-	tpq := querying.NewTradingPairQuerier(sqlite)
-	mkq := querying.NewMarketQuerier(coinGecko)
+	mkq := querying.NewMarketQuerier(binanceAPI)
+	tpq := querying.NewTradingPairQuerier(sqlite, binanceAPI)
 	querier := querying.NewService(*aq, *mkq, *tpq)
 	manager := managing.NewService(*ac, *tpc)
 	presenters.Run(&manager, &querier)

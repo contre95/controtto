@@ -1,35 +1,34 @@
 {{define "navbar"}}
+<div class="p-3 rounded-2xl flex justify-center">
+  <button class="transition-all flex inline-block rounded-lg my-0 mx-0 cursor-pointer text-xs ease-in">
+    <img src="/assets/img/logo.png" class="px-2 py-2 inline-block rounded-xl bg-white" style="width:75px;">
+    <h1 class="flex inline-block ml-4 font-bold text-white transition-all duration-200">Controtto</h1>
+  </button>
+</div>
 
-      <div class="p-3 rounded-2xl flex justify-center">
-        <button class="transition-all flex inline-block rounded-lg my-0 mx-0 cursor-pointer text-xs ease-in">
-             <img src="/assets/img/logo.png" class="px-2 py-2 inline-block rounded-xl bg-white" style="width:75px;">
-          <h1 class="flex inline-block ml-4 font-bold text-white transition-all duration-200">Controtto</h1>
-        </button>
-      </div>
-
-    <div class="flex w-full flex-wrap mt-4">
-    <div class="px-3 flex-auto text-white text-center">
-      <a hx-get="/dashboard" hx-swap="innerHTML" hx-target="#contenido"
-        _="on click remove .font-semibold from .sidebarbtn then add .font-semibold on me"
-        class="sidebarbtn dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 items-center whitespace-nowrap px-4 transition-colors font-semibold text-slate-700">
-        <button type="button"
-          class="inline-block px-6 py-3  text-center text-dark uppercase align-middle transition-all rounded-lg cursor-pointer bg-white leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
-          <i class="relative top-0 text-sm leading-normal text-blue-500 ni ni-tv-2"></i>
-          <span class="ml-p1 duration-300 opacity-100 pointer-events-none ease">Dashboard</span>
-        </button>
-      </a>
-    </div>
-
-    <div class="px-3 flex-auto text-white text-center">
-      <a hx-get="/pairs" hx-swap="innerHTML" hx-target="#contenido"  hx-trigger="click, load"
-        _="on click remove .font-semibold from .sidebarbtn then add .font-semibold on me"
-        class="sidebarbtn dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 items-center whitespace-nowrap px-4 transition-colors font-semibold text-slate-700">
-        <button type="button"
-          class="inline-block px-6 py-3  text-center text-dark uppercase align-middle transition-all rounded-lg cursor-pointer bg-white leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
-          <i class="relative top-0 text-sm leading-normal text-emerald-500 fa-solid fa-chart-area"></i>
-          <span class="ml-1 duration-300 opacity-100 pointer-events-none ease">Profit & Loss</span>
-        </button>
-      </a>
-    </div>
+<div class="flex w-full flex-wrap mt-4">
+  <div class="px-3 flex-auto text-white text-center">
+    <a hx-get="/dashboard" hx-swap="innerHTML" hx-target="#contenido"
+      _="on click remove .font-semibold from .sidebarbtn then add .font-semibold on me"
+      class="sidebarbtn dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 items-center whitespace-nowrap px-4 transition-colors font-semibold text-slate-700">
+      <button type="button"
+        class="inline-block px-6 py-3  text-center text-dark uppercase align-middle transition-all rounded-lg cursor-pointer bg-white leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
+        <i class="relative top-0 text-sm leading-normal text-blue-500 ni ni-tv-2"></i>
+        <span class="ml-p1 duration-300 opacity-100 pointer-events-none ease">Dashboard</span>
+      </button>
+    </a>
   </div>
+
+  <div class="px-3 flex-auto text-white text-center">
+    <a hx-get="/pairs" hx-swap="innerHTML" hx-target="#contenido" hx-trigger="click, load"
+      _="on click remove .font-semibold from .sidebarbtn then add .font-semibold on me"
+      class="sidebarbtn dark:text-white dark:opacity-80 py-2.7 text-sm ease-nav-brand my-0 mx-2 items-center whitespace-nowrap px-4 transition-colors font-semibold text-slate-700">
+      <button type="button"
+        class="inline-block px-6 py-3  text-center text-dark uppercase align-middle transition-all rounded-lg cursor-pointer bg-white leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
+        <i class="relative top-0 text-sm leading-normal text-emerald-500 fa-solid fa-chart-area"></i>
+        <span class="ml-1 duration-300 opacity-100 pointer-events-none ease">Profit & Loss</span>
+      </button>
+    </a>
+  </div>
+</div>
 {{end}}

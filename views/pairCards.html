@@ -106,10 +106,13 @@
           <div class="flex-none w-2/3 max-w-full px-3">
             <div>
               <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
-              --
+                Current <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> price
               </p>
-              <h5 class="mb-2 font-bold dark:text-white">
-                --
+              <h5 class="mb-2 font-bold">
+                {{ .BaseAssetPrice }}
+                <span style="color:#{{ .Pair.QuoteAsset.Color }}">
+                  {{ .Pair.QuoteAsset.Symbol }}
+                </span>
               </h5>
               <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
               <!--   <span class="font-bold leading-normal text-sm text-emerald-500">--</span> -->

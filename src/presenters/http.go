@@ -24,7 +24,7 @@ func Run(m *managing.Service, q *querying.Service) {
 	app.Get("/ui/pairs/form", newPairForm(q.AssetQuerier))
 	app.Get("/ui/pairs/table", pairsTable(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/table", transactionTable(q.TradingPairQuerier))
-	app.Get("/ui/pairs/:id/cards", pairCards(q.MarketQuerier, q.TradingPairQuerier))
+	app.Get("/ui/pairs/:id/cards", pairCards(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/form", newTransactionForm(q.TradingPairQuerier))
 	app.Get("/ui/assets/form", newAssetForm)
 	app.Get("/pairs/:id/", pairSection)

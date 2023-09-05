@@ -111,3 +111,8 @@ type TradingPairs interface {
 	RecordTransaction(t Transaction, tpid TradingPairID) error
 	ListTransactions(tpid string) ([]Transaction, error)
 }
+
+// Markets
+type Markets interface {
+	GetCurrentPrice(assetA, assetB string) (float64, error)
+}

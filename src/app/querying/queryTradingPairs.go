@@ -9,7 +9,8 @@ type GetTradingPairReq struct {
 	TPID string
 }
 type GetTradingPairResp struct {
-	Pair pnl.TradingPair
+	Pair           pnl.TradingPair
+	BaseAssetPrice float64
 }
 type QueryTradingPairReq struct{}
 type QueryTradingPairResp struct {
@@ -25,10 +26,11 @@ type TransactionsResp struct {
 
 type TradingPairsQuerier struct {
 	tradingPairs pnl.TradingPairs
+	markets      pnl.Markets
 }
 
-func NewTradingPairQuerier(a pnl.TradingPairs) *TradingPairsQuerier {
-	return &TradingPairsQuerier{a}
+func NewTradingPairQuerier(a pnl.TradingPairs, m pnl.Markets) *TradingPairsQuerier {
+	return &TradingPairsQuerier{a, m}
 }
 
 func (tpq *TradingPairsQuerier) ListTransactions(req TransactionsReq) (*TransactionsResp, error) {
@@ -57,7 +59,10 @@ func (tpq *TradingPairsQuerier) ListTradingPairs(req QueryTradingPairReq) (*Quer
 	return &resp, nil
 }
 
-// GetTradingPair retrieves trading pair information with associated transactions.
+// GetTradingPair retrieves trading pair information with associated transactions. It also returns the current base asset value expressed in terms of the quote value
+// If is fails to retrieve the value it will set it to 0 (zero)
+//
+// TODO: Answer: Why does the presenter won't simply use two different use cases to retrieve the market value ?. We'll see.
 func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradingPairResp, error) {
 	var err error
 	pair, err := tpq.tradingPairs.GetTradingPair(req.TPID)
@@ -74,8 +79,16 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 		t.CalculateFields()
 		pair.Transactions = append(pair.Transactions, t)
 	}
+	// baseAssetPrice is expres in the quoteAsset value, but ofcourse you know that cause you are a domain expert.
+	// Is this they way of handling errors? What if I wanna notify the user that the actual price is no 0.
+	baseAssetPrice, err := tpq.markets.GetCurrentPrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
+	if err != nil {
+		slog.Error("Error getting base asset price, setting it to 0.", "error", err)
+		baseAssetPrice = 0
+	}
 	resp := GetTradingPairResp{
-		Pair: *pair,
+		Pair:           *pair,
+		BaseAssetPrice: baseAssetPrice,
 	}
 	return &resp, nil
 }

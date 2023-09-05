@@ -6,11 +6,11 @@ import (
 )
 
 type QueryMarketReq struct {
-	Symbol string
+	AssetSymbolA string
+	AssetSymbolB string
 }
 type QueryMarketResp struct {
-	Symbol string
-	Price  float64
+	Price float64
 }
 
 type MarketsQuerier struct {
@@ -23,15 +23,14 @@ func NewMarketQuerier(a pnl.Markets) *MarketsQuerier {
 
 func (aq *MarketsQuerier) GetMarketPrice(req QueryMarketReq) (*QueryMarketResp, error) {
 	var err error
-	price, err := aq.markets.GetCurrentPrice(req.Symbol)
+	price, err := aq.markets.GetCurrentPrice(req.AssetSymbolA, req.AssetSymbolB)
 	if err != nil {
-		slog.Error("Could not get market current price", "market", req.Symbol, "error", err)
+		slog.Error("Could not get market current price", "market", req.AssetSymbolA, "error", err)
 		return nil, err
 	}
-	slog.Info("Market queried", "market", req.Symbol, "price", price)
+	slog.Info("Market queried", "market", req.AssetSymbolA, "price", price)
 	resp := QueryMarketResp{
-		Symbol: req.Symbol,
-		Price:  price,
+		Price: price,
 	}
 	return &resp, nil
 }

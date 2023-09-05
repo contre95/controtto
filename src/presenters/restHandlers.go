@@ -102,7 +102,7 @@ func marketPrice(aq querying.MarketsQuerier) func(*fiber.Ctx) error {
 		id := c.Params("id")
 		slog.Info("Requesting market price", "market", id)
 		req := querying.QueryMarketReq{
-			Symbol: id,
+			AssetSymbolA: id,
 		}
 		resp, err := aq.GetMarketPrice(req)
 		if err != nil {
@@ -289,7 +289,7 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func pairCards(mkq querying.MarketsQuerier, tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
@@ -306,8 +306,9 @@ func pairCards(mkq querying.MarketsQuerier, tpq querying.TradingPairsQuerier) fu
 		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
 		resp.Pair.CalculateFields()
 		return c.Render("pairCards", fiber.Map{
-			"Today": time.Now().Format(time.UnixDate),
-			"Pair":  resp.Pair,
+			"Today":          time.Now().Format(time.UnixDate),
+			"Pair":           resp.Pair,
+			"BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
 		})
 	}
 }

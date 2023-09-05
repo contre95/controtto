@@ -56,8 +56,3 @@ type Assets interface {
 	ListAssets() ([]Asset, error)
 	GetAsset(symbol string) (*Asset, error)
 }
-
-// Markets
-type Markets interface {
-	GetCurrentPrice(symbol string) (float64, error)
-}
