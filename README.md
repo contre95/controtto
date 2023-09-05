@@ -5,7 +5,7 @@ You give them two assets (e.g BTC and USDT) and you'll get a nice UI with you Av
 
 You can try it [here](pnl.contre.io)
 
-# Run:
+# Run
 
 ## Development env
 ```bash
