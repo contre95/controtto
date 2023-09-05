@@ -1,6 +1,7 @@
 {{ range .Pairs }}
 <tr>
-  <td class="p-2 align-middle px-12 min-h-500 bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+  <td
+    class="p-2 align-middle px-12 min-h-500 bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
     <div class="flex px-2">
       <div
         class="inline-flex items-center justify-center mr-2 text-sm text-white transition-all duration-200 ease-in-out rounded-full h-9 w-9">
@@ -32,11 +33,8 @@
     <p class="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60"> {{ .QuoteAsset.Symbol }}</p>
   </td>
   <td
-    class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-    <button 
-          hx-get="/pairs/{{ .ID }}/"
-           hx-target="#contenido"
-          dropdown-trigger aria-expanded="false" type="button"
+    class="p-2 text-right align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+    <button hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" dropdown-trigger aria-expanded="false" type="button"
       class="inline-block px-5 py-2.5 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25">
       <i class="fa-regular fa-eye"></i>
     </button>
