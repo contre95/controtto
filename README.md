@@ -20,8 +20,7 @@ and access [localhost:8721](http://localhost:8721)
 # TODO: Create a docker image 
 ```
 
-
-# TODO
+### TODO
 * Domain validations
 * Testing 
 * Wrappers for logging and metrics would be nice as well.
