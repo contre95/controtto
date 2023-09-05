@@ -1,16 +1,27 @@
 # Controtto
 
-A blazingly fast and user focused Opensrouce tool for contract management made with golang + htmx.
+An, of course, blazingly fast, self-hosted profit and loss tracker made with Go, HTMX and *no JavaScript*.
+You give them two assets (e.g BTC and USDT) and you'll get a nice UI with you Avg. buy price and your transactions, that's it (for now).
 
+You can try it [here](pnl.contre.io)
 
-## To Run:
-```shell
-# Downlaod air (go install github.com/cosmtrek/air@latest)
+# Run:
+
+## Development env
+```bash
+# Download air (go install github.com/cosmtrek/air@latest)
 go install github.com/cosmtrek/air@latest 
 air -c air.toml
 ```
 and access [localhost:8721](http://localhost:8721)
 
-## Develop
+## Run with docker
+```bash
+# TODO: Create a docker image 
+```
 
-Check the [Admin dashboard](https://demos.creative-tim.com/argon-dashboard-tailwind/pages/dashboard) for UI
+
+# TODO
+* Domain validations
+* Testing 
+* Wrappers for logging and metrics would be nice as well.
