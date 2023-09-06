@@ -113,6 +113,7 @@ type TradingPairs interface {
 }
 
 // Markets
+type MarketNotFound error
 type Markets interface {
 	GetCurrentPrice(assetA, assetB string) (float64, error)
 }
