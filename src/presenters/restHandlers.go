@@ -309,7 +309,7 @@ func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error
 		}
 		return c.Render("transactionForm", fiber.Map{
 			"Pair":           resp.Pair,
-			// "BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
+			"BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
 		})
 	}
 }
