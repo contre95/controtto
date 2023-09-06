@@ -19,15 +19,15 @@
 @tailwind utilities;
 
 .loader {
-    display: none;
+  display: none;
 }
 
 .htmx-request .loader {
-    display: block;
+  display: block;
 }
 
 .htmx-request.loader {
-    display: block;
+  display: block;
 }
 
 .htmx-request .loaded {
@@ -37,13 +37,12 @@
   display: none;
 }
 
-@media only screen and (max-width: 580px) {
-    #hideSmall{
-        display: none;
-    }
+@media only screen and (max-width: 698px) {
+  #hideSmall {
+    display: none;
+  }
 }
 
 body {
   /* background: rgb(2,0,36); */
-  
 }

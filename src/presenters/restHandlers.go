@@ -306,7 +306,7 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
 		resp.Pair.CalculateFields()
 		return c.Render("pairCards", fiber.Map{
-			"Today":          time.Now().Format(time.UnixDate),
+			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Pair":           resp.Pair,
 			"BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
 		})
@@ -331,8 +331,9 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
 		resp.Pair.CalculateFields()
 		return c.Render("transactionTable", fiber.Map{
-			"Today": time.Now().Format(time.UnixDate),
-			"Pair":  resp.Pair,
+			"Today":      time.Now().Format(time.UnixDate),
+			"TodayShort": time.Now().Format("02/01/2006"),
+			"Pair":       resp.Pair,
 		})
 	}
 }

@@ -2,22 +2,22 @@
   <div
     class="relative flex flex-col h-full min-w-0 mb-6 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
     <div class="p-6 px-4 pb-0 mb-0 border-b-0 rounded-t-2xl">
-      <div class="flex flex-wrap -mx-3">
-        <div class="max-w-full px-3 md:w-1/2 md:flex-none">
+      <div class="flex flex-wrap justify-items-stretch -mx-3">
+        <div class="flex flex-1 px-3">
           <h6 class="mb-0 dark:text-white">Transactions for
             <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span> and
             <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
           </h6>
         </div>
-        <div class="flex justify-end max-w-full px-3  sm:w-1/12 md:w-1/2 flex-none">
+        <div class="flex flex-1 px-3 justify-end">
+          <div  id="hideSmall">
+            <i class="mr-2 far fa-calendar-alt" aria-hidden="true"></i>
+            <small>{{ .Today }}</small>
+          </div>
           <button hx-get="/ui/pairs/{{ .Pair.ID }}/transactions/table" hx-target="#transaction-table"
             hx-swap="outerHTML" type="button" class="mx-4">
             <i class="fa-solid fa-arrows-rotate "></i>
           </button>
-          <div id="hideSmall">
-            <i class="mr-2 far fa-calendar-alt" aria-hidden="true"></i>
-            <small>{{ .Today }}</small>
-          </div>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
         hx-trigger="click">
         <i class="fa-solid fa-plus"> </i> Record new transaction
       </button>
-      <ul class="flex flex-col pl-0 mb-0 rounded-lg py-4"  id="ul">
+      <ul class="flex flex-col pl-0 mb-0 rounded-lg py-4" id="ul">
         <li
           class="relative flex flex-row justify-between px-4 py-2 pl-0 mb-2 border-0 rounded-t-inherit text-inherit rounded-xl">
           <div class="flex items-center">
@@ -48,18 +48,14 @@
               <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span>
             </p>
           </div>
-          <div class="flex visible flex-col items-center justify-center ">
+          <div id="hideSmall" class="flex visible flex-col items-center justify-center ">
             <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
               <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
             </p>
           </div>
           <div class="flex flex-col items-center justify-center">
             <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
-            <h6 class="mb-1 text-sm leading-normal text-slate-700">
-              Price (<span class="mb-1 text-sm leading-normal dark:text-white text-slate-700"
-                style="color:#{{ $.Pair.QuoteAsset.Color }}">
-                {{ $.Pair.QuoteAsset.Name }}
-              </span>)</h6>
+            <h6 class="mb-1 text-sm leading-normal text-slate-700">Price</h6>
           </div>
           <div class="flex flex-col items-center justify-center">
             <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
@@ -96,13 +92,13 @@
               <i class="fa-solid fa-arrow-trend-up  text-emerald-500"> </i>
             </p>
           </div>
-          <div class="flex flex-col items-center justify-center">
+          <div id="hideSmall" class="flex flex-col items-center justify-center">
             <p
               class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
               {{ .QuoteAmount }} <span class="mb-1 text-sm leading-normal dark:text-white text-slate-700">
                 {{ $.Pair.QuoteAsset.Symbol }}
               </span>
-              <i class="fa-solid fa-arrow-trend-down  text-red-500"> </i>
+              <i class="fa-solid fa-arrow-trend-down"> </i>
             </p>
           </div>
           <div class="flex flex-col items-center justify-center">
@@ -117,7 +113,7 @@
           </div>
           <div class="flex flex-col items-center justify-center">
             <button hx-target="this" hx-swap="outerHTML swap:1s" hx-delete="/transactions/{{ .ID }}"
-              class="inline-block px-5 py-2.5 mb-0 font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
+              class="inline-block px-5 py-2.5 mb-0 font-bold text-red-600 text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
               _="on htmx:confirm(issueRequest)
              halt the event
              call Swal.fire({title: 'Confirm', text:'Al transaction associated will be deleted. Are you sure ?'})
