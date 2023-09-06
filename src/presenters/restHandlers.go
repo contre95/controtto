@@ -299,7 +299,8 @@ func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error
 		slog.Info("Create Transaction UI requested")
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID: id,
+			TPID:          id,
+			WithBasePrice: true,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
