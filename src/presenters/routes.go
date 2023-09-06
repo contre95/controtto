@@ -43,7 +43,6 @@ func Run(m *managing.Service, q *querying.Service) {
 	app.Post("/assets", newAsset(m.AssetCreator))
 	app.Post("/pairs", newTradingPair(m.TradingPairManager))
 	app.Delete("/empty", func(c *fiber.Ctx) error {
-		log.Println("hi")
 		return c.SendString("")
 	})
 

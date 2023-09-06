@@ -1160,6 +1160,10 @@ h6 {
   display: grid;
 }
 
+.inline-grid {
+  display: inline-grid;
+}
+
 .hidden {
   display: none;
 }
@@ -1622,6 +1626,18 @@ h6 {
 
 .justify-between {
   justify-content: space-between;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+.justify-items-stretch {
+  justify-items: stretch;
+}
+
+.justify-items-center {
+  justify-items: center;
 }
 
 .overflow-auto {

@@ -6,7 +6,8 @@ import (
 )
 
 type GetTradingPairReq struct {
-	TPID string
+	TPID          string
+	WithBasePrice bool
 }
 type GetTradingPairResp struct {
 	Pair           pnl.TradingPair
@@ -79,12 +80,15 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 		t.CalculateFields()
 		pair.Transactions = append(pair.Transactions, t)
 	}
-	// baseAssetPrice is expres in the quoteAsset value, but ofcourse you know that cause you are a domain expert.
-	// Is this they way of handling errors? What if I wanna notify the user that the actual price is no 0.
-	baseAssetPrice, err := tpq.markets.GetCurrentPrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
-	if err != nil {
-		slog.Error("Error getting base asset price, setting it to 0.", "error", err)
-		baseAssetPrice = 0
+
+	baseAssetPrice := float64(0)
+	if req.WithBasePrice {
+		// baseAssetPrice is expres in the quoteAsset value, but ofcourse you know that cause you are a domain expert.
+		// Is this they way of handling errors? What if I wanna notify the user that the actual price is no 0.
+		baseAssetPrice, err = tpq.markets.GetCurrentPrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
+		if err != nil {
+			slog.Error("Error getting base asset price, setting it to 0.", "error", err)
+		}
 	}
 	resp := GetTradingPairResp{
 		Pair:           *pair,

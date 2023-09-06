@@ -25,6 +25,7 @@ func NewBinanceAPI() *BinanceAPI {
 
 // GetCurrentPrice retrieves the current price of a cryptocurrency pair using the Binance API.
 func (c *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
+	return 555, nil
 	// Construct the URL with the cryptocurrency pair symbol.
 	url := fmt.Sprintf("%s?symbol=%s%s", c.BaseURL, assetA, assetB)
 

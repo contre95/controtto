@@ -273,7 +273,8 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID: id,
+			TPID:          id,
+			WithBasePrice: true,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -318,7 +319,8 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID: id,
+			TPID:          id,
+			WithBasePrice: false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
