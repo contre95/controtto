@@ -38,26 +38,6 @@ func newAssetForm(c *fiber.Ctx) error {
 	})
 }
 
-func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		slog.Info("Create Transaction UI requested")
-		id := c.Params("id")
-		req := querying.GetTradingPairReq{
-			TPID: id,
-		}
-		resp, err := tpq.GetTradingPair(req)
-		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
-			})
-		}
-		return c.Render("transactionForm", fiber.Map{
-			"Pair": resp.Pair,
-		})
-	}
-}
-
 // Tables handler that renderizer the tables view and returns it to the client
 func pairsTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
@@ -309,6 +289,27 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Pair":           resp.Pair,
 			"BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
+		})
+	}
+}
+
+func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		slog.Info("Create Transaction UI requested")
+		id := c.Params("id")
+		req := querying.GetTradingPairReq{
+			TPID: id,
+		}
+		resp, err := tpq.GetTradingPair(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
+		return c.Render("transactionForm", fiber.Map{
+			"Pair":           resp.Pair,
+			// "BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
 		})
 	}
 }

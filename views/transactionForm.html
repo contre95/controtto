@@ -24,9 +24,8 @@
           <div class="w-full md:w-4/12  px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
               <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
-
             </label>
-            <input name="quote"
+            <input name="quote" value="{{ .BaseAssetPrice }}"
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               id="grid-first-name" value="0" type="number" placeholder="365.87 {{ .Pair.QuoteAsset.Symbol}}">
             <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->

@@ -40,7 +40,7 @@
             </span>
             <div class="flex flex-col ">
               <h6 class="mb-1 text-sm leading-normal text-slate-700">Type</h6>
-              <span class="text-xs leading-tight text-white/80 ">Transaction type (buy/sell)</span>
+              <span id="hideSmall" class="text-xs leading-tight text-white/80 ">Transaction type (buy/sell)</span>
             </div>
           </div>
           <div class="flex flex-col items-center justify-center">
@@ -79,7 +79,7 @@
             {{ end }}
             <div class="flex flex-col">
               <h6 class="mb-1 text-sm leading-normal dark:text-white text-slate-700">{{ .TransactionType }}</h6>
-              <span class="text-xs leading-tight dark:text-white/80">27 March 2020, at 12:30 PM</span>
+              <span class="text-xs leading-tight dark:text-white/80">{{ .Timestamp.Format "Jan 02, 2006 15:04" }}</span>
             </div>
           </div>
           <div class="flex flex-col items-center justify-center">
