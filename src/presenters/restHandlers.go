@@ -69,9 +69,9 @@ func avgBuyPrice(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		}
 		// TODO: Should this happen here? or in the app layer ?
 		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
-		resp.Pair.CalculateFields()
+		resp.Pair.Calculate()
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
-		return c.SendString(fmt.Sprintf("%.2f", resp.Pair.AvgBuyPrice))
+		return c.SendString(fmt.Sprintf("%.2f", resp.Pair.Calculations.AvgBuyPrice))
 	}
 }
 
@@ -285,7 +285,7 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		}
 		// TODO: Should this happen here? or in the app layer ?
 		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
-		resp.Pair.CalculateFields()
+		resp.Pair.Calculate()
 		return c.Render("pairCards", fiber.Map{
 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Pair":           resp.Pair,
@@ -300,7 +300,7 @@ func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
 			TPID:          id,
-			WithBasePrice: true,
+			WithBasePrice: false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -310,8 +310,7 @@ func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error
 			})
 		}
 		return c.Render("transactionForm", fiber.Map{
-			"Pair":           resp.Pair,
-			"BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
+			"Pair": resp.Pair,
 		})
 	}
 }
@@ -333,7 +332,7 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		// TODO: Should this happen here? or in the app layer ?
 		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
-		resp.Pair.CalculateFields()
+		resp.Pair.Calculate()
 		return c.Render("transactionTable", fiber.Map{
 			"Today":      time.Now().Format(time.UnixDate),
 			"TodayShort": time.Now().Format("02/01/2006"),

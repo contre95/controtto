@@ -13,13 +13,20 @@ type TradingPairID string
 
 // TradingPair represents the primary aggregate root. It contains the main context for profit and loss calculations between two assets
 type TradingPair struct {
-	ID              TradingPairID
-	BaseAsset       Asset
-	QuoteAsset      Asset
-	Transactions    []Transaction
-	AvgBuyPrice     float64
-	TotalBase       float64
-	TotalQuoteSpent float64
+	ID           TradingPairID
+	BaseAsset    Asset
+	QuoteAsset   Asset
+	Transactions []Transaction
+	Calculations Calculations
+}
+
+// Calculation is a value object for a TradingPair and it is populated with the function Calculate. It hold the data inferred from the TradingPair transactions
+type Calculations struct {
+	AvgBuyPrice             float64
+	TotalBase               float64
+	TotalQuoteSpent         float64
+	TotalTradingFeeSpent    float64
+	TotalWithdrawalFeeSpent float64
 }
 
 func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
@@ -38,22 +45,24 @@ func (tp *TradingPair) Validate() error {
 	return nil
 }
 
-func (tp *TradingPair) CalculateFields() {
+func (tp *TradingPair) Calculate() {
 	// Perform any necessary validation or business logic checks here.
-	tp.TotalBase = 0
-	tp.TotalQuoteSpent = 0
+	tp.Calculations.TotalBase = 0
+	tp.Calculations.TotalQuoteSpent = 0
 	for _, t := range tp.Transactions {
 		if t.TransactionType == Buy {
-			tp.TotalBase += t.BaseAmount
-			tp.TotalQuoteSpent += t.QuoteAmount
+			tp.Calculations.TotalBase += t.BaseAmount
+			tp.Calculations.TotalQuoteSpent += t.QuoteAmount
 		}
 		if t.TransactionType == Sell {
-			tp.TotalBase -= t.BaseAmount
-			tp.TotalQuoteSpent -= t.QuoteAmount
+			tp.Calculations.TotalBase -= t.BaseAmount
+			tp.Calculations.TotalQuoteSpent -= t.QuoteAmount
 		}
+		tp.Calculations.TotalTradingFeeSpent += t.TradingFee * t.QuoteAmount
+		tp.Calculations.TotalWithdrawalFeeSpent += t.WithdrawalFee * t.QuoteAmount
 	}
-	tp.AvgBuyPrice = float64(tp.TotalQuoteSpent / tp.TotalBase)
-	slog.Info("Fields calculated", "base", tp.TotalBase, "quote", tp.TotalQuoteSpent, "avg-buy-price", tp.AvgBuyPrice)
+	tp.Calculations.AvgBuyPrice = float64(tp.Calculations.TotalQuoteSpent / tp.Calculations.TotalBase)
+	slog.Info("Fields calculated", "base", tp.Calculations.TotalBase, "quote", tp.Calculations.TotalQuoteSpent, "avg-buy-price", tp.Calculations.AvgBuyPrice)
 }
 
 func (tp *TradingPair) NewTransaction(baseAmount float64, quoteAmount float64, timestamp time.Time, tType TransactionType) (*Transaction, error) {
