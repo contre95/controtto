@@ -1,6 +1,7 @@
 package pnl
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 )
@@ -17,6 +18,8 @@ import (
 // 	UDST Symbol = "UDST"
 // )
 
+const HEXCOLORPATTERN = `^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
+
 // Asset represents individual assets like BTC, USD, EUR, etc. the Symbol property uniquely identifies an asset.
 type Asset struct {
 	Symbol      string
@@ -26,16 +29,21 @@ type Asset struct {
 	CountryCode string
 }
 
+type InvalidAsset error
+
 func (a *Asset) Validate() error {
-	// TODO: Validate
+	var err InvalidAsset = errors.New("Invalid asset")
+	re := regexp.MustCompile(HEXCOLORPATTERN)
+	if !re.MatchString(a.Color) {
+		return err
+	}
 	return nil
 }
 
 // TODO: Define invariants
 // NewAsset reutrns a new Asset and validates it's invariants
 func NewAsset(symbol string, color string, name string, countryCode string) (*Asset, error) {
-	hexColorPattern := `^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
-	re := regexp.MustCompile(hexColorPattern)
+	re := regexp.MustCompile(HEXCOLORPATTERN)
 	if !re.MatchString(color) {
 		fmt.Println(color)
 		return nil, fmt.Errorf("%s is not a valid hex color", color)

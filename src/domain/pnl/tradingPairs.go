@@ -40,8 +40,8 @@ func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
 	return &tp, nil
 }
 
+type InvalidTradingPair error
 func (tp *TradingPair) Validate() error {
-	// TODO: Implement
 	return nil
 }
 
