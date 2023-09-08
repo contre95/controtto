@@ -169,7 +169,7 @@ func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
 		if err := rows.Scan(&asset.Symbol, &asset.Total, &asset.Name, &asset.Color, &asset.CountryCode); err != nil {
 			return nil, err
 		}
-		err := asset.Validate()
+		_, err := asset.Validate()
 		if err != nil {
 			panic(fmt.Sprintf("Invalid Asset: %s", err))
 		}

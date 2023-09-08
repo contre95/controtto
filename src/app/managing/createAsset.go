@@ -30,11 +30,11 @@ func (ac *AssetsCreator) Create(req CreateAssetReq) (*CreateAssetResp, error) {
 	var err error
 	asset, err := pnl.NewAsset(req.Symbol, req.Color, req.Name, req.CountryCode)
 	if err != nil {
-		slog.Error("Creating new asset", "Name", req.Name, "Countr code", req.CountryCode, "error", err)
+		slog.Error("Creating new asset", "Name", req.Name, "CountryCode", req.CountryCode, "error", err)
 		return nil, err
 	}
 	err = ac.assets.AddAsset(*asset)
-	// TODO: Validate already exists asset
+	// TODO: Validate already exists asset ?
 	if err != nil {
 		slog.Error("Creating saving asset", "asset", asset, "error", err)
 		return nil, err
