@@ -5,18 +5,14 @@ import (
 	"log/slog"
 )
 
-type GetTradingPairReq struct {
-	TPID             string
-	WithBasePrice    bool
-	WithTransactions bool
+type TradingPairsQuerier struct {
+	tradingPairs pnl.TradingPairs
+	markets      pnl.Markets
 }
-type GetTradingPairResp struct {
-	Pair           pnl.TradingPair
-	BaseAssetPrice float64
-}
-type QueryTradingPairReq struct{}
-type QueryTradingPairResp struct {
-	Pairs []pnl.TradingPair
+
+// NewTradingPairQuerier returns a new intereactor with all the Trading Pair related use cases.
+func NewTradingPairQuerier(a pnl.TradingPairs, m pnl.Markets) *TradingPairsQuerier {
+	return &TradingPairsQuerier{a, m}
 }
 
 type TransactionsReq struct {
@@ -24,15 +20,6 @@ type TransactionsReq struct {
 }
 type TransactionsResp struct {
 	Transactions []pnl.Transaction
-}
-
-type TradingPairsQuerier struct {
-	tradingPairs pnl.TradingPairs
-	markets      pnl.Markets
-}
-
-func NewTradingPairQuerier(a pnl.TradingPairs, m pnl.Markets) *TradingPairsQuerier {
-	return &TradingPairsQuerier{a, m}
 }
 
 func (tpq *TradingPairsQuerier) ListTransactions(req TransactionsReq) (*TransactionsResp, error) {
@@ -48,17 +35,32 @@ func (tpq *TradingPairsQuerier) ListTransactions(req TransactionsReq) (*Transact
 	return &resp, nil
 }
 
-func (tpq *TradingPairsQuerier) ListTradingPairs(req QueryTradingPairReq) (*QueryTradingPairResp, error) {
+type ListTradingPairsReq struct{}
+type ListTradingPairsResp struct {
+	Pairs []pnl.TradingPair
+}
+
+func (tpq *TradingPairsQuerier) ListTradingPairs(req ListTradingPairsReq) (*ListTradingPairsResp, error) {
 	var err error
 	pairs, err := tpq.tradingPairs.ListTradingPairs()
 	if err != nil {
 		slog.Error("Error getting tading pairs list from DB", "error", err)
 		return nil, err
 	}
-	resp := QueryTradingPairResp{
+	resp := ListTradingPairsResp{
 		Pairs: pairs,
 	}
 	return &resp, nil
+}
+
+type GetTradingPairReq struct {
+	TPID             string
+	WithBasePrice    bool
+	WithTransactions bool
+}
+type GetTradingPairResp struct {
+	Pair           pnl.TradingPair
+	BaseAssetPrice float64
 }
 
 // GetTradingPair retrieves trading pair information with associated transactions. It also returns the current base asset value expressed in terms of the quote value

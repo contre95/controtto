@@ -6,19 +6,18 @@ import (
 )
 
 const HEXCOLORPATTERN = `^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
-const MIN = 3
 
 type InvalidAsset error
 
 func (a *Asset) Validate() (*Asset, error) {
 	re := regexp.MustCompile(HEXCOLORPATTERN)
-	if re.MatchString(a.Color) {
+	if !re.MatchString(a.Color) {
 		return nil, InvalidAsset(errors.New("Wrong color string"))
 	}
-	if len(a.Symbol) < MIN || len(a.Symbol) > 6 {
+	if len(a.Symbol) < 3 || len(a.Symbol) > 8 {
 		return nil, InvalidAsset(errors.New("Invalid Asset Symbol"))
 	}
-	if len(a.Name) < MIN || len(a.Name) < 24 {
+	if len(a.Name) < 1 || len(a.Name) > 24 {
 		return nil, InvalidAsset(errors.New("Invalid Asset Name"))
 	}
 	if a.Total < 0 {
@@ -32,7 +31,7 @@ func (a *Asset) Validate() (*Asset, error) {
 func NewAsset(symbol string, color string, name string, countryCode string) (*Asset, error) {
 	a := Asset{
 		Symbol:      symbol,
-		Color:       color[1:],
+		Color:       color,
 		Total:       0,
 		Name:        name,
 		CountryCode: countryCode,

@@ -34,11 +34,11 @@ const tables string = `
           CountryCode TEXT
         );
 
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('BTC', 0, 'Bitcoin', '-', 'F7931A');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('DOT', 0, 'Polkadot', '-', 'DF0076');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('USDT', 0, 'Tether', 'US', '009393');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('ARS', 0, 'Peso', 'AR', '40AAF3');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('EUR', 0, 'Euro', 'EU', '004C8D');
+        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('BTC', 0, 'Bitcoin', '-', '#F7931A');
+        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('DOT', 0, 'Polkadot', '-', '#DF0076');
+        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('USDT', 0, 'Tether', 'US', '#009393');
+        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('ARS', 0, 'Peso', 'AR', '#40AAF3');
+        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('EUR', 0, 'Euro', 'EU', '#004C8D');
 	`
 
 // SQLiteStorage implements the TradingPairs interface using SQLiteStorage.
@@ -168,10 +168,6 @@ func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
 		var asset pnl.Asset
 		if err := rows.Scan(&asset.Symbol, &asset.Total, &asset.Name, &asset.Color, &asset.CountryCode); err != nil {
 			return nil, err
-		}
-		_, err := asset.Validate()
-		if err != nil {
-			panic(fmt.Sprintf("Invalid Asset: %s", err))
 		}
 		assets = append(assets, asset)
 	}

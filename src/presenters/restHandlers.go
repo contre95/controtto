@@ -15,8 +15,9 @@ import (
 
 func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		req := querying.QueryAssetReq{}
+		req := querying.QueryAssetsReq{}
 		resp, err := aq.ListAssets(req)
+		fmt.Println("IHJHIASHDFISDH")
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
@@ -42,7 +43,7 @@ func newAssetForm(c *fiber.Ctx) error {
 func pairsTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Pairs table requested")
-		req := querying.QueryTradingPairReq{}
+		req := querying.ListTradingPairsReq{}
 		resp, err := aq.ListTradingPairs(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
