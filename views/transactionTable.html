@@ -5,8 +5,8 @@
       <div class="flex flex-wrap -mx-3">
         <div class="flex flex-1 px-3">
           <h6 class="mb-0 dark:text-white">Transactions for
-            <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span> and
-            <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
+            <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span> and
+            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
           </h6>
         </div>
         <div class="flex flex-1 px-3 justify-end">
@@ -45,12 +45,12 @@
           </div>
           <div class="flex justify-center w-1/5">
             <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
-              <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span>
+              <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span>
             </p>
           </div>
           <div id="hideSmall" class="flex justify-center w-1/5">
             <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
-              <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
+              <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
             </p>
           </div>
           <div class="flex justify-center w-1/5">
@@ -87,7 +87,7 @@
             <p
               class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
               {{ .BaseAmount }}
-              <span style="color:#{{ $.Pair.BaseAsset.Color }}">
+              <span style="color:{{ $.Pair.BaseAsset.Color }}">
                 {{ $.Pair.BaseAsset.Symbol }}
               </span>
               </span>
@@ -98,7 +98,7 @@
             <p
               class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
               {{ .QuoteAmount }}
-              <span style="color:#{{ $.Pair.QuoteAsset.Color }}">
+              <span style="color:{{ $.Pair.QuoteAsset.Color }}">
                 {{ $.Pair.QuoteAsset.Symbol }}
               </span>
               <i class="fa-solid fa-arrow-trend-down text-red-500"> </i>
@@ -109,7 +109,7 @@
               class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
               {{ printf "%.2f" .Price }}
               <span class="mb-1 text-sm leading-normal dark:text-white text-slate-700"
-                style="color:#{{ $.Pair.QuoteAsset.Color }}">
+                style="color:{{ $.Pair.QuoteAsset.Color }}">
                 {{ $.Pair.QuoteAsset.Symbol }}
               </span>
             </p>

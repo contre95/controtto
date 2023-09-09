@@ -3,8 +3,9 @@ package pnl
 import "time"
 
 const (
-	Buy  TransactionType = "Buy"
-	Sell TransactionType = "Sell"
+	Buy      TransactionType = "Buy"
+	Withdraw TransactionType = "Withdraw"
+	Sell     TransactionType = "Sell"
 )
 
 type TradingPairID string
@@ -20,11 +21,15 @@ type TradingPair struct {
 
 // Calculation is a value object for a TradingPair and it is populated with the function Calculate. It hold the data inferred from the TradingPair transactions
 type Calculations struct {
-	AvgBuyPrice             float64
-	TotalBase               float64
-	TotalQuoteSpent         float64
-	TotalTradingFeeSpent    float64
-	TotalWithdrawalFeeSpent float64
+	AvgBuyPrice              float64
+	CurrentBasePrice         float64
+	CurrentBaseAmountInQuote float64
+	TotalBase                float64
+	TotalQuoteSpent          float64
+	PNLAmount                float64
+	PNLPercent               float64
+	TotalTradingFeeSpent     float64
+	TotalWithdrawalFeeSpent  float64
 }
 
 type TransactionType string

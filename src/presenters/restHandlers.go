@@ -3,7 +3,7 @@ package presenters
 import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
-	"controtto/src/domain/pnl"
+
 	"fmt"
 	"log/slog"
 	"math/rand"
@@ -17,14 +17,12 @@ func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		req := querying.QueryAssetsReq{}
 		resp, err := aq.ListAssets(req)
-		fmt.Println("IHJHIASHDFISDH")
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
 				"Msg":   err,
 			})
 		}
-		fmt.Println(resp)
 		return c.Render("newPairForm", fiber.Map{
 			"Title":  "New Pair",
 			"Assets": resp.Assets,
@@ -60,18 +58,7 @@ func pairsTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 
 func avgBuyPrice(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		id := c.Params("id")
-		req := querying.GetTradingPairReq{
-			TPID: id,
-		}
-		resp, err := tpq.GetTradingPair(req)
-		if err != nil {
-			return c.SendString("--")
-		}
-		// TODO: Should this happen here? or in the app layer ?
-		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
-		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
-		return c.SendString(fmt.Sprintf("%.2f", resp.Pair.Calculations.AvgBuyPrice))
+		return nil
 	}
 }
 
@@ -135,7 +122,6 @@ func deleteTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error 
 			})
 		}
 		slog.Info("Transaction deleted", "trasnaction", resp.ID)
-		// c.Append("HX-Trigger", "newPair")
 		return c.Render("toastErr", fiber.Map{
 			"Title": "Error",
 			"Msg":   "Deleted",
@@ -273,8 +259,8 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:          id,
-			WithBasePrice: true,
+			TPID:             id,
+			WithCalculations: true,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -284,12 +270,10 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			})
 		}
 		// TODO: Should this happen here? or in the app layer ?
-		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
-		resp.Pair.Calculate()
+		slices.Reverse(resp.Pair.Transactions)
 		return c.Render("pairCards", fiber.Map{
-			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
-			"Pair":           resp.Pair,
-			"BaseAssetPrice": fmt.Sprintf("%.2f", resp.BaseAssetPrice),
+			"Today": time.Now().Format("Mon Jan 02 15:04 2006"),
+			"Pair":  resp.Pair,
 		})
 	}
 }
@@ -299,8 +283,10 @@ func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error
 		slog.Info("Create Transaction UI requested")
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:          id,
-			WithBasePrice: false,
+			TPID:                 id,
+			WithCurrentBasePrice: true,
+			WithTransactions:     false,
+			WithCalculations:     false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -319,8 +305,10 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:          id,
-			WithBasePrice: false,
+			TPID:                 id,
+			WithCurrentBasePrice: false,
+			WithTransactions:     true,
+			WithCalculations:     false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -330,9 +318,9 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			})
 		}
 		// TODO: Should this happen here? or in the app layer ?
-		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
+		slices.Reverse(resp.Pair.Transactions)
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
-		resp.Pair.Calculate()
+		c.Append("HX-Trigger", "refreshTransaction")
 		return c.Render("transactionTable", fiber.Map{
 			"Today":      time.Now().Format(time.UnixDate),
 			"TodayShort": time.Now().Format("02/01/2006"),

@@ -33,7 +33,7 @@ func Run(m *managing.Service, q *querying.Service) {
 	// GET
 	app.Get("/", Home)
 	app.Get("/tables", Tables)
-	app.Get("/pairs/AvgButPrice/:id", avgBuyPrice(q.TradingPairQuerier))
+	// app.Get("/pairs/AvgBuyPrice/:id", avgBuyPrice(q.TradingPairQuerier))
 	app.Get("/users", TotalUsers)
 	// DELETE
 	app.Delete("/pairs/:id", deleteTradingPair(m.TradingPairManager))

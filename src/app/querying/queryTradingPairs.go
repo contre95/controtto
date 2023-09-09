@@ -15,25 +15,7 @@ func NewTradingPairQuerier(a pnl.TradingPairs, m pnl.Markets) *TradingPairsQueri
 	return &TradingPairsQuerier{a, m}
 }
 
-type TransactionsReq struct {
-	TradingPairID string
-}
-type TransactionsResp struct {
-	Transactions []pnl.Transaction
-}
-
-func (tpq *TradingPairsQuerier) ListTransactions(req TransactionsReq) (*TransactionsResp, error) {
-	var err error
-	transactions, err := tpq.tradingPairs.ListTransactions(req.TradingPairID)
-	if err != nil {
-		slog.Error("Error getting list from DB", "Trading Pair", req.TradingPairID, "error", err)
-		return nil, err
-	}
-	resp := TransactionsResp{
-		Transactions: transactions,
-	}
-	return &resp, nil
-}
+// List all trading pairs without any level of detail
 
 type ListTradingPairsReq struct{}
 type ListTradingPairsResp struct {
@@ -53,56 +35,101 @@ func (tpq *TradingPairsQuerier) ListTradingPairs(req ListTradingPairsReq) (*List
 	return &resp, nil
 }
 
-type GetTradingPairReq struct {
-	TPID             string
-	WithBasePrice    bool
-	WithTransactions bool
+// List Transactions
+
+type TransactionsReq struct {
+	TradingPairID string
 }
+type TransactionsResp struct {
+	Transactions []pnl.Transaction
+}
+
+func (tpq *TradingPairsQuerier) ListTransactions(req TransactionsReq) (*TransactionsResp, error) {
+	var err error
+	transactions, err := tpq.getTransactions(req.TradingPairID)
+	if err != nil {
+		slog.Error("Error getting list from DB", "TradingPair", req.TradingPairID, "error", err)
+		return nil, err
+	}
+	slog.Error("Transactions retrieved succesfully", "TradingPair", req.TradingPairID, "TransactionCount", len(transactions))
+	resp := TransactionsResp{
+		Transactions: transactions,
+	}
+	return &resp, nil
+}
+
+// Get single trading pair
+
+// GetTradingPairReq indicate the level of datail you want to retrieve the Trading pair
+type GetTradingPairReq struct {
+	TPID                 string
+	WithCurrentBasePrice bool
+	WithTransactions     bool
+	WithCalculations     bool
+}
+
 type GetTradingPairResp struct {
 	Pair           pnl.TradingPair
 	BaseAssetPrice float64
 }
 
-// GetTradingPair retrieves trading pair information with associated transactions. It also returns the current base asset value expressed in terms of the quote value
-// If is fails to retrieve the value it will set it to 0 (zero)
 func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradingPairResp, error) {
 	var err error
 	pair, err := tpq.tradingPairs.GetTradingPair(req.TPID)
 	if err != nil {
-		slog.Error("Error getting tading pairs list from DB", "error", err)
 		return nil, err
 	}
+
+	if req.WithCalculations {
+		req.WithTransactions = true
+		req.WithCurrentBasePrice = true
+	}
+
 	if req.WithTransactions {
-		transactions, err := tpq.tradingPairs.ListTransactions(req.TPID)
+		transactions, err := tpq.getTransactions(req.TPID)
 		if err != nil {
-			slog.Error("Error getting transaction", "Trading Pair", req.TPID, "error", err)
 			return nil, err
 		}
 		for _, t := range transactions {
 			t.CalculateFields()
-			if _, err := t.Validate(); err != nil { // Maybe this take to much time
-				slog.Error("Invalid transaction.", "error", err)
-				return nil, err
-			}
 			pair.Transactions = append(pair.Transactions, t)
 		}
 	}
-	baseAssetPrice := float64(0)
-	if req.WithBasePrice {
-		// baseAssetPrice is expres in the quoteAsset value, but ofcourse you know that cause you are a domain expert.
-		// Is this they way of handling errors? What if I wanna notify the user that the actual price is no 0.
-		baseAssetPrice, err = tpq.markets.GetCurrentPrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
+
+	if req.WithCurrentBasePrice {
+		pair.Calculations.CurrentBasePrice, err = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
 		if err != nil {
-			slog.Error("Error getting base asset price, setting it to 0.", "error", err)
+			return nil, err
 		}
 	}
-	if _, err := pair.Validate(); err != nil {
-		slog.Error("Invalid trading pair.", "error", err)
-		return nil, err
+
+	if req.WithCalculations {
+		err := pair.Calculate()
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	resp := GetTradingPairResp{
-		Pair:           *pair,
-		BaseAssetPrice: baseAssetPrice,
+		Pair: *pair,
 	}
 	return &resp, nil
+}
+
+func (tpq *TradingPairsQuerier) getTransactions(tpid string) ([]pnl.Transaction, error) {
+	transactions, err := tpq.tradingPairs.ListTransactions(tpid)
+	if err != nil {
+		slog.Error("Error getting transaction", "Trading Pair", tpid, "error", err)
+		return nil, err
+	}
+	return transactions, nil
+}
+
+func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (float64, error) {
+	baseAssetPrice, err := tpq.markets.GetCurrentPrice(asset1, asset2)
+	if err != nil {
+		slog.Error("Error getting base asset price, setting it to 0.", "error", err)
+		baseAssetPrice = 0 // Set it to 0 in case of an error
+	}
+	return baseAssetPrice, nil
 }

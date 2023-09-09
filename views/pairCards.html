@@ -1,4 +1,39 @@
-<div class="flex flex-wrap -mx-3" hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="newTransaction from:body">
+<div class="p-3 rounded-2xl flex justify-center" hx-get="/ui/pairs/{{ .Pair.ID }}/cards"
+  hx-trigger="refreshTransaction from:body">
+  <div class="py-8 px-8 mb-4 animate__animated animate__fadeInUp animate__fast">
+    <div
+      class="flex-wrap flex justify-center bg-white text-slate-500 shadow-xl border-emerlad-500 border-2 rounded-2xl bg-clip-border">
+      {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
+      <div class="mx-4">
+        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
+          <span class="font-bold leading-normal text-slate-700"> ( +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span> )</span>
+        </h1>
+      </div>
+      <div class="mx-4">
+        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
+          <span class="font-bold leading-normal text-emerald-500">{{ printf "%.2f" .Pair.Calculations.PNLPercent }}%</span>
+        </h1>
+      </div>
+      {{ else }}
+      <div class="mx-4">
+        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
+          <span class="font-bold leading-normal text-slate-700"> ( {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span> )</span>
+        </h1>
+      </div>
+      <div class="mx-4">
+        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
+          <span class="font-bold leading-normal text-red-500">{{ printf "%.2f" .Pair.Calculations.PNLPercent }}%</span>
+        </h1>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+</div>
+
+<div class="flex flex-wrap -mx-3" hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this"
+  hx-trigger="refreshTransaction from:body">
   <div
     class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInUp animate__fast">
     <div
@@ -7,22 +42,27 @@
         <div class="flex flex-row -mx-3">
           <div class="flex-none w-2/3 max-w-full px-3">
             <div>
-              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
-                You have </p>
+              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
+                You have
+                ( <span class="font-bold leading-normal text-sm text-slate-500">
+                  {{ printf "%.2f" .Pair.Calculations.CurrentBaseAmountInQuote }}
+                </span>
+                <span class="font-bold leading-normal text-sm text-emerald-500"
+                  style="color:{{ .Pair.QuoteAsset.Color }}">
+                  {{ .Pair.QuoteAsset.Symbol }}
+                </span>)
+              </p>
               <h5 class="mb-2 font-bold dark:text-white">
                 {{ printf "%.2f" .Pair.Calculations.TotalBase }}
-                <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+                <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
               </h5>
-              <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
-              <!--   <span class="font-bold leading-normal text-sm text-emerald-500">+0%</span> -->
-              <!--   since last week -->
-              <!-- </p> -->
             </div>
           </div>
           <div class="px-3 text-right basis-1/3">
             <div class="inline-block w-12 h-12 text-center rounded-circle"
-              style="background-color:#{{ .Pair.BaseAsset.Color }};">
-              <i class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
+              style="background-color:{{ .Pair.BaseAsset.Color }};">
+              <i
+                class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
             </div>
           </div>
         </div>
@@ -42,7 +82,7 @@
                 You spent </p>
               <h5 class="mb-2 font-bold dark:text-white">
                 {{ printf "%.2f" .Pair.Calculations.TotalQuoteSpent }}
-                <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
+                <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
               </h5>
               <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
               <!--   <span class="font-bold leading-normal text-sm text-emerald-500">+0%</span> -->
@@ -52,7 +92,7 @@
           </div>
           <div class="px-3 text-right basis-1/3">
             <div class="inline-block w-12 h-12 text-center rounded-circle"
-              style="background-color:#{{ .Pair.QuoteAsset.Color }};">
+              style="background-color:{{ .Pair.QuoteAsset.Color }};">
               <i
                 class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
             </div>
@@ -75,7 +115,7 @@
               </p>
               <h5 class="mb-2 font-bold dark:text-white">
                 {{ printf "%.2f" .Pair.Calculations.AvgBuyPrice }}
-                <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}
+                <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}
                 </span>
               </h5>
               <!-- <p class="mb-0 dark:text-white dark:opacity-60"> -->
@@ -104,11 +144,11 @@
           <div class="flex-none w-2/3 max-w-full px-3">
             <div>
               <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
-                Current <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> price
+                Current <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> price
               </p>
               <h5 class="mb-2 font-bold">
-                {{ .BaseAssetPrice }}
-                <span style="color:#{{ .Pair.QuoteAsset.Color }}">
+                {{ .Pair.Calculations.CurrentBasePrice }}
+                <span style="color:{{ .Pair.QuoteAsset.Color }}">
                   {{ .Pair.QuoteAsset.Symbol }}
                 </span>
               </h5>

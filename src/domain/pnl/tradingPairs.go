@@ -3,6 +3,7 @@ package pnl
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"slices"
 	"time"
 
@@ -32,7 +33,7 @@ func (tp *TradingPair) NewTransaction(baseAmount float64, quoteAmount float64, t
 		TransactionType: tType,
 	}
 	tp.Transactions = append(tp.Transactions, *transaction)
-	return transaction, nil
+	return transaction.Validate()
 }
 
 type InvalidTransaction error
@@ -40,7 +41,12 @@ type InvalidTransaction error
 // Validate validates a TradingPair, if all fields are valid it returns itself, otherwise it returns an InvalidTradingPair error.
 func (t *Transaction) Validate() (*Transaction, error) {
 	// Perform any necessary validation or business logic checks here.
-	if !slices.Contains([]TransactionType{Buy, Sell}, t.TransactionType) {
+	if t.BaseAmount <= 0 || t.QuoteAmount <= 0 {
+		slog.Error("Transaction Validation error", "error", "Invalid base/quote amount")
+		return nil, InvalidTransaction(errors.New("Invalid base/quote amounts"))
+	}
+	if !slices.Contains([]TransactionType{Buy, Sell, Withdraw}, t.TransactionType) {
+		slog.Error("Transaction Validation error", "error", "Invalid transaction type")
 		return nil, InvalidTransaction(errors.New("Invalid transaction"))
 	}
 	return t, nil

@@ -1,9 +1,41 @@
 package pnl
 
-import "log/slog"
+import (
+	"errors"
+	"fmt"
+	"log/slog"
+)
 
-func (tp *TradingPair) Calculate() {
+func (tp *TradingPair) Calculate() error {
+	if err := tp.calculateBuyPrice(); err != nil {
+		return err
+	}
+	if err := tp.calculateProfit(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (tp *TradingPair) calculateProfit() error {
 	// Perform any necessary validation or business logic checks here.
+	if tp.Calculations.CurrentBasePrice == 0 {
+		slog.Error("Error calculating P&L", "error", "TradingPair doens't have current base price.")
+		return errors.New("Error calculating P&L. No current base price.")
+	}
+	tp.Calculations.PNLAmount = tp.Calculations.CurrentBasePrice*tp.Calculations.TotalBase - tp.Calculations.TotalQuoteSpent
+	tp.Calculations.CurrentBaseAmountInQuote = tp.Calculations.CurrentBasePrice * tp.Calculations.TotalBase
+	tp.Calculations.PNLPercent = (100 * tp.Calculations.PNLAmount) / tp.Calculations.TotalQuoteSpent
+	fmt.Println(tp.Calculations.PNLAmount)
+	fmt.Println(tp.Calculations.TotalQuoteSpent)
+	return nil
+}
+
+func (tp *TradingPair) calculateBuyPrice() error {
+	// Perform any necessary validation or business logic checks here.
+	if len(tp.Transactions) == 0 {
+		slog.Error("Error calculating P&L", "error", "TradingPair doens't have any transactions")
+		return errors.New("Error calculating P&L. TradingPair doens't have any transactions")
+	}
 	tp.Calculations.TotalBase = 0
 	tp.Calculations.TotalQuoteSpent = 0
 	for _, t := range tp.Transactions {
@@ -20,6 +52,8 @@ func (tp *TradingPair) Calculate() {
 	}
 	tp.Calculations.AvgBuyPrice = float64(tp.Calculations.TotalQuoteSpent / tp.Calculations.TotalBase)
 	slog.Info("Fields calculated", "base", tp.Calculations.TotalBase, "quote", tp.Calculations.TotalQuoteSpent, "avg-buy-price", tp.Calculations.AvgBuyPrice)
+	return nil
+
 }
 
 func (t *Transaction) CalculateFields() error {
