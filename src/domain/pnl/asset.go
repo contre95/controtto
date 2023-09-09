@@ -27,5 +27,3 @@ type Assets interface {
 	ListAssets() ([]Asset, error)
 	GetAsset(symbol string) (*Asset, error)
 }
-
-

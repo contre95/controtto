@@ -21,6 +21,8 @@ func NewMarketQuerier(a pnl.Markets) *MarketsQuerier {
 	return &MarketsQuerier{a}
 }
 
+// GetMarketPrice returns the current base asset value expressed in terms of the quote value
+// If is fails to retrieve the value it will set it to 0 (zero)
 func (aq *MarketsQuerier) GetMarketPrice(req QueryMarketReq) (*QueryMarketResp, error) {
 	var err error
 	price, err := aq.markets.GetCurrentPrice(req.AssetSymbolA, req.AssetSymbolB)

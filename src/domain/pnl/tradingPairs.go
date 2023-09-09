@@ -21,7 +21,7 @@ func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
 	return tp.Validate()
 }
 
-//NewTransaction creates new transaction for the given TradingPair
+// NewTransaction creates new transaction for the given TradingPair
 func (tp *TradingPair) NewTransaction(baseAmount float64, quoteAmount float64, timestamp time.Time, tType TransactionType) (*Transaction, error) {
 	// Append the transaction to the Transactions slice.
 	transaction := &Transaction{

@@ -69,7 +69,6 @@ func avgBuyPrice(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		}
 		// TODO: Should this happen here? or in the app layer ?
 		slices.Reverse[[]pnl.Transaction](resp.Pair.Transactions)
-		resp.Pair.Calculate()
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
 		return c.SendString(fmt.Sprintf("%.2f", resp.Pair.Calculations.AvgBuyPrice))
 	}

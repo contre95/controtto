@@ -6,8 +6,9 @@ import (
 )
 
 type GetTradingPairReq struct {
-	TPID          string
-	WithBasePrice bool
+	TPID             string
+	WithBasePrice    bool
+	WithTransactions bool
 }
 type GetTradingPairResp struct {
 	Pair           pnl.TradingPair
@@ -62,8 +63,6 @@ func (tpq *TradingPairsQuerier) ListTradingPairs(req QueryTradingPairReq) (*Quer
 
 // GetTradingPair retrieves trading pair information with associated transactions. It also returns the current base asset value expressed in terms of the quote value
 // If is fails to retrieve the value it will set it to 0 (zero)
-//
-// TODO: Answer: Why does the presenter won't simply use two different use cases to retrieve the market value ?. We'll see.
 func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradingPairResp, error) {
 	var err error
 	pair, err := tpq.tradingPairs.GetTradingPair(req.TPID)
@@ -71,16 +70,21 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 		slog.Error("Error getting tading pairs list from DB", "error", err)
 		return nil, err
 	}
-	transactions, err := tpq.tradingPairs.ListTransactions(req.TPID)
-	if err != nil {
-		slog.Error("Error getting transaction", "Trading Pair", req.TPID, "error", err)
-		return nil, err
+	if req.WithTransactions {
+		transactions, err := tpq.tradingPairs.ListTransactions(req.TPID)
+		if err != nil {
+			slog.Error("Error getting transaction", "Trading Pair", req.TPID, "error", err)
+			return nil, err
+		}
+		for _, t := range transactions {
+			t.CalculateFields()
+			if _, err := t.Validate(); err != nil { // Maybe this take to much time
+				slog.Error("Invalid transaction.", "error", err)
+				return nil, err
+			}
+			pair.Transactions = append(pair.Transactions, t)
+		}
 	}
-	for _, t := range transactions {
-		t.CalculateFields()
-		pair.Transactions = append(pair.Transactions, t)
-	}
-
 	baseAssetPrice := float64(0)
 	if req.WithBasePrice {
 		// baseAssetPrice is expres in the quoteAsset value, but ofcourse you know that cause you are a domain expert.
@@ -89,6 +93,10 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 		if err != nil {
 			slog.Error("Error getting base asset price, setting it to 0.", "error", err)
 		}
+	}
+	if _, err := pair.Validate(); err != nil {
+		slog.Error("Invalid trading pair.", "error", err)
+		return nil, err
 	}
 	resp := GetTradingPairResp{
 		Pair:           *pair,
