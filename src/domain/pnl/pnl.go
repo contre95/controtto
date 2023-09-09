@@ -34,7 +34,7 @@ func (tp *TradingPair) calculateBuyPrice() error {
 	// Perform any necessary validation or business logic checks here.
 	if len(tp.Transactions) == 0 {
 		slog.Error("Error calculating P&L", "error", "TradingPair doens't have any transactions")
-		return errors.New("Error calculating P&L. TradingPair doens't have any transactions")
+		return errors.New("Please add some transactions in order to calculate you profit and loss")
 	}
 	tp.Calculations.TotalBase = 0
 	tp.Calculations.TotalQuoteSpent = 0
