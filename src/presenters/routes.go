@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/template/html/v2"
 )
 
-func Run(m *managing.Service, q *querying.Service) {
+func Run(port string, m *managing.Service, q *querying.Service) {
 	engine := html.New("./views", ".html")
 	engine.Debug(true)
 	app := fiber.New(fiber.Config{
@@ -47,5 +47,5 @@ func Run(m *managing.Service, q *querying.Service) {
 	})
 
 	app.Static("/assets", "./public/assets")
-	log.Fatal(app.Listen("0.0.0.0:8721"))
+	log.Fatal(app.Listen("0.0.0.0" + ":" + port))
 }

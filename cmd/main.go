@@ -7,10 +7,21 @@ import (
 	"controtto/src/gateways/sqlite"
 	"controtto/src/presenters"
 	"log/slog"
+	"os"
 )
 
 func main() {
+	port := "8000"
+	portEnv := ""
+	portEnv = os.Getenv("CONTROTTO_PORT")
+	if len(portEnv) > 0 {
+		port = portEnv
+	}
 	dbPath := "pnl.db"
+	dbPathEnv := os.Getenv("CONTROTTO_DB_PATH")
+	if len(portEnv) > 0 {
+		dbPath = dbPathEnv
+	}
 	sqlite, err := sqlite.NewSQLite(dbPath)
 	if err != nil {
 		slog.Error("Error creating SQLite:", "error", err)
@@ -25,5 +36,5 @@ func main() {
 	tpq := querying.NewTradingPairQuerier(sqlite, binanceAPI)
 	querier := querying.NewService(*aq, *mkq, *tpq)
 	manager := managing.NewService(*ac, *tpc)
-	presenters.Run(&manager, &querier)
+	presenters.Run(port, &manager, &querier)
 }

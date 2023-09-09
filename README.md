@@ -1,19 +1,36 @@
-m Controtto
+# 📊 Controtto
 
-An, of course, blazingly fast, self-hosted profit and loss tracker made with Go, HTMX and *no JavaScript*.
-You give them two assets (e.g BTC and USDT) and you'll get a nice UI with you Avg. buy price and your transactions, that's it (for now).
+A self-hosted, P&L tracker made with Go, HTMX and *no JavaScript*. Controtto, keeps track of your transaction saving it in a sqlite file, and returns all sorts of calculations including:
+* Avg. buy price
+* Current asset value
+* Transaction history
+* Profit & Loss 
 
-You can try it here ( [pnl.contre.io](https://pnl.contre.io) )
 
+## Screenshots
+See some illustrative screenshorts or just try it it at [pnl.contre.io](https://pnl.contre.io) )
+Trading pair | Dashboard
+:-------------------------:|:-------------------------:
+![accounts-dashboard](./public/assets/img/pairpnl.png) | ![kpi-dashboard](./public/assets/img/pairList.png)
 
+# Configurations
 
-# Run
+All configurations are set in the `.env` file and passed as environment variables
+
+```sh
+# Install the dependencies
+go mod tidy
+# Set the .env
+mv .env.example .env
+# Source the env variables
+. <(cat .env | grep -v -e '^$' | grep -v "#" | awk '{print "export " $1}')
+```
 
 ## Development env
 ```bash
 # Download air (go install github.com/cosmtrek/air@latest)
 go install github.com/cosmtrek/air@latest 
-air -c air.toml
+air -c air.toml # go run ./cmd/main.go
 ```
 and access [localhost:8721](http://localhost:8721)
 
@@ -21,12 +38,7 @@ and access [localhost:8721](http://localhost:8721)
 ```bash
 # TODO: Create a docker image 
 ```
-## Screenshots
-Organization             | By Account
-:-------------------------:|:-------------------------:
-![accounts-dashboard](./public/assets/img/pairpnl.png)|![kpi-dashboard](./public/assets/img/pairList.png)
 
-### TODO
-* Domain validations
+<!-- ### TODO -->
 * Testing 
 * Wrappers for logging and metrics would be nice as well.
