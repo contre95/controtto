@@ -1,11 +1,5 @@
-
-<div class="flex flex-wrap -mx-3 animate__animated animate__fadeInUp animate__faster">
-  <div class="flex-none w-full max-w-full px-3">
-    <div
-      class="border-black/12.5 bg-gradient-to-tl from-orange-500 to-yellow-500 dark:shadow-dark-xl shadow-xl relative z-20 flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-clip-border">
-      <div class="border-black/12.5 my-2 rounded-t-2xl border-b-0 border-solid p-6 pt-4 pb-0">
-        <h6 class="w-full text-center capitalize text-white">Comming soon ...</h6>
-      </div>
-    </div>
-  </div>
+{{ range .Pairs }}
+<div hx-get="/ui/pairs/{{ .ID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body" class="">
 </div>
+<br>
+{{ end }}

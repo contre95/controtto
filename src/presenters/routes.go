@@ -29,7 +29,7 @@ func Run(m *managing.Service, q *querying.Service) {
 	app.Get("/ui/assets/form", newAssetForm)
 	app.Get("/pairs/:id/", pairSection)
 	app.Get("/pairs/", pairsSection)
-	app.Get("/dashboard", dashboardSection)
+	app.Get("/dashboard", dashboardSection(q.TradingPairQuerier))
 	// GET
 	app.Get("/", Home)
 	app.Get("/tables", Tables)

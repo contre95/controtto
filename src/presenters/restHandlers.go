@@ -13,6 +13,44 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		slog.Info("Dashboard requested")
+		req := querying.ListTradingPairsReq{}
+		resp, err := aq.ListTradingPairs(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
+		return c.Render("dashboardSection", fiber.Map{
+			"Title": "Trading Pairs",
+			"Pairs": resp.Pairs,
+		})
+	}
+
+}
+
+func pairsSection(c *fiber.Ctx) error {
+	slog.Info("Pairs Section")
+	return c.Render("pairsSection", fiber.Map{})
+}
+
+func pairSection(c *fiber.Ctx) error {
+	slog.Info("Pair Section")
+	return c.Render("pairSection", fiber.Map{
+		"PairID": c.Params("id"),
+	})
+}
+
+// Home hanlder reders the homescreen
+func Home(c *fiber.Ctx) error {
+	slog.Info("HOME")
+	// render index template
+	return c.Render("main", fiber.Map{})
+}
+
 func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		req := querying.QueryAssetsReq{}
