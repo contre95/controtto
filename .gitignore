@@ -19,3 +19,5 @@
 tmp
 # Go workspace file
 go.work
+
+pnl.db
