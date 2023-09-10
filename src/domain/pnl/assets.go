@@ -20,9 +20,6 @@ func (a *Asset) Validate() (*Asset, error) {
 	if len(a.Name) < 1 || len(a.Name) > 24 {
 		return nil, InvalidAsset(errors.New("Invalid Asset Name"))
 	}
-	if a.Total < 0 {
-		return nil, InvalidAsset(errors.New("Total can't be less than 0"))
-	}
 	return a, nil
 }
 
@@ -32,7 +29,6 @@ func NewAsset(symbol string, color string, name string, countryCode string) (*As
 	a := Asset{
 		Symbol:      symbol,
 		Color:       color,
-		Total:       0,
 		Name:        name,
 		CountryCode: countryCode,
 	}

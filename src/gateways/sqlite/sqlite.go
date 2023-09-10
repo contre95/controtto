@@ -28,17 +28,16 @@ const tables string = `
 
         CREATE TABLE IF NOT EXISTS Asset (
           Symbol TEXT PRIMARY KEY,
-          Total REAL,
           Name TEXT,
           Color TEXT,
           CountryCode TEXT
         );
 
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('BTC', 0, 'Bitcoin', '-', '#F7931A');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('DOT', 0, 'Polkadot', '-', '#DF0076');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('USDT', 0, 'Tether', 'US', '#009393');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('ARS', 0, 'Peso', 'AR', '#40AAF3');
-        INSERT OR IGNORE INTO Asset (Symbol, Total, Name, CountryCode, Color) VALUES ('EUR', 0, 'Euro', 'EU', '#004C8D');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, CountryCode, Color) VALUES ('BTC', 'Bitcoin', '-', '#F7931A');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, CountryCode, Color) VALUES ('DOT', 'Polkadot', '-', '#DF0076');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, CountryCode, Color) VALUES ('ARS', 'Peso', 'AR', '#40AAF3');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, CountryCode, Color) VALUES ('EUR', 'Euro', 'EU', '#004C8D');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, CountryCode, Color) VALUES ('USDT', 'Tether', 'US', '#009393');
 	`
 
 // SQLiteStorage implements the TradingPairs interface using SQLiteStorage.
@@ -63,8 +62,8 @@ func NewSQLite(dbPath string) (*SQLiteStorage, error) {
 }
 
 func (s *SQLiteStorage) AddAsset(a pnl.Asset) error {
-	_, err := s.db.Exec("INSERT INTO Asset (Symbol, Total, Name, Color, CountryCode) VALUES (?, ?, ?, ?, ?)",
-		a.Symbol, a.Total, a.Name, a.Color, a.CountryCode)
+	_, err := s.db.Exec("INSERT INTO Asset (Symbol, Name, Color, CountryCode) VALUES (?, ?, ?, ?, ?)",
+		a.Symbol, a.Name, a.Color, a.CountryCode)
 	if err != nil {
 		slog.Error("Error adding asset.", "error", err)
 		return err
@@ -75,8 +74,8 @@ func (s *SQLiteStorage) AddAsset(a pnl.Asset) error {
 // GetAsset retrieves an asset by symbol from the database.
 func (s *SQLiteStorage) GetAsset(symbol string) (*pnl.Asset, error) {
 	var asset pnl.Asset
-	err := s.db.QueryRow("SELECT Symbol, Total, Name, Color, CountryCode FROM Asset WHERE Symbol = ?", symbol).
-		Scan(&asset.Symbol, &asset.Total, &asset.Name, &asset.Color, &asset.CountryCode)
+	err := s.db.QueryRow("SELECT Symbol, Name, Color, CountryCode FROM Asset WHERE Symbol = ?", symbol).
+		Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.CountryCode)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("asset with symbol %s not found", symbol)
@@ -158,7 +157,7 @@ func (s *SQLiteStorage) RecordTransaction(t pnl.Transaction, tpid pnl.TradingPai
 
 // ListAssets retrieves a list of all assets from the database.
 func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
-	rows, err := s.db.Query("SELECT Symbol, Total, Name, Color, CountryCode FROM Asset")
+	rows, err := s.db.Query("SELECT Symbol, Name, Color, CountryCode FROM Asset")
 	if err != nil {
 		return nil, err
 	}
@@ -166,7 +165,7 @@ func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
 	var assets []pnl.Asset
 	for rows.Next() {
 		var asset pnl.Asset
-		if err := rows.Scan(&asset.Symbol, &asset.Total, &asset.Name, &asset.Color, &asset.CountryCode); err != nil {
+		if err := rows.Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.CountryCode); err != nil {
 			return nil, err
 		}
 		assets = append(assets, asset)

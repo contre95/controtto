@@ -2,7 +2,6 @@ package pnl
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
 )
 
@@ -18,15 +17,13 @@ func (tp *TradingPair) Calculate() error {
 
 func (tp *TradingPair) calculateProfit() error {
 	// Perform any necessary validation or business logic checks here.
-	if tp.Calculations.CurrentBasePrice == 0 {
+	if tp.Calculations.BaseMarketPrice == 0 {
 		slog.Error("Error calculating P&L", "error", "TradingPair doens't have current base price.")
 		return errors.New("Error calculating P&L. No current base price.")
 	}
-	tp.Calculations.PNLAmount = tp.Calculations.CurrentBasePrice*tp.Calculations.TotalBase - tp.Calculations.TotalQuoteSpent
-	tp.Calculations.CurrentBaseAmountInQuote = tp.Calculations.CurrentBasePrice * tp.Calculations.TotalBase
+	tp.Calculations.PNLAmount = tp.Calculations.BaseMarketPrice*tp.Calculations.TotalBase - tp.Calculations.TotalQuoteSpent
+	tp.Calculations.CurrentBaseAmountInQuote = tp.Calculations.BaseMarketPrice * tp.Calculations.TotalBase
 	tp.Calculations.PNLPercent = (100 * tp.Calculations.PNLAmount) / tp.Calculations.TotalQuoteSpent
-	fmt.Println(tp.Calculations.PNLAmount)
-	fmt.Println(tp.Calculations.TotalQuoteSpent)
 	return nil
 }
 

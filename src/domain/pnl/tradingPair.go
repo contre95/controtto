@@ -22,7 +22,7 @@ type TradingPair struct {
 // Calculation is a value object for a TradingPair and it is populated with the function Calculate. It hold the data inferred from the TradingPair transactions
 type Calculations struct {
 	AvgBuyPrice              float64
-	CurrentBasePrice         float64
+	BaseMarketPrice          float64
 	CurrentBaseAmountInQuote float64
 	TotalBase                float64
 	TotalQuoteSpent          float64

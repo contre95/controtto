@@ -16,7 +16,6 @@ package pnl
 type Asset struct {
 	Symbol      string
 	Color       string
-	Total       float64
 	Name        string
 	CountryCode string
 }

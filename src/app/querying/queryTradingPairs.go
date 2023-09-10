@@ -69,8 +69,7 @@ type GetTradingPairReq struct {
 }
 
 type GetTradingPairResp struct {
-	Pair           pnl.TradingPair
-	BaseAssetPrice float64
+	Pair pnl.TradingPair
 }
 
 func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradingPairResp, error) {
@@ -97,7 +96,7 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 	}
 
 	if req.WithCurrentBasePrice {
-		pair.Calculations.CurrentBasePrice, err = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
+		pair.Calculations.BaseMarketPrice, err = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
 		if err != nil {
 			return nil, err
 		}
