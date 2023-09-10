@@ -1,27 +1,12 @@
-# Use the official Golang image as the base image
-FROM golang:1.21.1 as build
-
-# Set the working directory inside the container
+FROM golang:latest AS builder
 WORKDIR /app
-
-# Copy the Go application source code into the container
-COPY ./cmd /app/
-COPY ./src /app/
-COPY ./go.* /app/
-
-# Build the Go application
+ADD . .
+# COPY src .
+# COPY cmd .
+# COPY public .
+# COPY go.mod .
+# COPY go.sum .
 RUN go mod tidy
-RUN pwd
-RUN ls 
-RUN ls app
-RUN go build /app/cmd/main.go
-
-# # Expose the port your application will run on
-# EXPOSE 8080
-
-# Define the command to run your application
-
-FROM scratch
-COPY --from=build /app/main /main
-CMD ["./main"]
-
+RUN go build -o /app/controtto */**.go
+ENV CONTROTTO_DB_PATH=/data/pnl.db
+ENTRYPOINT ["/app/controtto"]

@@ -11,17 +11,12 @@ import (
 )
 
 func main() {
-	port := "8000"
-	portEnv := ""
-	portEnv = os.Getenv("CONTROTTO_PORT")
-	if len(portEnv) > 0 {
-		port = portEnv
-	}
 	dbPath := "pnl.db"
 	dbPathEnv := os.Getenv("CONTROTTO_DB_PATH")
-	if len(portEnv) > 0 {
+	if len(dbPathEnv) > 0 {
 		dbPath = dbPathEnv
 	}
+	slog.Info("Initiating SQLite path", "path", dbPath)
 	sqlite, err := sqlite.NewSQLite(dbPath)
 	if err != nil {
 		slog.Error("Error creating SQLite:", "error", err)
@@ -36,5 +31,12 @@ func main() {
 	tpq := querying.NewTradingPairQuerier(sqlite, binanceAPI)
 	querier := querying.NewService(*aq, *mkq, *tpq)
 	manager := managing.NewService(*ac, *tpc)
+
+	port := "8000"
+	portEnv := os.Getenv("CONTROTTO_PORT")
+	if len(portEnv) > 0 {
+		port = portEnv
+	}
+	slog.Info("Initiating server", "port", port)
 	presenters.Run(port, &manager, &querier)
 }

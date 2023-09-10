@@ -62,7 +62,7 @@ func NewSQLite(dbPath string) (*SQLiteStorage, error) {
 }
 
 func (s *SQLiteStorage) AddAsset(a pnl.Asset) error {
-	_, err := s.db.Exec("INSERT INTO Asset (Symbol, Name, Color, CountryCode) VALUES (?, ?, ?, ?, ?)",
+	_, err := s.db.Exec("INSERT INTO Asset (Symbol, Name, Color, CountryCode) VALUES (?, ?, ?, ?)",
 		a.Symbol, a.Name, a.Color, a.CountryCode)
 	if err != nil {
 		slog.Error("Error adding asset.", "error", err)
@@ -83,6 +83,24 @@ func (s *SQLiteStorage) GetAsset(symbol string) (*pnl.Asset, error) {
 		return nil, err
 	}
 	return &asset, nil
+}
+
+// ListAssets retrieves a list of all assets from the database.
+func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
+	rows, err := s.db.Query("SELECT Symbol, Name, Color, CountryCode FROM Asset")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var assets []pnl.Asset
+	for rows.Next() {
+		var asset pnl.Asset
+		if err := rows.Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.CountryCode); err != nil {
+			return nil, err
+		}
+		assets = append(assets, asset)
+	}
+	return assets, nil
 }
 
 // Add adds a new trading pair to the database.
@@ -153,24 +171,6 @@ func (s *SQLiteStorage) RecordTransaction(t pnl.Transaction, tpid pnl.TradingPai
 	_, err := s.db.Exec("INSERT INTO Transactions (Timestamp, BaseAmount, QuoteAmount, TransactionType, TradingPairID) VALUES (?, ?, ?, ?, ?)",
 		t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TransactionType, string(tpid))
 	return err
-}
-
-// ListAssets retrieves a list of all assets from the database.
-func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
-	rows, err := s.db.Query("SELECT Symbol, Name, Color, CountryCode FROM Asset")
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var assets []pnl.Asset
-	for rows.Next() {
-		var asset pnl.Asset
-		if err := rows.Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.CountryCode); err != nil {
-			return nil, err
-		}
-		assets = append(assets, asset)
-	}
-	return assets, nil
 }
 
 // ListTransactions returns a list of transactions for a given trading pair ID.
