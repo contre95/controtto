@@ -42,10 +42,7 @@ If you want to Docker, simply replace `podman` with `docker`.
 
 ```sh
 mkdir data
-podman container run --rm \
-    -p 8000:8000 \
-    -v $(pwd)/data:/data \
-    contre95/controtto
+podman container run --rm -p 8000:8000 -v $(pwd)/data:/data contre95/controtto
 ```
 
 ## Run tests
