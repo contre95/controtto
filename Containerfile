@@ -20,5 +20,6 @@ LABEL maintainer="contre95"
 WORKDIR /app
 COPY ./views /app/views
 COPY ./public /app/public
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /app/controtto /app/controtto
 ENTRYPOINT ["/app/controtto"]
