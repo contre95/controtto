@@ -9,8 +9,10 @@ func (tp *TradingPair) Calculate() error {
 	if err := tp.calculateBuyPrice(); err != nil {
 		return err
 	}
-	if err := tp.calculateProfit(); err != nil {
-		return err
+	if tp.Calculations.BaseMarketPrice > 0 {
+		if err := tp.calculateProfit(); err != nil {
+			return err
+		}
 	}
 	return nil
 }

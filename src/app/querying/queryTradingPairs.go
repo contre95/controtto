@@ -96,10 +96,7 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 	}
 
 	if req.WithCurrentBasePrice {
-		pair.Calculations.BaseMarketPrice, err = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
-		if err != nil {
-			return nil, err
-		}
+		pair.Calculations.BaseMarketPrice, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
 	}
 
 	if req.WithCalculations {

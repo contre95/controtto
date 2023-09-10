@@ -51,6 +51,28 @@ func Home(c *fiber.Ctx) error {
 	return c.Render("main", fiber.Map{})
 }
 
+func checkPrice(mq querying.MarketsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		base := c.Query("base")
+		quote := c.Query("quote")
+		req := querying.QueryMarketReq{
+			AssetSymbolA: base,
+			AssetSymbolB: quote,
+		}
+		_, err := mq.GetMarketPrice(req)
+		if err != nil {
+			return c.Render("toastCustom", fiber.Map{
+				"ToastColor": "#6F6F6F",
+				"Msg":        "Price not found.",
+			})
+		}
+		return c.Render("toastCustom", fiber.Map{
+			"ToastColor": "#F3BA2F",
+			"Msg":        "Binance",
+		})
+	}
+}
+
 func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		req := querying.QueryAssetsReq{}

@@ -21,6 +21,7 @@ func Run(port string, m *managing.Service, q *querying.Service) {
 	})
 
 	// UI
+	app.Get("/healthcheck/price", checkPrice(q.MarketQuerier))
 	app.Get("/ui/pairs/form", newPairForm(q.AssetQuerier))
 	app.Get("/ui/pairs/table", pairsTable(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/table", transactionTable(q.TradingPairQuerier))
