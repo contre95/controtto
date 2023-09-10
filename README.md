@@ -15,8 +15,7 @@ Trading pair | Dashboard
 
 ## Configurations
 
-All configurations are set in the `.env` file and passed as environment variables
-
+All configurations are set in the `.env` file and passed as environment variables. Variables `CONTROTTO_PORT` and `CONTROTTO_DB_PATH` are available.
 ```sh
 # Install the dependencies
 go mod tidy
@@ -32,19 +31,35 @@ go run ./cmd/main.go # go build ./cmd/main.go to just build it
 ```
 
 ## Development env
-```bash
-# Download air (go install github.com/cosmtrek/air@latest)
-go install github.com/cosmtrek/air@latest 
-air -c air.toml # go run ./cmd/main.go
+```sh
+go install github.com/cosmtrek/air@latest # Download air
+air -c air.toml
 ```
 and access [localhost:8721](http://localhost:8721)
 
-## Run with docker
-```bash
-# TODO: Create a docker image 
+## Run with Podman
+If you want to Docker, simply replace `podman` with `docker`.
+
+```sh
+podman container run --rm \
+    -p 8000:8000 \
+    -v $(pwd)/data:/data 
+    contre95/controtto
 ```
 
-<!-- ### TODO -->
-* Testing 
+## Run tests
+```sh
+go test -cover ./...
+#   Expected result
+#   ?       controtto/cmd   [no test files]
+#   ?       controtto/src/app/managing      [no test files]
+#   ?       controtto/src/domain/pnl        [no test files]
+#   ?       controtto/src/gateways/markets  [no test files]
+#   ?       controtto/src/gateways/sqlite   [no test files]
+#   ?       controtto/src/presenters        [no test files]
+#   ok      controtto/src/app/querying      0.003s  coverage: 40.7% of statements
+```
+### TODO
+* More tests
 * Wrappers for logging and metrics would be nice as well.
 * Remove all the CSS and use custom `style.css` + Tailwind CDN.
