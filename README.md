@@ -8,7 +8,8 @@ A self-hosted, P&L tracker made with Go, HTMX and *no JavaScript*. Controtto, ke
 
 
 ## Screenshots
-See some illustrative screenshorts or just try it it at [pnl.contre.io](https://pnl.contre.io) )
+See some illustrative screenshorts.
+
 Trading pair | Dashboard
 :-------------------------:|:-------------------------:
 ![accounts-dashboard](./public/assets/img/pairpnl.png) | ![kpi-dashboard](./public/assets/img/pairList.png)
