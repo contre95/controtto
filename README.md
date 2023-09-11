@@ -6,6 +6,10 @@ A self-hosted, P&L tracker made with Go, HTMX and *no JavaScript*. Controtto, ke
 * Transaction history
 * Profit & Loss 
 
+In order to fetch the price of an asset, Controtto relies on mainly 3 API ([see code](https://github.com/contre95/controtto/tree/main/src/gateways/markets)). 
+* [Binance](https://api.binance.com/api/v3/ticker/price) - Public API, no token needed.
+* [BingX](https://open-api.bingx.com/openApi/swap/v2/quote/price) - Public API, no token needed.
+* [Alpha Vantage](https://www.alphavantage.co/) - Mainly for stocks, free but short rate limit. (generate an api key [here](https://www.alphavantage.co/support/#api-key)) 
 
 ## Screenshots
 See some illustrative screenshorts.
