@@ -142,7 +142,7 @@ func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (floa
 		}
 	}
 	if failedMarkets == len(tpq.markets) {
-		slog.Error("All markets faileed to find the price.", "asset1", asset1, "asset2", asset2)
+		slog.Error("All markets failed to find the price.", "asset1", asset1, "asset2", asset2)
 		return 0, "", "", err
 	}
 	return baseAssetPrice, marketName, marketColor, nil

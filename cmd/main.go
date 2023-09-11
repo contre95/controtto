@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+	// Database
 	dbPath := "pnl.db"
 	dbPathEnv := os.Getenv("CONTROTTO_DB_PATH")
 	if len(dbPathEnv) > 0 {
@@ -24,14 +25,19 @@ func main() {
 		panic("Bye")
 	}
 
+	// Markets
 	binanceAPI := markets.NewBinanceAPI()
 	bingxAPI := markets.NewBingxAPI()
 	marketsAPIs := []pnl.Markets{binanceAPI, bingxAPI} // Defines query order
-	token := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
-	if len(token) != 0 {
-		avantageAPI := markets.NewAVantageAPI(token)
-		// marketsAPIs = append([]pnl.Markets{avantageAPI}, marketsAPIs...)
+	avToken := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
+	if len(avToken) != 0 {
+		avantageAPI := markets.NewAVantageAPI(avToken)
 		marketsAPIs = append(marketsAPIs, avantageAPI)
+	}
+	tToken := os.Getenv("CONTROTTO_TIINGO_TOKEN")
+	if len(tToken) != 0 {
+		tiingoAPI := markets.NewTiingoAPI(tToken)
+		marketsAPIs = append(marketsAPIs, tiingoAPI)
 	}
 	for _, m := range marketsAPIs {
 		slog.Info("Market registered", "market", m.Name())

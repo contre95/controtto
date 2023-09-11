@@ -143,6 +143,8 @@ func TestGetTradingPair(t *testing.T) {
 		Calculations: pnl.Calculations{
 			AvgBuyPrice:              50000.0,
 			BaseMarketPrice:          48000.0,
+			MarketName:               "Mock",
+			MarketColor:              "#FFFFFF",
 			CurrentBaseAmountInQuote: 48000.0,
 			TotalBase:                1.5,
 			TotalQuoteSpent:          75000.0,

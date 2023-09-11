@@ -331,8 +331,6 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		fmt.Println(resp.Pair.Calculations)
-		fmt.Println(resp.Pair.Calculations)
 		slices.Reverse(resp.Pair.Transactions)
 		return c.Render("pairCards", fiber.Map{
 			"Today": time.Now().Format("Mon Jan 02 15:04 2006"),
