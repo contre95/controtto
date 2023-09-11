@@ -158,7 +158,7 @@ func TestGetTradingPair(t *testing.T) {
 			return &testTradinPair, nil
 		}
 		mockMarkets := &pnl.MockMarkets{}
-		querier := NewTradingPairQuerier(mockTradingPairs, mockMarkets)
+		querier := NewTradingPairQuerier(mockTradingPairs, []pnl.Markets{mockMarkets})
 		req := GetTradingPairReq{
 			TPID: string(testTradinPair.ID),
 		}
@@ -183,7 +183,7 @@ func TestGetTradingPair(t *testing.T) {
 		mockMarkets.GetCurrentPriceResponse = func(assetA, assetB string) (float64, error) {
 			return testTradinPair.Calculations.BaseMarketPrice, nil
 		}
-		querier := NewTradingPairQuerier(mockTradingPairs, mockMarkets)
+		querier := NewTradingPairQuerier(mockTradingPairs, []pnl.Markets{mockMarkets})
 		req := GetTradingPairReq{
 			TPID:                 string(testTradinPair.ID),
 			WithCurrentBasePrice: true,

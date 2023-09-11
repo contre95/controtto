@@ -4,6 +4,8 @@ type MockMarkets struct {
 	GetCurrentPriceResponse func(assetA, assetB string) (float64, error)
 }
 
+func (mm *MockMarkets) Name() string  { return "Mock" }
+func (mm *MockMarkets) Color() string { return "#FFFFFF" }
 func (mm *MockMarkets) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	if mm.GetCurrentPriceResponse != nil {
 		return mm.GetCurrentPriceResponse(assetA, assetB)

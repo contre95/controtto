@@ -2,9 +2,9 @@ package markets
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 )
 
 // Define a struct to represent the Binance API response.
@@ -44,7 +44,7 @@ func (c *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	var binanceResponse BinanceResponse
 	err = json.NewDecoder(resp.Body).Decode(&binanceResponse)
 	if err != nil {
-		return 0, err
+		return 0, errors.New("Failed to get price from " + c.Name())
 	}
 	// Convert the price to a float64.
 	price, err := stringToFloat64(binanceResponse.Price)
@@ -53,12 +53,5 @@ func (c *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	}
 	return price, nil
 }
-
-// Helper function to convert a string to a float64.
-func stringToFloat64(s string) (float64, error) {
-	price, err := strconv.ParseFloat(s, 64)
-	if err != nil {
-		return 0, err
-	}
-	return price, nil
-}
+func (c *BinanceAPI) Name() string  { return "Binance" }
+func (c *BinanceAPI) Color() string { return "#F3BA2F" }

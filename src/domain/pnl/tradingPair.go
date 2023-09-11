@@ -64,4 +64,6 @@ type MarketNotFound error
 type Markets interface {
 	// GetCurrentPrice returns the given price of assetA expressed in terms of assetB, if the value is market is not found it returns a MarketNotFound error
 	GetCurrentPrice(assetA, assetB string) (float64, error)
+	Color() string
+	Name() string
 }
