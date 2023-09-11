@@ -59,7 +59,7 @@ func checkPrice(mq querying.MarketsQuerier) func(*fiber.Ctx) error {
 			AssetSymbolA: base,
 			AssetSymbolB: quote,
 		}
-		_, err := mq.GetMarketPrice(req)
+		resp, err := mq.GetMarketPrice(req)
 		if err != nil {
 			return c.Render("toastCustom", fiber.Map{
 				"ToastColor": "#6F6F6F",
@@ -67,8 +67,8 @@ func checkPrice(mq querying.MarketsQuerier) func(*fiber.Ctx) error {
 			})
 		}
 		return c.Render("toastCustom", fiber.Map{
-			"ToastColor": "#F3BA2F",
-			"Msg":        "Binance",
+			"ToastColor": resp.ProviderColor,
+			"Msg":        resp.ProviderName,
 		})
 	}
 }

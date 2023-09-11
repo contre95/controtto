@@ -3,6 +3,7 @@ package main
 import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"controtto/src/domain/pnl"
 	"controtto/src/gateways/markets"
 	"controtto/src/gateways/sqlite"
 	"controtto/src/presenters"
@@ -24,11 +25,13 @@ func main() {
 	}
 
 	binanceAPI := markets.NewBinanceAPI()
+	bingxAPI := markets.NewBingxAPI()
+	markets := []pnl.Markets{binanceAPI, bingxAPI}
 	ac := managing.NewAssetCreator(sqlite)
 	tpc := managing.NewTradingPairManager(sqlite, sqlite)
 	aq := querying.NewAssetQuerier(sqlite)
-	mkq := querying.NewMarketQuerier(binanceAPI)
-	tpq := querying.NewTradingPairQuerier(sqlite, binanceAPI)
+	mkq := querying.NewMarketQuerier(markets)
+	tpq := querying.NewTradingPairQuerier(sqlite, markets)
 	querier := querying.NewService(*aq, *mkq, *tpq)
 	manager := managing.NewService(*ac, *tpc)
 

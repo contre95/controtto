@@ -7,11 +7,11 @@ import (
 
 type TradingPairsQuerier struct {
 	tradingPairs pnl.TradingPairs
-	markets      pnl.Markets
+	markets      []pnl.Markets
 }
 
 // NewTradingPairQuerier returns a new intereactor with all the Trading Pair related use cases.
-func NewTradingPairQuerier(a pnl.TradingPairs, m pnl.Markets) *TradingPairsQuerier {
+func NewTradingPairQuerier(a pnl.TradingPairs, m []pnl.Markets) *TradingPairsQuerier {
 	return &TradingPairsQuerier{a, m}
 }
 
@@ -122,10 +122,17 @@ func (tpq *TradingPairsQuerier) getTransactions(tpid string) ([]pnl.Transaction,
 }
 
 func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (float64, error) {
-	baseAssetPrice, err := tpq.markets.GetCurrentPrice(asset1, asset2)
-	if err != nil {
-		slog.Error("Error getting base asset price, setting it to 0.", "error", err)
-		baseAssetPrice = 0 // Set it to 0 in case of an error
+	var err error
+	var baseAssetPrice float64 = 0
+	failedMarkets := 0
+	for _, markets := range tpq.markets {
+		baseAssetPrice, err = markets.GetCurrentPrice(asset1, asset2)
+		if err != nil && failedMarkets < len(tpq.markets) {
+			slog.Error("Error getting base asset price, setting it to 0.", "error", err)
+		} else {
+			failedMarkets++
+			continue
+		}
 	}
 	return baseAssetPrice, nil
 }

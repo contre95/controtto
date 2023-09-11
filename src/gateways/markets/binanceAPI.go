@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 )
 
 // Define a struct to represent the Binance API response.
@@ -53,12 +52,5 @@ func (c *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	}
 	return price, nil
 }
-
-// Helper function to convert a string to a float64.
-func stringToFloat64(s string) (float64, error) {
-	price, err := strconv.ParseFloat(s, 64)
-	if err != nil {
-		return 0, err
-	}
-	return price, nil
-}
+func (c *BinanceAPI) Name() string  { return "Binance" }
+func (c *BinanceAPI) Color() string { return "#F3BA2F" }
