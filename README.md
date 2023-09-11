@@ -15,9 +15,7 @@ In order to fetch the price of an asset, Controtto relies on mainly 3 API ([see 
 ## Screenshots
 See some illustrative screenshorts.
 
-Trading pair | Dashboard
-:-------------------------:|:-------------------------:
-![accounts-dashboard](./public/assets/img/pairpnl.png) | ![kpi-dashboard](./public/assets/img/pairList.png)
+![controtto screenshot](./public/assets/img/screenshot.png)
 
 ## Configurations
 
@@ -28,7 +26,7 @@ go mod tidy
 # Set the .env
 mv .env.example .env
 # Source the env variables
-. <(cat .env | grep -v -e '^$' | grep -v "#" | awk '{print "export " $1}')
+. <(cat .env | grep -v -e '^$' | grep -v "#" | awk '{}')
 ```
 
 ## Build and Run 
