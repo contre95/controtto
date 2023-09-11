@@ -74,16 +74,38 @@
               id="grid-first-name" value="0" type="number" placeholder="0.0002 {{ .Pair.BaseAsset.Symbol}}">
             <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
           </div>
-          <div class="w-full md:w-4/12 py-8 md:mb-0 text-center" id="toast">
+          <div class="w-full md:w-4/12 py-8 md:mb-0 text-center">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+              Date
+            </label>
+            <input
+              class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              type="date" id="start" name="tdate" value="{{ .Today }}" min="1997-01-01" max="2123-12-31" />
+            <!-- <input name="wfee" -->
+            <!--        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" -->
+            <!--        id="grid-first-name" value="0" type="number" placeholder="0.0002 {{ .Pair.BaseAsset.Symbol}}"> -->
+            <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+          </div>
+
+        </div>
+        <div class="flex flex-wrap items-center">
+          <div>
+            <button hx-post="/pairs/{{ .Pair.ID }}/transactions" hx-include="#trans-form" hx-target="#toast"
+              hx-swap="innerHTML"
+              class="my-4 inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs hover:-translate-y-px active:opacity-85 hover:shadow-md">
+              Record
+            </button>
+          </div>
+          <div>
+            <button hx-delete="/empty" hx-target="#remove" hx-swap="outerHTML" hx-trigger="click"
+              class="inline-block px-6 py-3 mr-3 font-bold text-center text-blue-500 uppercase text-red-600 ml-2 align-middle transition-all border-2 border-red-600 rounded-lg cursor-pointer bg-blue-500/0 leading-normal text-xs ease-in tracking-tight-rem bg-150 bg-x-25 hover:bg-blue-500/25 hover:-translate-y-px active:bg-blue/45">
+              Close
+            </button>
+          </div>
+          <div>
+            <div id="toast" class="inline-block px-6 py-3 mr-3"></div>
           </div>
         </div>
-        <button hx-post="/pairs/{{ .Pair.ID }}/transactions" hx-include="#trans-form" hx-target="#toast"
-          class="my-4 inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs hover:-translate-y-px active:opacity-85 hover:shadow-md">
-          Record
-        </button>
-        <button hx-delete="/empty" hx-target="#remove" hx-swap="outerHTML" hx-trigger="click" class="inline-block px-6 py-3 mr-3 font-bold text-center text-blue-500 uppercase text-red-600 ml-2 align-middle transition-all border-2 border-red-600 rounded-lg cursor-pointer bg-blue-500/0 leading-normal text-xs ease-in tracking-tight-rem bg-150 bg-x-25 hover:bg-blue-500/25 hover:-translate-y-px active:bg-blue/45">
-          Close
-        </button>
       </form>
     </div>
   </div>
