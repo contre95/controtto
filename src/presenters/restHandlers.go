@@ -279,19 +279,27 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Recording new transaction")
 		payload := struct {
-			Base  float64 `form:"base"`
-			Quote float64 `form:"quote"`
-			WFee  float64 `form:"wfee"`
-			TFee  float64 `form:"tfee"`
-			TType string  `form:"ttype"`
+			Base   float64 `form:"base"`
+			Quote  float64 `form:"quote"`
+			WFee   float64 `form:"wfee"`
+			TFee   float64 `form:"tfee"`
+			TType  string  `form:"ttype"`
+			TTDate string  `form:"tdate"`
 		}{}
 		if err := c.BodyParser(&payload); err != nil {
 			fmt.Println(err)
 			return err
 		}
+		tdate, err := time.Parse("2006-01-02", payload.TTDate)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
 		req := managing.RecordTransactionReq{
 			TradingPairID: c.Params("id"),
-			Timestamp:     time.Now(),
+			Timestamp:     tdate,
 			BaseAmount:    payload.Base,
 			QuoteAmount:   payload.Quote,
 			TradingFee:    payload.WFee,
@@ -356,7 +364,8 @@ func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error
 			})
 		}
 		return c.Render("transactionForm", fiber.Map{
-			"Pair": resp.Pair,
+			"Pair":  resp.Pair,
+			"Today": time.Now().Format("2006-01-02"),
 		})
 	}
 }
