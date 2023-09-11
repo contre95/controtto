@@ -1,15 +1,11 @@
 package markets
 
 import (
+	"controtto/src/domain/pnl"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
-)
-
-var (
-	// Define a custom error type for MarketNotFound
-	MarketNotFound = errors.New("Market not found")
 )
 
 // Markets repository interface
@@ -41,11 +37,6 @@ func NewTiingoAPI(token string) *TiingoAPI {
 func (api *TiingoAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	// Build the URL for the Tiingo API request
 	url := fmt.Sprintf("%s/iex?tickers=%s&token=%s", api.BaseURL, assetA, api.token)
-	fmt.Println(url)
-	fmt.Println(url)
-	fmt.Println(url)
-	fmt.Println(url)
-
 	// Make an HTTP GET request to the Tiingo API
 	resp, err := http.Get(url)
 	if err != nil {
@@ -65,10 +56,9 @@ func (api *TiingoAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	if err != nil {
 		return 0.0, err
 	}
-
 	// Check if the market data is found
-	if tiingoResp[0].Price == 0.0 {
-		return 0.0, MarketNotFound
+	if len(tiingoResp) == 0 || tiingoResp[0].Price == 0.0 {
+		return 0.0, pnl.MarketNotFound(errors.New(assetA + " market not found"))
 	}
 
 	return tiingoResp[0].Price, nil
