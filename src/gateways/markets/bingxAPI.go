@@ -31,9 +31,21 @@ func NewBingxAPI() *BingxAPI {
 }
 
 // GetCurrentPrice retrieves the current price of a cryptocurrency pair using the Bingx API.
-func (c *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
+func (api *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	// Construct the URL with the cryptocurrency pair symbol.
-	url := fmt.Sprintf("%s?symbol=%s-%s", c.BaseURL, assetA, assetB)
+	if assetB != "USDT" {
+		bPriceUSDT, err := api.GetCurrentPrice(assetB, "USDT")
+		if err != nil {
+			return 0, err
+		}
+		aPriceUSDT, err := api.GetCurrentPrice(assetA, "USDT")
+		if err != nil {
+			return 0, err
+		}
+		return bPriceUSDT / aPriceUSDT, nil
+	}
+
+	url := fmt.Sprintf("%s?symbol=%s-%s", api.BaseURL, assetA, assetB)
 
 	// Send a GET request to the Bingx API.
 	resp, err := http.Get(url)
@@ -64,5 +76,5 @@ func (c *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	return price, nil
 }
 
-func (c *BingxAPI) Name() string  { return "BingX" }
-func (c *BingxAPI) Color() string { return "#2951F4" }
+func (api *BingxAPI) Name() string  { return "BingX" }
+func (api *BingxAPI) Color() string { return "#2951F4" }

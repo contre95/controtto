@@ -33,15 +33,15 @@ const tables string = `
           CountryCode TEXT
         );
 
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('BTC', 'Bitcoin', '#F7931A', '-');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('DOT', 'Polkadot', '#DF0076', '-');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('ARS', 'Arg. Peso', '#40AAF3', 'AR');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('EUR', 'Euro', '#004C8D', 'EU');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('USDT', 'Tether', '#009393', 'US');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('ETH', 'Ethereum', '#c061cb', '-');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('USD', 'US Dollar', '#26a269', '-');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('AAPL', 'Apple ', '#5e5c64', '-');
-        INSERT OR IGNORE NTO Asset (Symbol, Name, Color, CountryCode) VALUES ('AMZN', 'Amazon', '#ffa348', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('BTC', 'Bitcoin', '#F7931A', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('DOT', 'Polkadot', '#DF0076', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('ARS', 'Arg. Peso', '#40AAF3', 'AR');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('EUR', 'Euro', '#004C8D', 'EU');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('USDT', 'Tether', '#009393', 'US');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('ETH', 'Ethereum', '#c061cb', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('USD', 'US Dollar', '#26a269', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('AAPL', 'Apple ', '#5e5c64', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, CountryCode) VALUES ('AMZN', 'Amazon', '#ffa348', '-');
 	`
 
 // SQLiteStorage implements the TradingPairs interface using SQLiteStorage.

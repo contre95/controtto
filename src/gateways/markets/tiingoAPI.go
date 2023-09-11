@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"slices"
 )
 
 // Markets repository interface
@@ -35,6 +36,14 @@ func NewTiingoAPI(token string) *TiingoAPI {
 }
 
 func (api *TiingoAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
+	abPrice := 1.0
+	var err error
+	if !slices.Contains([]string{"USDT", "USD"}, assetB) {
+		abPrice, err = api.GetCurrentPrice(assetB, "USD")
+		if err != nil {
+			return 0, err
+		}
+	}
 	// Build the URL for the Tiingo API request
 	url := fmt.Sprintf("%s/iex?tickers=%s&token=%s", api.BaseURL, assetA, api.token)
 	// Make an HTTP GET request to the Tiingo API
@@ -61,7 +70,7 @@ func (api *TiingoAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 		return 0.0, pnl.MarketNotFound(errors.New(assetA + " market not found"))
 	}
 
-	return tiingoResp[0].Price, nil
+	return tiingoResp[0].Price / abPrice, nil
 }
 
 func (api *TiingoAPI) Color() string { return "#AA74EF" }

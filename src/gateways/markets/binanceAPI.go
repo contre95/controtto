@@ -23,10 +23,21 @@ func NewBinanceAPI() *BinanceAPI {
 }
 
 // GetCurrentPrice retrieves the current price of a cryptocurrency pair using the Binance API.
-func (c *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
+func (api *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
+	fmt.Printf("\nQuerying %s and  %s\n\n", assetA, assetB)
+	if assetB != "USDT" {
+		bPriceUSDT, err := api.GetCurrentPrice(assetB, "USDT")
+		if err != nil {
+			return 0, err
+		}
+		aPriceUSDT, err := api.GetCurrentPrice(assetA, "USDT")
+		if err != nil {
+			return 0, err
+		}
+		return aPriceUSDT / bPriceUSDT, nil
+	}
 	// Construct the URL with the cryptocurrency pair symbol.
-	url := fmt.Sprintf("%s?symbol=%s%s", c.BaseURL, assetA, assetB)
-
+	url := fmt.Sprintf("%s?symbol=%s%s", api.BaseURL, assetA, assetB)
 	// Send a GET request to the Binance API.
 	resp, err := http.Get(url)
 	if err != nil {
@@ -52,5 +63,5 @@ func (c *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	}
 	return price, nil
 }
-func (c *BinanceAPI) Name() string  { return "Binance" }
-func (c *BinanceAPI) Color() string { return "#F3BA2F" }
+func (api *BinanceAPI) Name() string  { return "Binance" }
+func (api *BinanceAPI) Color() string { return "#F3BA2F" }

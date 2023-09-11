@@ -38,17 +38,17 @@ func NewAVantageAPI(token string) *AVantageAPI {
 }
 
 // GetCurrentPrice retrieves the current price of a cryptocurrency pair using the Bingx API.
-func (c *AVantageAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
+func (api *AVantageAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	abPrice := 1.0
 	var err error
 	if !slices.Contains([]string{"USDT", "USD"}, assetB) {
-		abPrice, err = c.GetCurrentPrice(assetB, "USD")
+		abPrice, err = api.GetCurrentPrice(assetB, "USD")
 		if err != nil {
 			return 0, err
 		}
 	}
 	// Construct the URL with the cryptocurrency pair symbol.
-	url := fmt.Sprintf("%s?function=GLOBAL_QUOTE&symbol=%s&apikey=%s", c.BaseURL, assetA, c.token)
+	url := fmt.Sprintf("%s?function=GLOBAL_QUOTE&symbol=%s&apikey=%s", api.BaseURL, assetA, api.token)
 
 	// Send a GET request to the Bingx API.
 	resp, err := http.Get(url)
@@ -77,5 +77,5 @@ func (c *AVantageAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	return price / abPrice, nil
 }
 
-func (c *AVantageAPI) Name() string  { return "Alphan Vintage" }
-func (c *AVantageAPI) Color() string { return "#5CC6B1 " }
+func (api *AVantageAPI) Name() string  { return "Alphan Vintage" }
+func (api *AVantageAPI) Color() string { return "#5CC6B1 " }
