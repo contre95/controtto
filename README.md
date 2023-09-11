@@ -36,7 +36,7 @@ go run ./cmd/main.go # go build ./cmd/main.go to just build it
 go install github.com/cosmtrek/air@latest # Download air
 air -c air.toml
 ```
-and access [localhost:8721](http://localhost:8721)
+and access [localhost:3000](http://localhost:3000)
 
 ## Run with Podman
 If you want to Docker, simply replace `podman` with `docker`.
