@@ -2,6 +2,7 @@ package querying
 
 import (
 	"controtto/src/domain/pnl"
+	"errors"
 	"log/slog"
 )
 
@@ -96,13 +97,14 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 	}
 
 	if req.WithCurrentBasePrice {
-		pair.Calculations.BaseMarketPrice, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
+		pair.Calculations.BaseMarketPrice, pair.Calculations.MarketName, pair.Calculations.MarketColor, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
 	}
 
 	if req.WithCalculations {
 		err := pair.Calculate()
 		if err != nil {
-			return nil, err
+			slog.Error("Error making calculations", "TradinPair", string(pair.ID))
+			return nil, errors.New("Error making calculations")
 		}
 	}
 
@@ -121,18 +123,27 @@ func (tpq *TradingPairsQuerier) getTransactions(tpid string) ([]pnl.Transaction,
 	return transactions, nil
 }
 
-func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (float64, error) {
+func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (float64, string, string, error) {
 	var err error
 	var baseAssetPrice float64 = 0
+	marketName := ""
+	marketColor := ""
 	failedMarkets := 0
-	for _, markets := range tpq.markets {
-		baseAssetPrice, err = markets.GetCurrentPrice(asset1, asset2)
-		if err != nil && failedMarkets < len(tpq.markets) {
-			slog.Error("Error getting base asset price, setting it to 0.", "error", err)
-		} else {
+	for _, m := range tpq.markets {
+		slog.Info("Querying markets", "market", m.Name())
+		baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
+		marketName = m.Name()
+		marketColor = m.Color()
+		if err != nil {
+			slog.Error("Error getting base asset price.", "market", m.Name(), "error", err)
 			failedMarkets++
-			continue
+		} else {
+			break
 		}
 	}
-	return baseAssetPrice, nil
+	if failedMarkets == len(tpq.markets) {
+		slog.Error("All markets faileed to find the price.", "asset1", asset1, "asset2", asset2)
+		return 0, "", "", err
+	}
+	return baseAssetPrice, marketName, marketColor, nil
 }

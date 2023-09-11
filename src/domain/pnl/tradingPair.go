@@ -23,6 +23,8 @@ type TradingPair struct {
 type Calculations struct {
 	AvgBuyPrice              float64
 	BaseMarketPrice          float64
+	MarketName               string
+	MarketColor              string
 	CurrentBaseAmountInQuote float64
 	TotalBase                float64
 	TotalQuoteSpent          float64

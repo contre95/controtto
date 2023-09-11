@@ -157,14 +157,16 @@
                 Current <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> price
               </p>
               <h5 class="mb-2 font-bold">
-                {{ .Pair.Calculations.BaseMarketPrice }}
+                {{ printf "%.2f" .Pair.Calculations.BaseMarketPrice }}
                 <span style="color:{{ .Pair.QuoteAsset.Color }}">
                   {{ .Pair.QuoteAsset.Symbol }}
                 </span>
               </h5>
-              <div hx-get="/healthcheck/price?base={{ .Pair.BaseAsset.Symbol }}&quote={{ .Pair.QuoteAsset.Symbol }}"
-                hx-target="this" hx-trigger="load">
-              </div>
+              {{ if ne .Pair.Calculations.MarketName "" }}
+              <span class="right-0 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color: {{ .Pair.Calculations.MarketColor }};">{{ .Pair.Calculations.MarketName }}</span><br>
+              {{ else }}
+              <span class="right-0 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color: gray;">Price not found</span><br>
+              {{ end }}
             </div>
           </div>
           <div class="px-3 text-right basis-1/3">

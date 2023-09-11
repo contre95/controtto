@@ -1,6 +1,7 @@
 package markets
 
 import (
+	"controtto/src/domain/pnl"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -49,8 +50,11 @@ func (c *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	// Parse the JSON response.
 	var BingxResponse BingxResponse
 	err = json.NewDecoder(resp.Body).Decode(&BingxResponse)
-	if err != nil || BingxResponse.Code != 0 {
-		return 0, errors.New("Failed to get price from " + c.Name())
+	if err != nil {
+		return 0, err
+	}
+	if BingxResponse.Code != 0 {
+		return 0, pnl.MarketNotFound(errors.New("Could not find: " + assetA))
 	}
 	// Convert the price to a float64.
 	price, err := stringToFloat64(BingxResponse.Data.Price)
@@ -60,5 +64,5 @@ func (c *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	return price, nil
 }
 
-func (c *BingxAPI) Name() string  { return "Bingx" }
+func (c *BingxAPI) Name() string  { return "BingX" }
 func (c *BingxAPI) Color() string { return "#2951F4" }
