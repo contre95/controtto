@@ -1,7 +1,7 @@
 # 📊 Controtto
 
 A self-hosted, P&L tracker made with Go, HTMX and *no JavaScript*. Controtto, keeps track of your transaction saving it in a sqlite file, and returns all sorts of calculations including:
-* Avg. buy price
+* Avg. Buy price
 * Current asset value
 * Transaction history
 * Profit & Loss 
