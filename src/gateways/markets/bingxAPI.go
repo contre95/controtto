@@ -60,5 +60,5 @@ func (c *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	return price, nil
 }
 
-func (c *BingxAPI) Name() string  { return "Bingx" }
+func (c *BingxAPI) Name() string  { return "BingX" }
 func (c *BingxAPI) Color() string { return "#2951F4" }

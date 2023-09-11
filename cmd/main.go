@@ -26,12 +26,20 @@ func main() {
 
 	binanceAPI := markets.NewBinanceAPI()
 	bingxAPI := markets.NewBingxAPI()
-	markets := []pnl.Markets{binanceAPI, bingxAPI} // Defines query order
+	marketsAPIs := []pnl.Markets{binanceAPI, bingxAPI} // Defines query order
+	token := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
+	if len(token) != 0 {
+		avantageAPI := markets.NewAVantageAPI(token)
+		marketsAPIs = append(marketsAPIs, avantageAPI)
+	}
+	for _, m := range marketsAPIs {
+		slog.Info("Market registered", "market", m.Name())
+	}
 	ac := managing.NewAssetCreator(sqlite)
 	tpc := managing.NewTradingPairManager(sqlite, sqlite)
 	aq := querying.NewAssetQuerier(sqlite)
-	mkq := querying.NewMarketQuerier(markets)
-	tpq := querying.NewTradingPairQuerier(sqlite, markets)
+	mkq := querying.NewMarketQuerier(marketsAPIs)
+	tpq := querying.NewTradingPairQuerier(sqlite, marketsAPIs)
 	querier := querying.NewService(*aq, *mkq, *tpq)
 	manager := managing.NewService(*ac, *tpc)
 
