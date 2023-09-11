@@ -2,6 +2,7 @@ package markets
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -43,7 +44,7 @@ func (c *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	var binanceResponse BinanceResponse
 	err = json.NewDecoder(resp.Body).Decode(&binanceResponse)
 	if err != nil {
-		return 0, err
+		return 0, errors.New("Failed to get price from " + c.Name())
 	}
 	// Convert the price to a float64.
 	price, err := stringToFloat64(binanceResponse.Price)

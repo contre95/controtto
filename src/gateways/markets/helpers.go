@@ -1,6 +1,8 @@
 package markets
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // Helper function to convert a string to a float64.
 func stringToFloat64(s string) (float64, error) {

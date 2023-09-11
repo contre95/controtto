@@ -2,6 +2,7 @@ package markets
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -48,8 +49,8 @@ func (c *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	// Parse the JSON response.
 	var BingxResponse BingxResponse
 	err = json.NewDecoder(resp.Body).Decode(&BingxResponse)
-	if err != nil {
-		return 0, err
+	if err != nil || BingxResponse.Code != 0 {
+		return 0, errors.New("Failed to get price from " + c.Name())
 	}
 	// Convert the price to a float64.
 	price, err := stringToFloat64(BingxResponse.Data.Price)

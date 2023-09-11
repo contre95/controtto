@@ -26,7 +26,7 @@ func main() {
 
 	binanceAPI := markets.NewBinanceAPI()
 	bingxAPI := markets.NewBingxAPI()
-	markets := []pnl.Markets{binanceAPI, bingxAPI}
+	markets := []pnl.Markets{bingxAPI, binanceAPI}
 	ac := managing.NewAssetCreator(sqlite)
 	tpc := managing.NewTradingPairManager(sqlite, sqlite)
 	aq := querying.NewAssetQuerier(sqlite)
