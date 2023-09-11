@@ -30,7 +30,7 @@ func main() {
 	token := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
 	if len(token) != 0 {
 		avantageAPI := markets.NewAVantageAPI(token)
-		marketsAPIs = append(marketsAPIs, avantageAPI)
+		marketsAPIs = append([]pnl.Markets{avantageAPI}, marketsAPIs...)
 	}
 	for _, m := range marketsAPIs {
 		slog.Info("Market registered", "market", m.Name())

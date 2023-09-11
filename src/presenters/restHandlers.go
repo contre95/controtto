@@ -61,15 +61,9 @@ func checkPrice(mq querying.MarketsQuerier) func(*fiber.Ctx) error {
 		}
 		resp, err := mq.GetMarketPrice(req)
 		if err != nil {
-			return c.Render("toastCustom", fiber.Map{
-				"ToastColor": "#6F6F6F",
-				"Msg":        "Price not found.",
-			})
+			return c.SendString(err.Error())
 		}
-		return c.Render("toastCustom", fiber.Map{
-			"ToastColor": resp.ProviderColor,
-			"Msg":        resp.ProviderName,
-		})
+		return c.SendString(fmt.Sprintf("%f", resp.Price))
 	}
 }
 
@@ -337,7 +331,8 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		// TODO: Should this happen here? or in the app layer ?
+		fmt.Println(resp.Pair.Calculations)
+		fmt.Println(resp.Pair.Calculations)
 		slices.Reverse(resp.Pair.Transactions)
 		return c.Render("pairCards", fiber.Map{
 			"Today": time.Now().Format("Mon Jan 02 15:04 2006"),
