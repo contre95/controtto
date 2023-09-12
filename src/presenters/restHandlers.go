@@ -319,6 +319,7 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 
 func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		time.Sleep(2 * time.Second)
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
 			TPID:             id,

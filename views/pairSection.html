@@ -1,8 +1,172 @@
 <div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body"
-  class="">
+  hx-trigger="refreshTransaction from:body">
+  <div class="p-4 w-full rounded-2xl flex justify-center" hx-get="/ui/pairs/{{ .Pair.ID }}/cards"
+    hx-trigger="refreshTransaction from:body">
+    <div class="mb-4 w-full animate__animated animate__fadeInDown animate__fast">
+      <div
+        class="loadingb flex-wrap flex justify-center bg-white text-slate-500 shadow-xl border-emerlad-500 border-2 rounded-2xl bg-clip-border">
+        <div class="mx-4">
+          <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
+            <span class="font-bold leading-normal text-slate-700"> &nbsp;
+              &nbsp;
+          </h1>
+        </div>
+        <div class="mx-4">
+          <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
+            <small class="font-bold leading-normal text-emerald-500">&nbsp;</small>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-wrap -mx-3">
+    <div
+      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
+      <div
+        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+        <div class="flex-auto p-4">
+          <div class="flex flex-row -mx-3">
+            <div class="flex-none w-2/3 max-w-full px-3">
+              <div>
+                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
+                  &nbsp;
+                  <span class="font-bold leading-normal text-sm text-slate-500">
+                    &nbsp;
+                  </span>
+                  <span class="font-bold leading-normal text-sm text-emerald-500">
+                    &nbsp;
+                  </span>
+                </p>
+                <h5 class="mb-2 font-bold dark:text-white">
+                  &nbsp;
+                </h5>
+                <p class="mb-0 dark:text-white dark:opacity-60">
+                </p>
+                &nbsp;
+              </div>
+            </div>
+            <div class="px-3 text-right basis-1/3">
+              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
+                <i
+                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
+      <div
+        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+        <div class="flex-auto p-4">
+          <div class="flex flex-row -mx-3">
+            <div class="flex-none w-2/3 max-w-full px-3">
+              <div>
+                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
+                  &nbsp;
+                  <span class="font-bold leading-normal text-sm text-slate-500">
+                    &nbsp;
+                  </span>
+                  <span class="font-bold leading-normal text-sm text-emerald-500">
+                    &nbsp;
+                  </span>
+                </p>
+                <h5 class="mb-2 font-bold dark:text-white">
+                  &nbsp;
+                </h5>
+                <p class="mb-0 dark:text-white dark:opacity-60">
+                </p>
+                &nbsp;
+              </div>
+            </div>
+            <div class="px-3 text-right basis-1/3">
+              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
+                <i
+                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
+      <div
+        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+        <div class="flex-auto p-4">
+          <div class="flex flex-row -mx-3">
+            <div class="flex-none w-2/3 max-w-full px-3">
+              <div>
+                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
+                  &nbsp;
+                  <span class="font-bold leading-normal text-sm text-slate-500">
+                    &nbsp;
+                  </span>
+                  <span class="font-bold leading-normal text-sm text-emerald-500">
+                    &nbsp;
+                  </span>
+                </p>
+                <h5 class="mb-2 font-bold dark:text-white">
+                  &nbsp;
+                </h5>
+                <p class="mb-0 dark:text-white dark:opacity-60">
+                </p>
+                &nbsp;
+              </div>
+            </div>
+            <div class="px-3 text-right basis-1/3">
+              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
+                <i
+                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
+      <div
+        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
+        <div class="flex-auto p-4">
+          <div class="flex flex-row -mx-3">
+            <div class="flex-none w-2/3 max-w-full px-3">
+              <div>
+                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
+                  &nbsp;
+                  <span class="font-bold leading-normal text-sm text-slate-500">
+                    &nbsp;
+                  </span>
+                  <span class="font-bold leading-normal text-sm text-emerald-500">
+                    &nbsp;
+                  </span>
+                </p>
+                <h5 class="mb-2 font-bold dark:text-white">
+                  &nbsp;
+                </h5>
+                <p class="mb-0 dark:text-white dark:opacity-60">
+                </p>
+                &nbsp;
+              </div>
+            </div>
+            <div class="px-3 text-right basis-1/3">
+              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
+                <i
+                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
+
 <!-- Starts below section-->
-<div id="transaction-form" class="rounded-lg bg-white p-8 shadow-lg lg:col-span-3  animate__animated animate__flipInX animate__faster">
+<div id="transaction-form"
+  class="rounded-lg bg-white p-8 shadow-lg lg:col-span-3  animate__animated animate__flipInX animate__faster">
 </div>
 
 <div hx-get="/ui/pairs/{{ .PairID }}/transactions/table" hx-target="this" hx-trigger="revealed,newTransaction from:body"
