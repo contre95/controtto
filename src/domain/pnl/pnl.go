@@ -2,6 +2,7 @@ package pnl
 
 import (
 	"errors"
+	"fmt"
 	"log/slog"
 )
 
@@ -35,21 +36,27 @@ func (tp *TradingPair) calculateBuyPrice() error {
 		slog.Error("Error calculating P&L", "error", "TradingPair doens't have any transactions")
 		return errors.New("Please add some transactions in order to calculate you profit and loss")
 	}
-	tp.Calculations.TotalBase = 0
-	tp.Calculations.TotalQuoteSpent = 0
+	// tp.Calculations.TotalBase = 0
+	// tp.Calculations.TotalQuoteSpent = 0
 	for _, t := range tp.Transactions {
+		fmt.Println(t.TransactionType)
+		fmt.Println(tp.Calculations.AvgBuyPrice)
 		if t.TransactionType == Buy {
 			tp.Calculations.TotalBase += t.BaseAmount
 			tp.Calculations.TotalQuoteSpent += t.QuoteAmount
 		}
 		if t.TransactionType == Sell {
 			tp.Calculations.TotalBase -= t.BaseAmount
-			tp.Calculations.TotalQuoteSpent -= t.QuoteAmount
+			// fmt.Println(tp.Calculations.AvgBuyPrice)
+			// tp.Calculations.AvgBuyPrice -= t.BaseAmount * tp.Calculations.AvgBuyPrice
+			// fmt.Println(tp.Calculations.AvgBuyPrice)
+			tp.Calculations.TotalQuoteSpent -= t.BaseAmount * tp.Calculations.AvgBuyPrice
+			// TODO: Figure out what should happen here.
 		}
-		tp.Calculations.TotalTradingFeeSpent += t.TradingFee * t.QuoteAmount
-		tp.Calculations.TotalWithdrawalFeeSpent += t.WithdrawalFee * t.QuoteAmount
+		tp.Calculations.TotalFeeInQuote += t.FeeInQuote
+		tp.Calculations.TotalFeeInBase += t.FeeInBase
+		tp.Calculations.AvgBuyPrice = float64(tp.Calculations.TotalQuoteSpent / tp.Calculations.TotalBase)
 	}
-	tp.Calculations.AvgBuyPrice = float64(tp.Calculations.TotalQuoteSpent / tp.Calculations.TotalBase)
 	slog.Info("Fields calculated", "base", tp.Calculations.TotalBase, "quote", tp.Calculations.TotalQuoteSpent, "avg-buy-price", tp.Calculations.AvgBuyPrice)
 	return nil
 

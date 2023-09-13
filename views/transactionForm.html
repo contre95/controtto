@@ -14,7 +14,7 @@
         <div class="flex flex-wrap -mx-3 mb-6">
           <div class="w-full md:w-4/12 px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-              <span style="color:#{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol}}</span>
+              <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol}}</span>
             </label>
             <input name="base"
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -23,7 +23,7 @@
           </div>
           <div class="w-full md:w-4/12  px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-              <span style="color:#{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
+              <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
             </label>
             <input name="quote" value="350.65 {{ .Pair.QuoteAsset.Symbol}}"
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -44,8 +44,8 @@
               <select name="ttype"
                 class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-state">
-                <option>Buy</option>
-                <option>Sell</option>
+                <option value="Buy">Buy</option>
+                <option value="Sell">Sell</option>
               </select>
               <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -57,22 +57,52 @@
         </div>
         <div class="flex flex-wrap items-center -mx-3 mb-6">
           <div class="w-full md:w-4/12 px-3 mb-6 md:mb-0">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+              Fee in <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol}}</span>
+              / <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
+              <span class="text-red-500">
+              </span>
+            </label>
+            <div class="relative">
+              <select
+                class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                _="on change toggle .hidden on #qfee then toggle .hidden on #bfee" id="grid-state">
+                <option selected><span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+                </option>
+                <option><span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span></option>
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+              <small class="text-xs leading-tight text-white/80 ">
+                Usually, when <span class="text-emerald-500 font-semibold">buying </span> <span
+                  style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> fee is charge in <span
+                  style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+              </small>
+            </div>
+          </div>
+
+          <div id="bfee" class="w-full md:w-4/12 px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-              Transaction Fee
+              Fee in <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol}}</span>
             </label>
             <input name="tfee"
+              style="border: solid 1px {{ .Pair.BaseAsset.Color }}; box-shadow: 0 -1px 5px {{ .Pair.BaseAsset.Color }};"
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name" value="0" type="number" placeholder="0.0004 {{ .Pair.BaseAsset.Symbol}}">
-            <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+              id="grid-first-name" type="number" placeholder="0.0004 {{ .Pair.BaseAsset.Symbol}}">
+                <small class="text-xs leading-tight text-white/80 italic"> &nbsp; </small>
           </div>
-          <div class="w-full md:w-4/12 px-3 mb-6 md:mb-0">
+          <div id="qfee" class="hidden w-full md:w-4/12 px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-              Withdrawal Fee
+              Fee in <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
             </label>
             <input name="wfee"
+              style="border: solid 1px {{ .Pair.QuoteAsset.Color }}; box-shadow: 0 -1px 5px {{ .Pair.QuoteAsset.Color }};"
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-              id="grid-first-name" value="0" type="number" placeholder="0.0002 {{ .Pair.BaseAsset.Symbol}}">
-            <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+              id="grid-first-name" type="number" placeholder="0.0002 {{ .Pair.QuoteAsset.Symbol}}">
+            <small class="text-xs leading-tight text-white/80 italic"> &nbsp; </small>
           </div>
           <div class="w-full md:w-4/12 px-3 mb-6 md:mb-0">
             <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
@@ -81,10 +111,8 @@
             <input
               class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="date" id="start" name="tdate" value="{{ .Today }}" min="1997-01-01" max="2123-12-31" />
-            <!-- <input name="wfee" -->
-            <!--        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" -->
-            <!--        id="grid-first-name" value="0" type="number" placeholder="0.0002 {{ .Pair.BaseAsset.Symbol}}"> -->
-            <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+            <small class="text-xs leading-tight text-white/80 italic"> &nbsp; </small>
+
           </div>
 
         </div>
@@ -108,8 +136,7 @@
           <div class="flex flex-1 justify-end items-center">
           </div>
         </div>
-        </form>
+      </form>
     </div>
   </div>
 </div>
-

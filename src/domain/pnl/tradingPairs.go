@@ -30,8 +30,8 @@ func (tp *TradingPair) NewTransaction(baseAmount, quoteAmount, tFee, wFee float6
 		Timestamp:       timestamp,
 		BaseAmount:      baseAmount,
 		QuoteAmount:     quoteAmount,
-		TradingFee:      tFee,
-		WithdrawalFee:   wFee,
+		FeeInBase:       tFee,
+		FeeInQuote:      wFee,
 		TransactionType: tType,
 	}
 	tp.Transactions = append(tp.Transactions, *transaction)
@@ -43,6 +43,10 @@ type InvalidTransaction error
 // Validate validates a TradingPair, if all fields are valid it returns itself, otherwise it returns an InvalidTradingPair error.
 func (t *Transaction) Validate() (*Transaction, error) {
 	// Perform any necessary validation or business logic checks here.
+	if t.FeeInBase > 0 && t.FeeInQuote > 0 {
+		slog.Error("Transaction Validation error", "error", "Invalid fee, can't have both on a single transaction.", "FeeInQuote", t.FeeInQuote, "FeeInBase", t.FeeInBase)
+		return nil, InvalidTransaction(errors.New("Invalid base/quote amounts"))
+	}
 	if t.BaseAmount <= 0 || t.QuoteAmount <= 0 {
 		slog.Error("Transaction Validation error", "error", "Invalid base/quote amount")
 		return nil, InvalidTransaction(errors.New("Invalid base/quote amounts"))

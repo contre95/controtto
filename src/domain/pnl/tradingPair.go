@@ -30,8 +30,8 @@ type Calculations struct {
 	TotalQuoteSpent          float64
 	PNLAmount                float64
 	PNLPercent               float64
-	TotalTradingFeeSpent     float64
-	TotalWithdrawalFeeSpent  float64
+	TotalFeeInQuote          float64
+	TotalFeeInBase           float64
 }
 
 type TransactionType string
@@ -43,8 +43,8 @@ type Transaction struct {
 	Timestamp       time.Time
 	BaseAmount      float64
 	QuoteAmount     float64
-	TradingFee      float64
-	WithdrawalFee   float64
+	FeeInBase       float64
+	FeeInQuote      float64
 	TransactionType TransactionType
 	Price           float64
 }
