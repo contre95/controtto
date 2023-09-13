@@ -23,13 +23,15 @@ func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
 }
 
 // NewTransaction creates new transaction for the given TradingPair
-func (tp *TradingPair) NewTransaction(baseAmount float64, quoteAmount float64, timestamp time.Time, tType TransactionType) (*Transaction, error) {
+func (tp *TradingPair) NewTransaction(baseAmount, quoteAmount, tFee, wFee float64, timestamp time.Time, tType TransactionType) (*Transaction, error) {
 	// Append the transaction to the Transactions slice.
 	transaction := &Transaction{
 		ID:              uuid.New().String(),
 		Timestamp:       timestamp,
 		BaseAmount:      baseAmount,
 		QuoteAmount:     quoteAmount,
+		TradingFee:      tFee,
+		WithdrawalFee:   wFee,
 		TransactionType: tType,
 	}
 	tp.Transactions = append(tp.Transactions, *transaction)
