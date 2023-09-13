@@ -4,7 +4,7 @@ A self-hosted, P&L tracker made with Go, HTMX and *no JavaScript*. Controtto, ke
 * Avg. Buy price
 * Current asset value
 * Transaction history
-* Import / Export transaction (see [sample](./public/assets/export_BTC_USDT.csv))
+* Import / Export transaction (see [sample](./public/assets/export_USDT_ARS.csv))
 * Profit & Loss 
 
 In order to fetch the price of an asset, Controtto relies on mainly 4 APIs ([see code](https://github.com/contre95/controtto/tree/main/src/gateways/markets)). 
