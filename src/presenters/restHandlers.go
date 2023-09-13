@@ -476,7 +476,7 @@ func transactionExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error 
 			WithCalculations:     false,
 		}
 		resp, err := tpq.GetTradingPair(req)
-		if err == nil {
+		if err != nil {
 			return c.SendString(fmt.Sprintf("Error exporting transactions. %s", err))
 		}
 		file := ""
