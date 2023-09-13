@@ -314,27 +314,32 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 			}
 			req := managing.RecordTransactionReq{}
 			req.TradingPairID = c.Params("id")
-			req.Timestamp, err = time.Parse("2006-01-02 15:04", line[0])
+			req.Type = line[0]
+			req.Timestamp, err = time.Parse("2006-01-02 15:04", line[1])
 			if err != nil {
+				slog.Error("Error parsing imported transaction.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 0)})
 			}
-			req.BaseAmount, err = strconv.ParseFloat(line[1], 64)
+			req.BaseAmount, err = strconv.ParseFloat(line[2], 64)
 			if err != nil {
+				slog.Error("Error parsing imported transaction.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 1)})
 			}
-			req.QuoteAmount, err = strconv.ParseFloat(line[2], 64)
+			req.QuoteAmount, err = strconv.ParseFloat(line[3], 64)
 			if err != nil {
+				slog.Error("Error parsing imported transaction.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 2)})
 			}
-			req.TradingFee, err = strconv.ParseFloat(line[3], 64)
+			req.FeeInBase, err = strconv.ParseFloat(line[4], 64)
 			if err != nil {
+				slog.Error("Error parsing imported transaction.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 3)})
 			}
-			req.WithdrawalFee, err = strconv.ParseFloat(line[4], 64)
+			req.FeeInQuote, err = strconv.ParseFloat(line[5], 64)
 			if err != nil {
+				slog.Error("Error parsing imported transaction.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 4)})
 			}
-			req.Type = line[5]
 			reqs = append(reqs, req)
 			tCount++
 		}
@@ -363,8 +368,8 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 		payload := struct {
 			Base   float64 `form:"base"`
 			Quote  float64 `form:"quote"`
-			WFee   float64 `form:"wfee"`
-			TFee   float64 `form:"tfee"`
+			BFee   float64 `form:"bfee"`
+			QFee   float64 `form:"qfee"`
 			TType  string  `form:"ttype"`
 			TTDate string  `form:"tdate"`
 		}{}
@@ -384,8 +389,8 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 			Timestamp:     tdate,
 			BaseAmount:    payload.Base,
 			QuoteAmount:   payload.Quote,
-			TradingFee:    payload.WFee,
-			WithdrawalFee: payload.WFee,
+			FeeInBase:     payload.BFee,
+			FeeInQuote:    payload.QFee,
 			Type:          payload.TType,
 		}
 		resp, err := tpm.RecordTransaction(req)
@@ -492,9 +497,9 @@ func transactionExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error 
 		if err != nil {
 			return c.SendString(fmt.Sprintf("Error exporting transactions. %s", err))
 		}
-		file := "Timestamp,BaseAmount,QuoteAmount,TradingFee,WithdrawalFee,TransactionType\n"
+		file := "TransactionType,Timestamp,BaseAmount,QuoteAmount,FeeInBase,FeeInQuote\n"
 		for _, t := range resp.Pair.Transactions {
-			file += fmt.Sprintf("%s,%f,%f,%f,%f,%s\n", t.Timestamp.Format("2006-01-02 15:04"), t.BaseAmount, t.QuoteAmount, t.FeeInBase, t.FeeInQuote, t.TransactionType)
+			file += fmt.Sprintf("%s,%s,%f,%f,%f,%f\n", t.TransactionType, t.Timestamp.Format("2006-01-02 15:04"), t.BaseAmount, t.QuoteAmount, t.FeeInBase, t.FeeInQuote)
 		}
 		c.Set("Content-Disposition", fmt.Sprintf("attachment; filename=export_%s_%s.csv", resp.Pair.BaseAsset.Symbol, resp.Pair.QuoteAsset.Symbol))
 		c.Set("Content-Type", "application/octet-stream")
