@@ -274,19 +274,31 @@ func newAsset(ac managing.AssetsCreator) func(*fiber.Ctx) error {
 
 func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		slog.Info("Importing transactions")
 		file, err := c.FormFile("trancsv")
 		if err != nil {
-			return err
+			slog.Error("error", err)
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   fmt.Sprintln("Error reading CSV req:", err),
+			})
+
 		}
 		uploadedFile, err := file.Open()
 		if err != nil {
-			return err
+			slog.Error("error", err)
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   fmt.Sprintln("Error reading CSV req:", err),
+			})
+
 		}
 		defer uploadedFile.Close()
 
 		csvReader := csv.NewReader(uploadedFile)
 
 		// Iterate over the CSV records
+		csvReader.Read() // Skip column
 		tCount := 0
 		reqs := []managing.RecordTransactionReq{}
 		for {
@@ -294,6 +306,7 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 			if err == io.EOF {
 				break
 			}
+			fmt.Println(line)
 			if err != nil {
 				return c.Render("toastErr", fiber.Map{
 					"Title": "Error",
@@ -480,7 +493,7 @@ func transactionExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error 
 		if err != nil {
 			return c.SendString(fmt.Sprintf("Error exporting transactions. %s", err))
 		}
-		file := ""
+		file := "Timestamp,BaseAmount,QuoteAmount,TradingFee,WithdrawalFee,TransactionType\n"
 		for _, t := range resp.Pair.Transactions {
 			file += fmt.Sprintf("%s,%f,%f,%f,%f,%s\n", t.Timestamp.Format("2006-01-02 15:04"), t.BaseAmount, t.QuoteAmount, t.TradingFee, t.WithdrawalFee, t.TransactionType)
 		}
