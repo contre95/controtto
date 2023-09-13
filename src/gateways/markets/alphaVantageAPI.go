@@ -77,5 +77,5 @@ func (api *AVantageAPI) GetCurrentPrice(assetA, assetB string) (float64, error) 
 	return price / abPrice, nil
 }
 
-func (api *AVantageAPI) Name() string  { return "Alphan Vintage" }
+func (api *AVantageAPI) Name() string  { return "Alpha Vantage" }
 func (api *AVantageAPI) Color() string { return "#5CC6B1 " }
