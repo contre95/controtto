@@ -306,7 +306,6 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 			if err == io.EOF {
 				break
 			}
-			fmt.Println(line)
 			if err != nil {
 				return c.Render("toastErr", fiber.Map{
 					"Title": "Error",
