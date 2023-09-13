@@ -43,4 +43,12 @@
       background-position: 100% 0, 0 0, 15px 140px, 65px 145px;
     }
   }
-  
+
+/* input[type="file"] { */
+/*     position: absolute; */
+/*     z-index: -1; */
+/*     top: 15px; */
+/*     left: 20px; */
+/*     font-size: 17px; */
+/*     color: #b8b8b8; */
+/* } */

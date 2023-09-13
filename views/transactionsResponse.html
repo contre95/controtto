@@ -1,0 +1,15 @@
+{{ if eq .TErr 1 }}
+<span class="right-0 ml-2 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color:#BE7E7E;">Transaction {{ .TFailed }} failed</span>
+{{ end }}
+
+{{ if gt .TErr 1 }}
+<span class="right-0 ml-2 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color: #BE7E7E;">Failed rows: {{ .TFailed }}</span>
+{{ end }}
+
+{{ if eq .TOk 1 }}
+<span class="right-0 ml-2 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color: #91B795;"> Only row {{ .TOk }} was imported</span>
+{{ end }}
+{{ if gt .TOk 1 }}
+<span class="right-0 ml-2 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color: #91B795;"> {{ .TOk }} rows imported</span>
+{{ end }}
+

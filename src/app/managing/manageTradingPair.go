@@ -91,7 +91,7 @@ func (tpm *TradingPairsManager) RecordTransaction(req RecordTransactionReq) (*Re
 		slog.Error("Could not retrieve TradingPair", "error", err)
 		return nil, err
 	}
-	transaction, err := tradingPair.NewTransaction(req.BaseAmount, req.QuoteAmount, req.Timestamp, pnl.TransactionType(req.Type))
+	transaction, err := tradingPair.NewTransaction(req.BaseAmount, req.QuoteAmount, req.TradingFee, req.WithdrawalFee, req.Timestamp, pnl.TransactionType(req.Type))
 	if err != nil {
 		slog.Error("Could create transaction", "error", err)
 		return nil, err

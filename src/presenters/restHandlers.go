@@ -3,6 +3,9 @@ package presenters
 import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"encoding/csv"
+	"io"
+	"strconv"
 
 	"fmt"
 	"log/slog"
@@ -269,6 +272,78 @@ func newAsset(ac managing.AssetsCreator) func(*fiber.Ctx) error {
 	}
 }
 
+func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		file, err := c.FormFile("trancsv")
+		if err != nil {
+			return err
+		}
+		uploadedFile, err := file.Open()
+		if err != nil {
+			return err
+		}
+		defer uploadedFile.Close()
+
+		csvReader := csv.NewReader(uploadedFile)
+
+		// Iterate over the CSV records
+		tCount := 0
+		reqs := []managing.RecordTransactionReq{}
+		for {
+			line, err := csvReader.Read()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{
+					"Title": "Error",
+					"Msg":   fmt.Sprintln("Error reading CSV req:", err),
+				})
+			}
+			req := managing.RecordTransactionReq{}
+			req.TradingPairID = c.Params("id")
+			req.Timestamp, err = time.Parse("2006-01-02 15:04", line[0])
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 0)})
+			}
+			req.BaseAmount, err = strconv.ParseFloat(line[1], 64)
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 1)})
+			}
+			req.QuoteAmount, err = strconv.ParseFloat(line[2], 64)
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 2)})
+			}
+			req.TradingFee, err = strconv.ParseFloat(line[3], 64)
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 3)})
+			}
+			req.WithdrawalFee, err = strconv.ParseFloat(line[4], 64)
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 4)})
+			}
+			req.Type = line[5]
+			reqs = append(reqs, req)
+			tCount++
+		}
+		failedTransactions := []string{}
+		for i, r := range reqs {
+			_, err := tpm.RecordTransaction(r)
+			if err != nil {
+				slog.Error("Attempt to import transaction failed.", "error", err, "row", i)
+				failedTransactions = append(failedTransactions, fmt.Sprint(i))
+			}
+		}
+		tok := int(tCount - len(failedTransactions))
+		return c.Render("transactionsResponse", fiber.Map{
+			"Title":   "Info",
+			"TErr":    len(failedTransactions),
+			"TOk":     tok,
+			"TFailed": failedTransactions,
+		})
+	}
+}
+
 func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Recording new transaction")
@@ -311,7 +386,7 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",
 			"Msg":   resp.Msg,
-			"Time":  resp.RecordTime.Format("15h 04m 05s"),
+			"Extra": resp.RecordTime.Format("15h 04m 05s"),
 		})
 
 	}
@@ -388,5 +463,29 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			"TodayShort": time.Now().Format("02/01/2006"),
 			"Pair":       resp.Pair,
 		})
+	}
+}
+
+func transactionExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		id := c.Params("id")
+		req := querying.GetTradingPairReq{
+			TPID:                 id,
+			WithCurrentBasePrice: false,
+			WithTransactions:     true,
+			WithCalculations:     false,
+		}
+		resp, err := tpq.GetTradingPair(req)
+		if err == nil {
+			return c.SendString(fmt.Sprintf("Error exporting transactions. %s", err))
+		}
+		file := ""
+		for _, t := range resp.Pair.Transactions {
+			file += fmt.Sprintf("%s,%f,%f,%f,%f,%s\n", t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TradingFee, t.WithdrawalFee, t.TransactionType)
+		}
+		c.Set("Content-Disposition", fmt.Sprintf("attachment; filename=export_%s_%s.csv", resp.Pair.BaseAsset.Symbol, resp.Pair.QuoteAsset.Symbol))
+		c.Set("Content-Type", "application/octet-stream")
+		// Send the string as a response
+		return c.SendString(file)
 	}
 }

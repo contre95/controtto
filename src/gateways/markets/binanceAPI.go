@@ -24,7 +24,6 @@ func NewBinanceAPI() *BinanceAPI {
 
 // GetCurrentPrice retrieves the current price of a cryptocurrency pair using the Binance API.
 func (api *BinanceAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
-	fmt.Printf("\nQuerying %s and  %s\n\n", assetA, assetB)
 	if assetB != "USDT" {
 		bPriceUSDT, err := api.GetCurrentPrice(assetB, "USDT")
 		if err != nil {

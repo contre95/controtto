@@ -29,6 +29,7 @@ func Run(port string, m *managing.Service, q *querying.Service) {
 	app.Get("/ui/pairs/:id/transactions/form", newTransactionForm(q.TradingPairQuerier))
 	app.Get("/ui/assets/form", newAssetForm)
 	app.Get("/pairs/:id/", pairSection)
+	app.Get("/pairs/:id/transactions/export", transactionExport(q.TradingPairQuerier))
 	app.Get("/pairs/", pairsSection)
 	app.Get("/dashboard", dashboardSection(q.TradingPairQuerier))
 	// GET
@@ -41,6 +42,7 @@ func Run(port string, m *managing.Service, q *querying.Service) {
 	app.Delete("/transactions/:id", deleteTransaction(m.TradingPairManager))
 	// POST
 	app.Post("/pairs/:id/transactions", newTransaction(m.TradingPairManager))
+	app.Post("/pairs/:id/transactions/upload", newTransactionImport(m.TradingPairManager))
 	app.Post("/assets", newAsset(m.AssetCreator))
 	app.Post("/pairs", newTradingPair(m.TradingPairManager))
 	app.Delete("/empty", func(c *fiber.Ctx) error {
