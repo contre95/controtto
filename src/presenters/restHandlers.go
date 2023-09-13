@@ -339,6 +339,7 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 			"Title":   "Info",
 			"TErr":    len(failedTransactions),
 			"TOk":     tok,
+			"TCount":  tCount,
 			"TFailed": failedTransactions,
 		})
 	}
@@ -481,7 +482,7 @@ func transactionExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error 
 		}
 		file := ""
 		for _, t := range resp.Pair.Transactions {
-			file += fmt.Sprintf("%s,%f,%f,%f,%f,%s\n", t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TradingFee, t.WithdrawalFee, t.TransactionType)
+			file += fmt.Sprintf("%s,%f,%f,%f,%f,%s\n", t.Timestamp.Format("2006-01-02 15:04"), t.BaseAmount, t.QuoteAmount, t.TradingFee, t.WithdrawalFee, t.TransactionType)
 		}
 		c.Set("Content-Disposition", fmt.Sprintf("attachment; filename=export_%s_%s.csv", resp.Pair.BaseAsset.Symbol, resp.Pair.QuoteAsset.Symbol))
 		c.Set("Content-Type", "application/octet-stream")
