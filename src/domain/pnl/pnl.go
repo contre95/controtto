@@ -2,7 +2,6 @@ package pnl
 
 import (
 	"errors"
-	"fmt"
 	"log/slog"
 )
 
@@ -39,19 +38,14 @@ func (tp *TradingPair) calculateBuyPrice() error {
 	// tp.Calculations.TotalBase = 0
 	// tp.Calculations.TotalQuoteSpent = 0
 	for _, t := range tp.Transactions {
-		fmt.Println(t.TransactionType)
-		fmt.Println(tp.Calculations.AvgBuyPrice)
 		if t.TransactionType == Buy {
 			tp.Calculations.TotalBase += t.BaseAmount
 			tp.Calculations.TotalQuoteSpent += t.QuoteAmount
 		}
 		if t.TransactionType == Sell {
 			tp.Calculations.TotalBase -= t.BaseAmount
-			// fmt.Println(tp.Calculations.AvgBuyPrice)
-			// tp.Calculations.AvgBuyPrice -= t.BaseAmount * tp.Calculations.AvgBuyPrice
-			// fmt.Println(tp.Calculations.AvgBuyPrice)
-			tp.Calculations.TotalQuoteSpent -= t.BaseAmount * tp.Calculations.AvgBuyPrice
 			// TODO: Figure out what should happen here.
+			tp.Calculations.TotalQuoteSpent -= t.BaseAmount * tp.Calculations.AvgBuyPrice
 		}
 		tp.Calculations.TotalFeeInQuote += t.FeeInQuote
 		tp.Calculations.TotalFeeInBase += t.FeeInBase
