@@ -51,7 +51,7 @@ func (t *Transaction) Validate() (*Transaction, error) {
 		slog.Error("Transaction Validation error", "error", "Invalid base/quote amount")
 		return nil, InvalidTransaction(errors.New("Invalid base/quote amounts"))
 	}
-	if !slices.Contains(t.TransactionType.getValidTypes(), t.TransactionType) {
+	if !slices.Contains(t.TransactionType.GetValidTypes(), t.TransactionType) {
 		slog.Error("Transaction Validation error", "error", "Invalid transaction type")
 		return nil, InvalidTransaction(errors.New("Invalid transaction"))
 	}

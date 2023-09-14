@@ -1,6 +1,6 @@
 <form id="asset-form" class="w-full max-w-lg p-6 animate__animated animate__fadeIn animate__faster ">
   <div class="flex flex-wrap -mx-3 mb-6">
-    <div class="flex-1  md:w-1/3 px-3 mb-6 md:mb-0">
+    <div class="flex-1  xl:w-1/4 px-3 mb-6 md:mb-0">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
         Asset Name
       </label>
@@ -10,7 +10,7 @@
           name="name" type="text" placeholder="Bitcoin, Apple stock">
       </div>
     </div>
-    <div class="flex-1 md:w-1/3 px-3">
+    <div class="flex-1 xl:w-1/4 px-3">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
         Ticker Symbol
       </label>
@@ -20,13 +20,27 @@
           name="symbol" type="text" placeholder="APPL">
       </div>
     </div>
-    <div class="flex-1 md:w-1/3 px-3">
+    <div class="flex-1 xl:w-1/4 px-3">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+        Color HEX
+      </label>
+      <div class="relative">
+        <select
+          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+          name="base">
+          {{ range .Assets }}
+          <option style="color: {{ .Color }};" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}</option>
+          {{ end }}
+        </select>
+      </div>
+    </div>
+    <div class="flex-1 xl:w-1/4 px-3">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
         Color HEX
       </label>
       <div class="relative">
         <input
-            class="inline-block rounded bg-blue-600 w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
+          class="inline-block rounded bg-blue-600 w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
           name="color" type="color" value="#C1B6F0">
       </div>
     </div>

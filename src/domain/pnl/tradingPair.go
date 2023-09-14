@@ -36,7 +36,7 @@ const (
 
 type TransactionType string
 
-func (t *TransactionType) getValidTypes() []TransactionType {
+func (t *TransactionType) GetValidTypes() []TransactionType {
 	return []TransactionType{Buy, Sell}
 }
 
