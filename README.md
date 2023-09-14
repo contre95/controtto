@@ -43,7 +43,7 @@ air -c air.toml
 and access [localhost:3000](http://localhost:3000)
 
 ## Run with Podman
-If you want to Docker, simply replace `podman` with `docker`.
+If you want to use Docker, simply replace `podman` with `docker`.
 
 ```sh
 mkdir data
