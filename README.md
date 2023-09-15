@@ -1,5 +1,7 @@
 # 📊 Controtto
 
+Try is out at [demo.contre.io](https://demo.contre.io), the database resets every hour.
+
 A self-hosted, P&L tracker made with Go, HTMX and *no JavaScript*. Controtto, keeps track of your transaction saving it in a sqlite file, and returns all sorts of calculations including:
 * Avg. Buy price
 * Current asset value
