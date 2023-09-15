@@ -6,7 +6,7 @@
       </label>
       <div class="relative">
         <select
-          _="on change log my.options[my.options.selectedIndex].attributes.atype.value"
+          _="on change set x to my.options[my.options.selectedIndex].attributes.atype.value then if x is equal to 'Stock' then remove .hidden from #advice else add .hidden to #advice end"
           class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           name="base">
           {{ range .Assets }}
@@ -20,8 +20,8 @@
           </svg>
         </div>
       </div>
-      <small id="advice" class="hidden">
-        Hi
+      <small id="advice" class="hidden text-red-500 text-xs italic">
+        Stock markets are usually traded in your local broker currency.
       </small>
     </div>
     <div class="w-full md:w-1/2 px-3">
