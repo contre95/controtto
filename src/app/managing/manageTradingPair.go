@@ -47,8 +47,8 @@ type DeleteTransactionResp struct {
 }
 
 type CreateTradingPairReq struct {
-	BaseAsset  string
-	QuoteAsset string
+	BaseAssetSymbol  string
+	QuoteAssetSymbol string
 }
 
 type TradingPairsManager struct {
@@ -112,14 +112,14 @@ func (tpm *TradingPairsManager) RecordTransaction(req RecordTransactionReq) (*Re
 func (tpm *TradingPairsManager) Create(req CreateTradingPairReq) (*CreateTradingPairResp, error) {
 	var err error
 	var base, quote *pnl.Asset
-	base, err = tpm.assets.GetAsset(req.BaseAsset)
+	base, err = tpm.assets.GetAsset(req.BaseAssetSymbol)
 	if err != nil {
-		slog.Error("Getting asset", "Asset", req.BaseAsset, "error", err)
+		slog.Error("Getting asset", "Asset", req.BaseAssetSymbol, "error", err)
 		return nil, err
 	}
-	quote, err = tpm.assets.GetAsset(req.QuoteAsset)
+	quote, err = tpm.assets.GetAsset(req.QuoteAssetSymbol)
 	if err != nil {
-		slog.Error("Getting asset", "Asset", req.QuoteAsset, "error", err)
+		slog.Error("Getting asset", "Asset", req.QuoteAssetSymbol, "error", err)
 		return nil, err
 	}
 	tradingPair, err := pnl.NewTradingPair(*base, *quote)

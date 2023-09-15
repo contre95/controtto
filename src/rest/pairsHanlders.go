@@ -21,7 +21,7 @@ func pairSection(c *fiber.Ctx) error {
 
 func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		req := querying.QueryAssetsReq{}
+		req := querying.ListAssetsReq{}
 		resp, err := aq.ListAssets(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{

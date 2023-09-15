@@ -36,8 +36,8 @@ func TestListAssets(t *testing.T) {
 			return testAssets, nil
 		}
 		querier := NewAssetQuerier(mockAssets)
-		req := QueryAssetsReq{}
-		want := QueryAssetsResp{Assets: testAssets}
+		req := ListAssetsReq{}
+		want := ListAssetsResp{Assets: testAssets}
 		got, err := querier.ListAssets(req)
 		if err != nil {
 			t.Errorf("Expected no error, got %v", err)
@@ -55,7 +55,7 @@ func TestListAssets(t *testing.T) {
 			return nil, errors.New("Mock error")
 		}
 		querier := NewAssetQuerier(mockAssets)
-		req := QueryAssetsReq{}
+		req := ListAssetsReq{}
 		_, err := querier.ListAssets(req)
 		if err == nil {
 			t.Error("Expected an error, got nil")

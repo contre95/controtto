@@ -11,7 +11,7 @@
           name="base">
           {{ range .Assets }}
           <option 
-          style="color: {{ .Color }};"  atype="{{ .Type }}" `value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}</option>
+          style="color: {{ .Color }};"  atype="{{ .Type }}" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}</option>
           {{ end }}
         </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">

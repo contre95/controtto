@@ -70,8 +70,8 @@ func newTradingPair(tpc managing.TradingPairsManager) func(*fiber.Ctx) error {
 			return err
 		}
 		req := managing.CreateTradingPairReq{
-			BaseAsset:  payload.Base,
-			QuoteAsset: payload.Quote,
+			BaseAssetSymbol:  payload.Base,
+			QuoteAssetSymbol: payload.Quote,
 		}
 		slog.Info("Creating", "req", req)
 		resp, err := tpc.Create(req)

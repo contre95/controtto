@@ -113,7 +113,7 @@ func (s *SQLiteStorage) AddAsset(a pnl.Asset) error {
 // GetAsset retrieves an asset by symbol from the database.
 func (s *SQLiteStorage) GetAsset(symbol string) (*pnl.Asset, error) {
 	var asset pnl.Asset
-	err := s.db.QueryRow("SELECT Symbol, Name, Color, Type,CountryCode FROM Asset WHERE Symbol = ?", symbol).
+	err := s.db.QueryRow("SELECT Symbol, Name, Color, Type, CountryCode FROM Asset WHERE Symbol = ?", symbol).
 		Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.Type, &asset.CountryCode)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -126,7 +126,7 @@ func (s *SQLiteStorage) GetAsset(symbol string) (*pnl.Asset, error) {
 
 // ListAssets retrieves a list of all assets from the database.
 func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
-	rows, err := s.db.Query("SELECT Symbol, Name, Color, CountryCode FROM Asset")
+	rows, err := s.db.Query("SELECT Symbol, Name, Color, Type, CountryCode FROM Asset")
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
 	var assets []pnl.Asset
 	for rows.Next() {
 		var asset pnl.Asset
-		if err := rows.Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.CountryCode); err != nil {
+		if err := rows.Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.Type, &asset.CountryCode); err != nil {
 			return nil, err
 		}
 		assets = append(assets, asset)

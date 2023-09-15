@@ -5,18 +5,6 @@ import (
 	"log/slog"
 )
 
-type QueryAssetReq struct {
-	Symbol string
-}
-type QueryAssetResp struct {
-	Asset pnl.Asset
-}
-
-type QueryAssetsReq struct{}
-type QueryAssetsResp struct {
-	Assets []pnl.Asset
-}
-
 type AssetsQuerier struct {
 	assets pnl.Assets
 }
@@ -25,7 +13,13 @@ func NewAssetQuerier(a pnl.Assets) *AssetsQuerier {
 	return &AssetsQuerier{a}
 }
 
-func (aq *AssetsQuerier) ListAssets(req QueryAssetsReq) (*QueryAssetsResp, error) {
+type ListAssetsReq struct{}
+
+type ListAssetsResp struct {
+	Assets []pnl.Asset
+}
+
+func (aq *AssetsQuerier) ListAssets(req ListAssetsReq) (*ListAssetsResp, error) {
 	var err error
 	assets, err := aq.assets.ListAssets()
 	if err != nil {
@@ -37,10 +31,18 @@ func (aq *AssetsQuerier) ListAssets(req QueryAssetsReq) (*QueryAssetsResp, error
 			slog.Error("Invalid asset "+a.Symbol, "error", err)
 		}
 	}
-	resp := QueryAssetsResp{
+	resp := ListAssetsResp{
 		Assets: assets,
 	}
 	return &resp, nil
+}
+
+type QueryAssetReq struct {
+	Symbol string
+}
+
+type QueryAssetResp struct {
+	Asset pnl.Asset
 }
 
 func (aq *AssetsQuerier) GetAsset(req QueryAssetReq) (*QueryAssetResp, error) {
