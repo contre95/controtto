@@ -76,11 +76,19 @@
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
+                {{ if eq .Pair.BaseAsset.Type "Crypto"}}
               <small class="text-xs leading-tight text-white/80 ">
-                Usually, when <span class="text-emerald-500 font-semibold">buying </span> <span
-                  style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> fee is charge in <span
-                  style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+                Usually, when <span class="text-emerald-500 font-semibold">buying</span>
+                <span
+                  style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}
+                </span> fee is charge in 
+                <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
               </small>
+                {{ else }}
+                <small class="text-xs leading-tight text-white/80 ">
+                  Please be mindful of the currency for fee charges.
+                </small>
+                {{ end }}
             </div>
           </div>
 
