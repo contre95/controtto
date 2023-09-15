@@ -31,6 +31,7 @@ func newAsset(ac managing.AssetsCreator) func(*fiber.Ctx) error {
 		req := managing.CreateAssetReq{
 			Symbol:      payload.Symbol,
 			Color:       payload.Color,
+			Type:        payload.Type,
 			Name:        payload.Name,
 			CountryCode: "-",
 		}

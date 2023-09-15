@@ -32,6 +32,9 @@
   <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
     <p class="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60"> {{ .QuoteAsset.Symbol }}</p>
   </td>
+  <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+    <p class="mb-0 text-sm font-semibold leading-normal dark:text-white dark:opacity-60"> {{ .BaseAsset.Type }} / {{ .QuoteAsset.Type }}</p>
+  </td>
   <td
     class="p-2 text-right align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
     <button hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" dropdown-trigger aria-expanded="false" type="button"

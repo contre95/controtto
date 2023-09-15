@@ -113,8 +113,8 @@ func (s *SQLiteStorage) AddAsset(a pnl.Asset) error {
 // GetAsset retrieves an asset by symbol from the database.
 func (s *SQLiteStorage) GetAsset(symbol string) (*pnl.Asset, error) {
 	var asset pnl.Asset
-	err := s.db.QueryRow("SELECT Symbol, Name, Color, CountryCode FROM Asset WHERE Symbol = ?", symbol).
-		Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.CountryCode)
+	err := s.db.QueryRow("SELECT Symbol, Name, Color, Type,CountryCode FROM Asset WHERE Symbol = ?", symbol).
+		Scan(&asset.Symbol, &asset.Name, &asset.Color, &asset.Type, &asset.CountryCode)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("asset with symbol %s not found", symbol)

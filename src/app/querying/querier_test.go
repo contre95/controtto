@@ -29,6 +29,7 @@ func TestListAssets(t *testing.T) {
 			CountryCode: "US",
 		},
 	}
+
 	t.Run("ListAssets_Success", func(t *testing.T) {
 		mockAssets := pnl.MockAssets{}
 		mockAssets.ListAssetsResponse = func() ([]pnl.Asset, error) {
@@ -65,23 +66,21 @@ func TestListAssets(t *testing.T) {
 func TestGetAsset(t *testing.T) {
 
 	t.Run("GetAsset_Success", func(t *testing.T) {
-		testAsset := pnl.Asset{
-			Symbol:      "AAPL",
-			Color:       "#FFFFFF",
-			Name:        "Apple Stocks",
-			CountryCode: "US",
+		testAsset, err := pnl.NewAsset("AAPL", "#FFFFFF", "Apple", "US", "Forex")
+		if err != nil {
+			t.Errorf("Invalid test, asset should be valid for testing.")
 		}
 		mockAssets := &pnl.MockAssets{}
 		mockAssets.GetAssetResponse = func(symbol string) (*pnl.Asset, error) {
 			if symbol != testAsset.Symbol {
 				t.Errorf("Expect to get %s, got %s instead", testAsset.Color, symbol)
 			}
-			return &testAsset, nil
+			return testAsset, nil
 		}
 		querier := NewAssetQuerier(mockAssets)
 		req := QueryAssetReq{Symbol: testAsset.Symbol}
 		want := QueryAssetResp{
-			Asset: testAsset,
+			Asset: *testAsset,
 		}
 
 		got, err := querier.GetAsset(req)
@@ -108,6 +107,7 @@ func TestGetAsset(t *testing.T) {
 }
 
 func TestGetTradingPair(t *testing.T) {
+	// TODO: Instanciate this assets from the domain, not like this.
 	testTradinPair := pnl.TradingPair{
 		ID: pnl.TradingPairID("BTCUSD"),
 		BaseAsset: pnl.Asset{
@@ -124,8 +124,8 @@ func TestGetTradingPair(t *testing.T) {
 				Timestamp:       time.Now(),
 				BaseAmount:      1.0,
 				QuoteAmount:     50000.0,
-				FeeInBase:      0.1,
-				FeeInQuote:   0.0,
+				FeeInBase:       0.1,
+				FeeInQuote:      0.0,
 				TransactionType: pnl.Buy,
 				Price:           50000.0,
 			},
@@ -134,8 +134,8 @@ func TestGetTradingPair(t *testing.T) {
 				Timestamp:       time.Now(),
 				BaseAmount:      0.5,
 				QuoteAmount:     25000.0,
-				FeeInBase:      0.05,
-				FeeInQuote:   0.0,
+				FeeInBase:       0.05,
+				FeeInQuote:      0.0,
 				TransactionType: pnl.Sell,
 				Price:           50000.0,
 			},
@@ -150,8 +150,8 @@ func TestGetTradingPair(t *testing.T) {
 			TotalQuoteSpent:          75000.0,
 			PNLAmount:                2500.0,
 			PNLPercent:               5.0,
-			TotalFeeInQuote:     0.15,
-			TotalFeeInBase:  0.0,
+			TotalFeeInQuote:          0.15,
+			TotalFeeInBase:           0.0,
 		},
 	}
 	t.Run("GetTradingPair_Success", func(t *testing.T) {

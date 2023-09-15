@@ -14,8 +14,8 @@ func (a *Asset) Validate() (*Asset, error) {
 	if !re.MatchString(a.Color) {
 		return nil, InvalidAsset(errors.New("Wrong color string"))
 	}
-	if slices.Contains(GetValidTypes(), a.Type) {
-		return nil, InvalidAsset(errors.New("Invalid Asset Symbol"))
+	if !slices.Contains(GetValidTypes(), a.Type) {
+		return nil, InvalidAsset(errors.New("Invalid Asset Type"))
 	}
 	if len(a.Symbol) < 3 || len(a.Symbol) > 8 {
 		return nil, InvalidAsset(errors.New("Invalid Asset Symbol"))
@@ -33,6 +33,7 @@ func NewAsset(symbol, color, name, countryCode, assetType string) (*Asset, error
 		Symbol:      symbol,
 		Color:       color,
 		Name:        name,
+		Type:        AssetType(assetType),
 		CountryCode: countryCode,
 	}
 	return a.Validate()

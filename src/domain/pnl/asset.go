@@ -20,7 +20,6 @@ const (
 
 type AssetType string
 
-// TODO: Move this to domain level function.
 func GetValidTypes() []AssetType {
 	return []AssetType{Crypto, Forex, Stock}
 }
