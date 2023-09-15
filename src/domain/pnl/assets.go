@@ -3,16 +3,19 @@ package pnl
 import (
 	"errors"
 	"regexp"
+	"slices"
 )
-
-const HEXCOLORPATTERN = `^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
 
 type InvalidAsset error
 
 func (a *Asset) Validate() (*Asset, error) {
-	re := regexp.MustCompile(HEXCOLORPATTERN)
+	hexColorPattern := `^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
+	re := regexp.MustCompile(hexColorPattern)
 	if !re.MatchString(a.Color) {
 		return nil, InvalidAsset(errors.New("Wrong color string"))
+	}
+	if !slices.Contains(GetValidTypes(), a.Type) {
+		return nil, InvalidAsset(errors.New("Invalid Asset Type"))
 	}
 	if len(a.Symbol) < 3 || len(a.Symbol) > 8 {
 		return nil, InvalidAsset(errors.New("Invalid Asset Symbol"))
@@ -25,11 +28,12 @@ func (a *Asset) Validate() (*Asset, error) {
 
 // TODO: Define invariants
 // NewAsset reutrns a new Asset and validates it's invariants
-func NewAsset(symbol string, color string, name string, countryCode string) (*Asset, error) {
+func NewAsset(symbol, color, name, countryCode, assetType string) (*Asset, error) {
 	a := Asset{
 		Symbol:      symbol,
 		Color:       color,
 		Name:        name,
+		Type:        AssetType(assetType),
 		CountryCode: countryCode,
 	}
 	return a.Validate()

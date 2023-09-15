@@ -2,12 +2,6 @@ package pnl
 
 import "time"
 
-const (
-	Buy      TransactionType = "Buy"
-	Withdraw TransactionType = "Withdraw"
-	Sell     TransactionType = "Sell"
-)
-
 type TradingPairID string
 
 // TradingPair represents the primary aggregate root. It contains the main context for profit and loss calculations between two assets
@@ -34,7 +28,17 @@ type Calculations struct {
 	TotalFeeInBase           float64
 }
 
+const (
+	Buy TransactionType = "Buy"
+	// Withdraw TransactionType = "Withdraw"
+	Sell TransactionType = "Sell"
+)
+
 type TransactionType string
+
+func GetValidTransactionTypes() []TransactionType {
+	return []TransactionType{Buy, Sell}
+}
 
 // Transaction represents individual exchange transactions between the asset pair.
 // The first listed currency of a currency pair is called the base currency, and the second currency is called the quote currency.

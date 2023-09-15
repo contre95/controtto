@@ -13,6 +13,7 @@ type CreateAssetResp struct {
 type CreateAssetReq struct {
 	Symbol      string
 	Color       string
+	Type        string
 	Name        string // Optional
 	CountryCode string // Optional
 }
@@ -28,7 +29,7 @@ func NewAssetCreator(a pnl.Assets) *AssetsCreator {
 
 func (ac *AssetsCreator) Create(req CreateAssetReq) (*CreateAssetResp, error) {
 	var err error
-	asset, err := pnl.NewAsset(req.Symbol, req.Color, req.Name, req.CountryCode)
+	asset, err := pnl.NewAsset(req.Symbol, req.Color, req.Name, req.CountryCode, req.Type)
 	if err != nil {
 		slog.Error("Creating new asset", "Name", req.Name, "CountryCode", req.CountryCode, "error", err)
 		return nil, err

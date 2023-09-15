@@ -6,7 +6,7 @@ import (
 	"controtto/src/domain/pnl"
 	"controtto/src/gateways/markets"
 	"controtto/src/gateways/sqlite"
-	"controtto/src/presenters"
+	"controtto/src/rest"
 	"log/slog"
 	"os"
 )
@@ -56,5 +56,5 @@ func main() {
 		port = portEnv
 	}
 	slog.Info("Initiating server", "port", port)
-	presenters.Run(port, &manager, &querier)
+	rest.Run(port, &manager, &querier)
 }
