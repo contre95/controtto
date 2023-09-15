@@ -1,8 +1,8 @@
-package presenters
+package rest
 
 import (
 	"controtto/src/app/managing"
-	"fmt"
+	"controtto/src/domain/pnl"
 	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +11,8 @@ import (
 func newAssetForm(c *fiber.Ctx) error {
 	slog.Info("Create Asset UI requested")
 	return c.Render("newAssetForm", fiber.Map{
-		"Title": "New Asset",
+		"Title":      "New Asset",
+		"AssetTypes": pnl.GetValidTypes(),
 	})
 }
 
@@ -21,10 +22,10 @@ func newAsset(ac managing.AssetsCreator) func(*fiber.Ctx) error {
 		payload := struct {
 			Symbol string `form:"symbol"`
 			Name   string `form:"name"`
+			Type   string `form:"atype"`
 			Color  string `form:"color"`
 		}{}
 		if err := c.BodyParser(&payload); err != nil {
-			fmt.Println(err)
 			return err
 		}
 		req := managing.CreateAssetReq{

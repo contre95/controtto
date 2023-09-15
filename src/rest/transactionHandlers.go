@@ -1,4 +1,4 @@
-package presenters
+package rest
 
 import (
 	"controtto/src/app/managing"

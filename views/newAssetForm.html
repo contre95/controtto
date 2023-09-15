@@ -22,14 +22,14 @@
     </div>
     <div class="flex-1 xl:w-1/4 px-3">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
-        Color HEX
+        Asset type
       </label>
       <div class="relative">
         <select
           class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-          name="base">
-          {{ range .Assets }}
-          <option style="color: {{ .Color }};" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}</option>
+          name="atype">
+          {{ range .AssetTypes }}
+          <option value="">{{ . }}</option>
           {{ end }}
         </select>
       </div>

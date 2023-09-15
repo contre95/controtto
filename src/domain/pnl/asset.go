@@ -21,7 +21,7 @@ const (
 type AssetType string
 
 // TODO: Move this to domain level function.
-func (a *AssetType) GetValidTypes() []AssetType {
+func GetValidTypes() []AssetType {
 	return []AssetType{Crypto, Forex, Stock}
 }
 

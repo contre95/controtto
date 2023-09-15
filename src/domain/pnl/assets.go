@@ -14,7 +14,7 @@ func (a *Asset) Validate() (*Asset, error) {
 	if !re.MatchString(a.Color) {
 		return nil, InvalidAsset(errors.New("Wrong color string"))
 	}
-	if slices.Contains(a.Type.GetValidTypes(), a.Type) {
+	if slices.Contains(GetValidTypes(), a.Type) {
 		return nil, InvalidAsset(errors.New("Invalid Asset Symbol"))
 	}
 	if len(a.Symbol) < 3 || len(a.Symbol) > 8 {
@@ -28,7 +28,7 @@ func (a *Asset) Validate() (*Asset, error) {
 
 // TODO: Define invariants
 // NewAsset reutrns a new Asset and validates it's invariants
-func NewAsset(symbol string, color string, name string, countryCode string) (*Asset, error) {
+func NewAsset(symbol, color, name, countryCode, assetType string) (*Asset, error) {
 	a := Asset{
 		Symbol:      symbol,
 		Color:       color,
