@@ -5,19 +5,16 @@ name: Docker
 # separate terms of service, privacy policy, and support
 # documentation.
 
+  
 on:
-  schedule:
-    - cron: '29 11 * * *'
   push:
     branches: [ "main" ]
-    # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
 
 env:
   # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
+  REGISTRY: docer.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
