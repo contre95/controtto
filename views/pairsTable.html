@@ -10,13 +10,15 @@
         </div>
       </th>
 
-      <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+      <th scope="col"
+        class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <button class="gap-x-2">
           <span>Base</span>
         </button>
       </th>
 
-      <th scope="col" class="px-4 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+      <th scope="col"
+        class="px-4 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <button class="gap-x-2">
           <span>Quote</span>
         </button>
@@ -32,13 +34,15 @@
 
       <th scope="col" class="relative py-3.5 px-4">
         <button class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          hx-get="/ui/pairs/table" hx-target="#table" hx-trigger="click, newPair from:body" hx-swap="outerHTML" type="button">
+          hx-get="/ui/pairs/table" hx-target="#table" hx-trigger="click, newPair from:body" hx-swap="outerHTML"
+          type="button">
           <i class="fa-solid fa-arrows-rotate px-6"></i>
         </button>
       </th>
     </tr>
   </thead>
-  <tbody id="tbody" class="bg-white divide-y divide-gray-200 dark:divide-gray-900 dark:bg-gray-700 animate__headShake animate__animated">
+  <tbody id="tbody"
+    class="bg-white divide-y divide-gray-200 dark:divide-gray-900 dark:bg-gray-700 animate__headShake animate__animated">
     {{ range .Pairs }}
     <tr id="{{ .BaseAsset.Symbol }}{{ .QuoteAsset.Symbol }}">
       <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
@@ -69,7 +73,8 @@
           </div>
         </div>
       </td>
-      <td class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+      <td
+        class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-gray-800">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <h2 class="text-sm font-normal text-gray-500"> <span class="font-bold leading-normal text-sm text-emerald-500"
@@ -79,7 +84,8 @@
           </h2>
         </div>
       </td>
-      <td class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+      <td
+        class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-gray-800">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <h2 class="text-sm font-normal text-gray-500"> <span class="font-bold leading-normal text-sm text-emerald-500"
@@ -95,7 +101,7 @@
           {{ if eq .QuoteAsset.Type "Stock" }}
           <span class="px-3 py-1 text-xs text-indigo-500 rounded-l-lg dark:bg-gray-800 bg-indigo-100/60">
             {{ .QuoteAsset.Type }}
-          </span> 
+          </span>
           {{ end }}
           {{ if eq .QuoteAsset.Type "Crypto" }}
           <span class="px-3 py-1 text-xs text-pink-500 rounded-l-lg dark:bg-gray-800 bg-pink-100/60">
@@ -122,11 +128,11 @@
             {{ .BaseAsset.Type }}
           </span>
           {{ end }}
-        </th>
+      </th>
       <td class="px-4 py-4 text-sm whitespace-nowrap text-center">
         <div class="gap-x-6">
           <button
-            class="text-gray-500 transition-colors duration-200 dark:hover:text-yellow-500 dark:text-gray-300 hover:text-yellow-500 focus:outline-none">
+            class="text-gray-500 mx-2 transition-colors duration-200 dark:hover:text-yellow-500 dark:text-gray-300 hover:text-yellow-500 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-5 h-5">
               <path stroke-linecap="round" stroke-linejoin="round"
@@ -138,7 +144,7 @@
              halt the event
              call Swal.fire({title: 'Confirm', text:'Al transaction associated will be deleted. Are you sure ?'})
              if result.isConfirmed issueRequest()"
-            class="text-gray-500 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-red-500 focus:outline-none">
+            class="text-gray-500 mx-2 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-red-500 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-5 h-5">
               <path stroke-linecap="round" stroke-linejoin="round"
