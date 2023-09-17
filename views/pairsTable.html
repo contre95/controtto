@@ -1,4 +1,5 @@
-<table class="w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700 dark:divide-gray-700 transition-all"
+<table
+  class="w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700 dark:divide-gray-700 transition-all"
   id="table">
   <thead class="bg-gray-50 dark:bg-gray-800">
     <tr>
@@ -34,8 +35,7 @@
 
       <th scope="col" class="relative py-3.5 px-4">
         <button class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          hx-get="/ui/pairs/table" hx-target="#pairsTable" hx-trigger="click" hx-swap="innerHTML"
-          type="button">
+          hx-get="/ui/pairs/table" hx-target="#pairsTable" hx-trigger="click" hx-swap="innerHTML" type="button">
           <i class="fa-solid fa-arrows-rotate px-6"></i>
         </button>
       </th>
@@ -44,7 +44,7 @@
   <tbody id="tbody"
     class="bg-white divide-y divide-gray-200 dark:divide-gray-900 dark:bg-gray-700 animate__headShake animate__animated">
     {{ range .Pairs }}
-    <tr id="{{ .BaseAsset.Symbol }}{{ .QuoteAsset.Symbol }}">
+    <tr id="{{ .BaseAsset.Symbol }}{{ .QuoteAsset.Symbol }}" class="animate__animated">
       <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
         <div class="inline-flex items-center gap-x-3">
           <input type="checkbox"
@@ -140,10 +140,10 @@
             </svg>
           </button>
 
-          <button hx-swap="outerHTML swap:1s" hx-delete="/pairs/{{ .ID }}" _="on htmx:confirm(issueRequest)
+          <button hx-swap="innerHTML" hx-delete="/pairs/{{ .ID }}" hx-target="this" _="on htmx:confirm(issueRequest)
              halt the event
              call Swal.fire({title: 'Confirm', text:'Al transaction associated will be deleted. Are you sure ?'})
-             if result.isConfirmed issueRequest()"
+             if result.isConfirmed toggle .animate__backOutRight on #{{ .BaseAsset.Symbol }}{{ .QuoteAsset.Symbol }} then wait 1s then issueRequest()"
             class="text-gray-500 mx-2 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-red-500 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-5 h-5">
