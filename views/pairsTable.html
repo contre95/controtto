@@ -10,20 +10,20 @@
         </div>
       </th>
 
-      <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400">
+      <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <button class="gap-x-2">
           <span>Base</span>
         </button>
       </th>
 
-      <th scope="col" class="px-4 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400">
+      <th scope="col" class="px-4 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <button class="gap-x-2">
           <span>Quote</span>
         </button>
       </th>
 
 
-      <th scope="col" class="px-12 py-3.5 text-sm font-normal hidden lg:table-cell rtl:text-right text-gray-500 dark:text-gray-400">
+      <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400">
         <button class="gap-x-2">
           <span>Asset types</span>
         </button>
@@ -32,13 +32,13 @@
 
       <th scope="col" class="relative py-3.5 px-4">
         <button class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          <!-- hx-get="/ui/pairs/table" hx-target="#table" hx-trigger="click, newPair from:body" hx-swap="outerHTML" type="button"> -->
+          hx-get="/ui/pairs/table" hx-target="#table" hx-trigger="click, newPair from:body" hx-swap="outerHTML" type="button">
           <i class="fa-solid fa-arrows-rotate px-6"></i>
         </button>
       </th>
     </tr>
   </thead>
-  <tbody id="tbody" class="bg-white divide-y divide-gray-200 dark:divide-gray-900 dark:bg-gray-700">
+  <tbody id="tbody" class="bg-white divide-y divide-gray-200 dark:divide-gray-900 dark:bg-gray-700 animate__headShake animate__animated">
     {{ range .Pairs }}
     <tr id="{{ .BaseAsset.Symbol }}{{ .QuoteAsset.Symbol }}">
       <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
@@ -69,7 +69,7 @@
           </div>
         </div>
       </td>
-      <td class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400">
+      <td class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-gray-800">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <h2 class="text-sm font-normal text-gray-500"> <span class="font-bold leading-normal text-sm text-emerald-500"
@@ -79,7 +79,7 @@
           </h2>
         </div>
       </td>
-      <td class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400">
+      <td class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-gray-800">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <h2 class="text-sm font-normal text-gray-500"> <span class="font-bold leading-normal text-sm text-emerald-500"
@@ -90,7 +90,7 @@
         </div>
       </td>
 
-      <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right hidden lg:table-cell text-gray-500 dark:text-gray-400">
+      <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400">
         <button class="gap-x-2">
           {{ if eq .QuoteAsset.Type "Stock" }}
           <span class="px-3 py-1 text-xs text-indigo-500 rounded-l-lg dark:bg-gray-800 bg-indigo-100/60">
