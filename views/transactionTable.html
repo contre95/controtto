@@ -135,7 +135,7 @@
           </p>
         </div>
         <div class="flex justify-end w-1/5">
-          <button hx-target="this" hx-swap="outerHTML swap:1s" hx-delete="/transactions/{{ .ID }}"
+          <button hx-target="this" hx-swap="outerHTML" hx-delete="/transactions/{{ .ID }}"
             class="inline-block font-bold text-red-600 text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
             _="on htmx:confirm(issueRequest)
              halt the event

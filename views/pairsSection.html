@@ -7,9 +7,10 @@
     </div>
     <div class="flex-1 md:justify-end justify-center items-center flex lg:right-0 py-2 mx-4">
       <button
+          _="on click toggle .animate__headShake on #coin-icon"
         class="sidebtn flex items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-        href="#">
-        <svg class="mb-1 h-6 w-6" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+        hx-get="/ui/pairs/form" hx-swap="outerHTML" hx-target="#pairs-form" hx-trigger="click">
+        <svg class="mb-1 h-6 w-6 animate__animated" id="coin-icon"  version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -45,9 +46,10 @@
         <span class="mx-4 sidebtn">New pair</span>
       </button>
       <button
-        class="sidebtn flex items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-        href="#">
-        <svg class="mb-1 h-6 w-6" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
+        _="on click toggle .animate__headShake on #new-pair"
+        class="sidebtn flex block items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+          >
+        <svg class="mb-1 h-6 w-6 animate__animated" id="new-pair" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -85,10 +87,17 @@
     </div>
   </div>
 
+  <div class="flex justify-center items-center grow">
+    <div class="m-4 w-full overflow-x-auto">
+      <form id="pairs-form">
+      </form>
+    </div>
+  </div>
+
   <div class="flex justify-center items-center grow animate__animated animate__fadeInDown">
     <div class="m-4 w-full overflow-x-auto">
-          <table hx-get="/ui/pairs/table" hx-swap="outerHTML" hx-target="this" hx-trigger="revealed,newPair from:body">
-          </table>
+      <table hx-get="/ui/pairs/table" hx-swap="outerHTML" hx-target="this" hx-trigger="revealed,newPair from:body">
+      </table>
     </div>
   </div>
 
