@@ -36,28 +36,6 @@ func deleteTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error 
 	}
 }
 
-func deleteTradingPair(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		req := managing.DeleteTradingPairReq{
-			ID: c.Params("id"),
-		}
-		slog.Info("Delete", "id", req.ID)
-		resp, err := tpm.DeleteTradingPair(req)
-		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
-			})
-		}
-		slog.Info("Trading pair deleted", "trading-pair", resp.ID)
-		c.Append("HX-Trigger", "newPair")
-		return c.Render("toastErr", fiber.Map{
-			"Title": "Error",
-			"Msg":   "Deleted",
-		})
-	}
-}
-
 func newTradingPair(tpc managing.TradingPairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Creating new pair")

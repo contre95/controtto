@@ -1,3 +1,51 @@
+  <div class="flex flex-col mt-6 animate__animated animate__fadeInDown">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle md:px-6 ">
+        <div id="newForm" class="overflow-hidden bg-gray-50 border border-gray-300 dark:border-gray-500 md:rounded-lg p-4 mx-4">
+          <form>
+            <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+              <div>
+                <label class="text-gray-700 dark:text-gray-200" for="base">Base</label>
+                <input id="base" type="text"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
+              </div>
+
+              <div>
+                <label class="text-gray-700 dark:text-gray-200" for="quote">Quote</label>
+                <input id="quote" type="email"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
+              </div>
+
+              <div>
+                <label class="text-gray-700 dark:text-gray-200" for="password">Asset type</label>
+                <select
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+                  name="atype">
+                  {{ range .AssetTypes }}
+                  <option value="{{ . }}">{{ . }}</option>
+                  {{ end }}
+                </select>
+
+              </div>
+
+              <div>
+                <label class="text-gray-700 dark:text-gray-200" for="passwordConfirmation">Password Confirmation</label>
+                <input
+                  class="inline-block rounded w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
+                  name="color" type="color" value="#">
+              </div>
+
+            </div>
+            <div class="flex justify-end mt-6">
+                    <button type="button" hx-post="/assets" hx-include="#asset-form" hx-target="#create"
+                class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Save</button>
+            </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 <form id="asset-form" class="w-full max-w-lg p-6 animate__animated animate__fadeIn animate__faster ">
   <div class="flex flex-wrap -mx-3 mb-6">
     <div class="flex-1  xl:w-1/4 px-3 mb-6 md:mb-0">
@@ -40,8 +88,8 @@
       </label>
       <div class="relative">
         <input
-          class="inline-block rounded bg-blue-600 w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
-          name="color" type="color" value="#C1B6F0">
+          class="inline-block rounded bg-gray-600 dark:bg-gray-800 w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
+          name="color" type="color" value="#111827 ">
       </div>
     </div>
   </div>

@@ -1,3 +1,20 @@
+.clickednav{
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  color: #4A5568; /* Replace with your desired text color */
+  background-color: #F7FAFC; /* Replace with your desired background color */
+  border-radius: 0.375rem; /* You can adjust the radius as needed */
+}
+
+.clickednav.dark{
+  background-color: #1A202C; /* Replace with your desired dark background color */
+  color: #CBD5E0; /* Replace with your desired dark text color */
+}
+
 .loader {
   display: none;
 }
