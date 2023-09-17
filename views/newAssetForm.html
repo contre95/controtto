@@ -1,112 +1,55 @@
-  <div class="flex flex-col mt-6 animate__animated animate__fadeInDown">
-    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 align-middle md:px-6 ">
-        <div id="newForm" class="overflow-hidden bg-gray-50 border border-gray-300 dark:border-gray-500 md:rounded-lg p-4 mx-4">
-          <form>
-            <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-              <div>
-                <label class="text-gray-700 dark:text-gray-200" for="base">Base</label>
-                <input id="base" type="text"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-              </div>
-
-              <div>
-                <label class="text-gray-700 dark:text-gray-200" for="quote">Quote</label>
-                <input id="quote" type="email"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring">
-              </div>
-
-              <div>
-                <label class="text-gray-700 dark:text-gray-200" for="password">Asset type</label>
-                <select
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-                  name="atype">
-                  {{ range .AssetTypes }}
-                  <option value="{{ . }}">{{ . }}</option>
-                  {{ end }}
-                </select>
-
-              </div>
-
-              <div>
-                <label class="text-gray-700 dark:text-gray-200" for="passwordConfirmation">Password Confirmation</label>
-                <input
-                  class="inline-block rounded w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
-                  name="color" type="color" value="#">
-              </div>
-
-            </div>
-            <div class="flex justify-end mt-6">
-                    <button type="button" hx-post="/assets" hx-include="#asset-form" hx-target="#create"
-                class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">Save</button>
-            </div>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-<form id="asset-form" class="w-full max-w-lg p-6 animate__animated animate__fadeIn animate__faster ">
-  <div class="flex flex-wrap -mx-3 mb-6">
-    <div class="flex-1  xl:w-1/4 px-3 mb-6 md:mb-0">
-      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
-        Asset Name
+<form id="asset-form"
+  class="p-5 bg-white dark:bg-gray-700 w-full divide-y  rounded-md divide-gray-200 border border-gray-200 dark:border-gray-700  dark:divide-gray-700 animate__animated animate__fadeIn">
+  <div class="grid grid-cols-1 gap-6 my-6 sm:grid-cols-2">
+    <div>
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+              Name
       </label>
-      <div class="relative">
-        <input
-          class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-          name="name" type="text" placeholder="Bitcoin, Apple stock">
-      </div>
+
+      <input id="name" type="text" name="name"
+        class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring">
     </div>
-    <div class="flex-1 xl:w-1/4 px-3">
-      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
-        Ticker Symbol
+
+    <div>
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+              Ticker symbol
       </label>
-      <div class="relative">
-        <input
-          class="appearance-none block w-full bg-gray-200 text-gray-700 border border-purple-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-          name="symbol" type="text" placeholder="APPL">
-      </div>
+
+      <input id="symbol" type="email" name="symbol"
+        class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring">
     </div>
-    <div class="flex-1 xl:w-1/4 px-3">
-      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+
+    <div>
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
         Asset type
       </label>
-      <div class="relative">
-        <select
-          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-          name="atype">
-          {{ range .AssetTypes }}
-          <option value="{{ . }}">{{ . }}</option>
-          {{ end }}
-        </select>
-      </div>
+
+      <select
+        class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring"
+        name="atype">
+        {{ range .AssetTypes }}
+        <option value="{{ . }}">{{ . }}</option>
+        {{ end }}
+      </select>
+
     </div>
-    <div class="flex-1 xl:w-1/4 px-3">
-      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
-        Color HEX
+
+    <div>
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+        Color
       </label>
-      <div class="relative">
-        <input
-          class="inline-block rounded bg-gray-600 dark:bg-gray-800 w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg"
-          name="color" type="color" value="#111827 ">
-      </div>
+
+      <input
+        class="inline-block rounded w-full px-4 py-2 h-12 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:shadow-lg focus:bg-slate-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-slate-800 active:shadow-lg"
+        name="color" type="color" value="#FFFFFF">
     </div>
+
   </div>
-  <div class="flex flex-row">
-    <div class="basis-1/4">
-      <!-- <button type="button" hx-post="/assets" hx-include="#asset-form" hx-target="#create" id="create" -->
-      <!--   class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"> -->
-      <!--   Create -->
-      <!-- </button> -->
-      <button type="button" hx-post="/assets" hx-include="#asset-form" hx-target="#create"
-        class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
-        Create
-      </button>
-    </div>
-    <div class="basis-1/4 grow"></div>
-    <div class="basis-1/4">
-      <span id="create"></span>
-    </div>
+    <div class="flex border-none">
+    <button type="button" hx-post="/assets" hx-include="#asset-form" hx-target="#mitoast"
+      class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+      Create
+    </button>
   </div>
+
 </form>

@@ -1,4 +1,5 @@
-<form id="pair-form" class="p-5 bg-white w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700  dark:divide-gray-700 animate__animated animate__fadeInDown">
+<form id="pair-form"
+  class="p-5 bg-white dark:bg-gray-700 w-full divide-y divide-gray-200 border border-gray-200 rounded-md dark:border-gray-700 dark:divide-gray-700 animate__animated animate__fadeIn">
   <div class="flex flex-wrap -mx-3 mb-6">
     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
       <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
@@ -10,8 +11,8 @@
           class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           name="base">
           {{ range .Assets }}
-          <option 
-          style="color: {{ .Color }};"  atype="{{ .Type }}" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}</option>
+          <option style="color: {{ .Color }};" atype="{{ .Type }}" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}
+          </option>
           {{ end }}
         </select>
         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -45,11 +46,10 @@
     </div>
   </div>
   <div class="flex border-none">
-      <button type="button" hx-post="/pairs" hx-include="#pair-form" hx-target="#mitoast"
-        class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-        Create
-      </button>
+    <button type="button" hx-post="/pairs" hx-include="#pair-form" hx-target="#mitoast"
+      class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+      Create
+    </button>
 
-    <div class="basis-1/4 grow"></div>
   </div>
 </form>
