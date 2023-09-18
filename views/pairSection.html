@@ -38,12 +38,12 @@
     </div>
   </div>
 
-  <div class="flex justify-center items-center grow animate__animted animate__flipInX">
+  <div class="flex justify-center items-center grow animate__animted animate__fadeInUp">
     <div id="transaction-form" class="m-4 w-full overflow-x-auto">
     </div>
   </div>
 
-  <div class="flex justify-center items-center grow animate__animated animate__fadeInLeft">
+  <div class="flex justify-center items-center grow animate__animated animate__fadeInUp">
     <div class="m-4 w-full overflow-x-clip hover:overflow-x-auto">
       <div id="transactionsTable" hx-get="/ui/pairs/{{ .PairID }}/transactions/table" hx-swap="innerHTML"
         hx-target="this" hx-trigger="revealed,newTransaction from:body">
