@@ -21,6 +21,7 @@ type Calculations struct {
 	MarketColor              string
 	CurrentBaseAmountInQuote float64
 	TotalBase                float64
+	TotalBaseInQuote         float64
 	TotalQuoteSpent          float64
 	PNLAmount                float64
 	PNLPercent               float64

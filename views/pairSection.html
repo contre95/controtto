@@ -1,9 +1,15 @@
-<section class="container px-4 mx-auto">
-  <div class="sm:flex sm:items-center sm:justify-between">
-    <h2 class="text-lg font-medium text-gray-800 dark:text-white">Transactions</h2>
+<section class="mx-auto max-w-screen-2xl">
 
-    <div class="flex items-center mt-4 gap-x-3">
+  <div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body" class="">
+  </div>
+  <br>
 
+  <div class="flex items-center justify-between flex-wrap">
+    <div class="flex-none py-2 mx-6">
+      <h2 class="text-lg font-medium text-gray-800 dark:text-white">Transactions</h2>
+    </div>
+
+    <div class="flex-wrap gap-y-2 gap-x-2 md:justify-end gap-x-2 justify-center items-center flex lg:right-0 py-2 mx-4">
       <form id="import-form" class="flex items-center">
         <input id="upload"
           class="inline-block px-3 py-2 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs active:opacity-85 hover:shadow-md "
@@ -17,7 +23,7 @@
       </button>
       <button
         class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
-          <img src="/assets/img/export.svg" alt="export" class="h-6 w-6">
+        <img src="/assets/img/export.svg" alt="export" class="h-6 w-6">
         <a href="/pairs/{{ .PairID }}/transactions/export" target="_blank">
           <span>Export</span>
         </a>

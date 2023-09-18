@@ -51,6 +51,7 @@ func (tp *TradingPair) calculateBuyPrice() error {
 		tp.Calculations.TotalFeeInBase += t.FeeInBase
 		tp.Calculations.AvgBuyPrice = float64(tp.Calculations.TotalQuoteSpent / tp.Calculations.TotalBase)
 	}
+	tp.Calculations.TotalBaseInQuote = tp.Calculations.TotalBase * tp.Calculations.BaseMarketPrice
 	slog.Info("Fields calculated", "base", tp.Calculations.TotalBase, "quote", tp.Calculations.TotalQuoteSpent, "avg-buy-price", tp.Calculations.AvgBuyPrice)
 	return nil
 
