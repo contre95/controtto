@@ -2,20 +2,20 @@
   class="p-5 bg-white dark:bg-gray-700 w-full divide-y divide-gray-200 border border-gray-200 rounded-md dark:border-gray-700 dark:divide-gray-700 animate__animated animate__fadeIn">
   <div class="flex flex-wrap -mx-3 mb-6">
     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+      <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-state">
         Base
       </label>
       <div class="relative">
         <select
           _="on change set x to my.options[my.options.selectedIndex].attributes.atype.value then if x is equal to 'Stock' then remove .hidden from #advice else add .hidden to #advice end"
-          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 dark:text-gray-200 dark:bg-gray-600 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           name="base">
           {{ range .Assets }}
           <option style="color: {{ .Color }};" atype="{{ .Type }}" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}
           </option>
           {{ end }}
         </select>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-200">
           <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
             <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
           </svg>
@@ -26,18 +26,18 @@
       </small>
     </div>
     <div class="w-full md:w-1/2 px-3">
-      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
+      <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-state">
         Quote
       </label>
       <div class="relative">
         <select
-          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 dark:text-gray-200 dark:bg-gray-600 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
           name="quote">
           {{ range .Assets }}
           <option style="color: {{ .Color }};" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}</option>
           {{ end }}
         </select>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-200">
           <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
             <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
           </svg>

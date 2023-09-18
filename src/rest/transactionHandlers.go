@@ -29,9 +29,9 @@ func deleteTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error 
 			})
 		}
 		slog.Info("Transaction deleted", "trasnaction", resp.ID)
-		return c.Render("toastErr", fiber.Map{
-			"Title": "Error",
-			"Msg":   "Deleted",
+		return c.Render("toastOk", fiber.Map{
+			"Title": "Deleted",
+			"Msg":   "Transaction deleted",
 		})
 	}
 }

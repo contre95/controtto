@@ -1,152 +1,101 @@
-<div id="transaction-table" class="w-full max-w-full mt-6  animate__animated animate__fadeInUp animate__faster shadow">
-  <div
-    class="relative flex flex-col h-full min-w-0 mb-6 px-3 break-words bg-white border-0 shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-    <div class="py-6 px-0 pb-0 mb-2 border-b-0 rounded-t-2xl">
-      <div class="flex flex-wrap -mx-3">
-        <div class="flex flex-1 px-3">
-          <h6 class="mb-0 dark:text-white">Transactions for
-            <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span> and
-            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
-          </h6>
+<table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+  <thead class="bg-gray-50 dark:bg-gray-800">
+    <tr>
+      <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <div class="flex items-center gap-x-3">
+          <input type="checkbox"
+            class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700">
+          <span>Transaction type</span>
         </div>
-        <div class="flex flex-1 px-3 justify-end">
-          <div id="hideSmall">
-            <small class=" text-slate-500"> <i class="far fa-calendar-alt" aria-hidden="true"></i> {{ .Today }}</small>
-          </div>
-          <button hx-get="/ui/pairs/{{ .Pair.ID }}/transactions/table" hx-target="#transaction-table"
-            hx-swap="outerHTML" type="button" class="mx-4">
-            <i class="fa-solid fa-arrows-rotate "></i>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="flex flex-wrap">
-      <div
-        class="flex px-3 py-2 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
-        <button
-          class="inline-block p-2 font-bold text-center bg-gradient-to-tl from-emerald-500 uppercase to-teal-400 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md text-white"
-          hx-get="/ui/pairs/{{ .Pair.ID }}/transactions/form" hx-swap="innerHTML" hx-target="#transaction-form"
-          hx-trigger="click">
-          <i class="fa-solid fa-plus"> </i> Record new transaction
-        </button>
-      </div>
-      <div
-        class="flex flex-1 justify-end px-3 py-2 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md">
-        <form id="import-form" class="flex items-center">
-            <input id="upload"
-            class="inline-block px-3 py-2 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs active:opacity-85 hover:shadow-md "
-            name='trancsv' type="file">
-        </form>
-        <button hx-encoding='multipart/form-data' hx-post="/pairs/{{ .Pair.ID }}/transactions/upload"
-          hx-swap="outerHTML" hx-target="#upload" hx-include="#import-form" hx-swap="outerHTML"
-          class="inline-block ml-2 p-2 font-bold text-center bg-gradient-to-tl from-emerald-500 uppercase to-teal-400 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md text-white">
-          <i class="fa-solid fa-plus"> </i> Import csv
-        </button>
-        <a href="/pairs/{{ .Pair.ID }}/transactions/export" target="_blank"
-          class="mx-2 inline-block px-3 py-2 font-bold text-center bg-gradient-to-tl from-blue-500 uppercase to-teal-400 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md text-white">
-          <i class="fa-solid fa-plus"> </i> Export
-        </a>
-      </div>
-    </div>
+      </th>
 
-    <ul class="pl-0 w-full mb-0 rounded-lg py-4" id="ul">
-      <li
-        class="flex justify-items-stretch justify-between px-4 py-2 pl-0 mb-2 border-0 rounded-t-inherit text-inherit rounded-xl">
-        <div class="flex justify-start w-1/5">
-          <span
-            class="leading-pro ease-in text-xs bg-150 w-6.5 h-6.5 p-1.2 rounded-3.5xl tracking-tight-rem bg-x-25 mr-4 mb-0 flex cursor-pointer items-center justify-center border border-solid border-slate-700 border-transparent bg-transparent text-center align-middle font-bold uppercase text-slate-600 transition-all hover:opacity-75">
-            <i class="fa-solid fa-chart-simple"></i>
-          </span>
-          <div>
-            <h6 class="mb-1 text-sm leading-normal text-slate-700">Type</h6>
-            <span id="hideSmall" class="text-xs leading-tight text-white/80 ">Transaction type (buy/sell)</span>
-          </div>
-        </div>
-        <div class="flex justify-center w-1/5">
-          <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
-            <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Name }}</span>
-          </p>
-        </div>
-        <div id="hideSmall" class="flex justify-center w-1/5">
-          <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
-            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Name }}</span>
-          </p>
-        </div>
-        <div class="flex justify-center w-1/5">
-          <p class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
-            <span class="mb-1 text-sm leading-normal text-slate-700">Price</span>
-        </div>
-        <div class="flex justify-end w-1/5">
-          <p class="z-10 inline-block m-0 text-sm font-semibold leading-normal bg-clip-text">
-            <span class="mb-1 text-sm leading-normal text-slate-700">Action</span>
-        </div>
-      </li>
-      <hr class="h-px my-0 bg-slate-700 border-1">
-      {{ range .Pair.Transactions }}
-      <li
-        class="flex justify-items-stretch justify-between px-4 py-2 pl-0 mb-0 border-0 rounded-t-inherit text-inherit rounded-xl">
-        <div class="flex justify-start  w-1/5">
-          {{ if eq .TransactionType "Buy" }}
-          <button
-            class="leading-pro ease-in text-xs bg-150 w-6.5 h-6.5 p-1.2 rounded-3.5xl tracking-tight-rem bg-x-25 mr-4 mb-0 flex cursor-pointer items-center justify-center border border-solid border-emerald-500 border-transparent bg-transparent text-center align-middle font-bold uppercase text-emerald-500 transition-all hover:opacity-75"><i
-              class="fas fa-arrow-up text-3xs" aria-hidden="true"></i></button>
-          {{ else }}
-          <button
-            class="leading-pro ease-in text-xs bg-150 w-6.5 h-6.5 p-1.2 rounded-3.5xl tracking-tight-rem bg-x-25 mr-4 mb-0 flex cursor-pointer items-center justify-center border border-solid border-red-600 border-transparent bg-transparent text-center align-middle font-bold uppercase text-red-600 transition-all hover:opacity-75"><i
-              class="fas fa-arrow-down text-3xs"></i></button>
-          {{ end }}
-          <div>
-            <div class="flex items-center sm:flex-none">
-              <h6 class="mb-1 text-sm leading-normal dark:text-white text-slate-700">{{ .TransactionType }}</h6>
-              <span id="hideSmall" class="text-xs ml-2 text-center">{{ .Timestamp.Format "Jan 02, 2006 15:04"
-                }}</span>
+      <th scope="col"
+        class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        Quote
+      </th>
+
+      <th scope="col"
+        class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        Price
+      </th>
+
+      <th scope="col"
+        class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        Date
+      </th>
+
+      <th scope="col" class="relative py-3.5 px-4">
+        <span class="sr-only">Edit</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
+    {{ range .Pair.Transactions }}
+    <tr id="trans{{ .ID }}" class="animate__animated">
+      <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+        <div class="inline-flex items-center gap-x-3">
+          <input type="checkbox"
+            class="text-blue-500 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700" disabled>
+          <div class="flex items-center gap-x-2">
+            {{ if eq .TransactionType "Buy" }}
+            <div class="flex items-center border-0 justify-center w-8 h-8 bg-green-500 rounded-full dark:bg-gray-800">
+              <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full dark:bg-gray-800">
+                <img src="/assets/img/buy.svg" alt="buy">
+              </div>
+            </div>
+            {{ else }}
+            <div class="flex items-center justify-center w-8 h-8 text-red-500 bg-red-100 rounded-full dark:bg-gray-800">
+              <div class="flex items-center justify-center w-8 h-8 bg-red-100 rounded-full dark:bg-gray-800">
+                <img src="/assets/img/sell.svg" alt="sell">
+              </div>
+            </div>
+            {{ end }}
+            <div>
+              <h2 class="font-normal text-gray-800 dark:text-white ">{{ .TransactionType }}</h2>
+              <p class="text-xs font-normal text-gray-500 dark:text-gray-400">
+                {{ .BaseAmount }}
+                <span style="color:{{ $.Pair.BaseAsset.Color }}">
+                  {{ $.Pair.BaseAsset.Symbol }}
+                </span>
+              </p>
             </div>
           </div>
         </div>
-        <div class="flex justify-center text-center w-1/5">
-          <p
-            class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
-            {{ .BaseAmount }}
-            <span style="color:{{ $.Pair.BaseAsset.Color }}">
-              {{ $.Pair.BaseAsset.Symbol }}
-            </span>
-            </span>
-            <i id="hideSmall" class="fa-solid fa-arrow-trend-up text-emerald-500"> </i>
-          </p>
-        </div>
-        <div id="hideSmall" class="flex justify-center w-1/5">
-          <p
-            class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
-            {{ .QuoteAmount }}
-            <span style="color:{{ $.Pair.QuoteAsset.Color }}">
-              {{ $.Pair.QuoteAsset.Symbol }}
-            </span>
-            <i class="fa-solid fa-arrow-trend-down text-red-500"> </i>
-          </p>
-        </div>
-        <div class="flex justify-center text-center w-1/5">
-          <p
-            class="relative z-10 inline-block m-0 text-sm font-semibold leading-normal text-slate-600 to--600 bg-clip-text">
-            {{ printf "%.2f" .Price }}
-            <span class="mb-1 text-sm leading-normal dark:text-white text-slate-700"
-              style="color:{{ $.Pair.QuoteAsset.Color }}">
-              {{ $.Pair.QuoteAsset.Symbol }}
-            </span>
-          </p>
-        </div>
-        <div class="flex justify-end w-1/5">
-          <button hx-target="this" hx-swap="outerHTML" hx-delete="/transactions/{{ .ID }}"
-            class="inline-block font-bold text-red-600 text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
-            _="on htmx:confirm(issueRequest)
+      </td>
+      <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+        {{ if eq .TransactionType "Buy" }}
+        <span class="text-emerald-500">
+          + {{ .QuoteAmount }}
+        </span>
+        {{ else }}
+        <span class="text-emerald-500">
+          - {{ .QuoteAmount }}
+        </span>
+        {{ end }}
+        <span style="color:{{ $.Pair.QuoteAsset.Color }}">
+          {{ $.Pair.QuoteAsset.Symbol }}
+        </span>
+      </td>
+      <td class="px-4 py-4 text-sm text-gray-500 font-semibold dark:text-gray-300 whitespace-nowrap">
+        {{ printf "%.2f" .Price }}
+        <span class="mb-1 text-sm leading-normal dark:text-white" style="color:{{ $.Pair.QuoteAsset.Color }}">
+          {{ $.Pair.QuoteAsset.Symbol }}
+        </span>
+      </td>
+      <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+        {{ .Timestamp.Format "Jan 02, 2006 15:04" }}
+      </td>
+      <td class="px-4 py-4 text-sm whitespace-nowrap">
+        <button hx-target="#mitoast" hx-delete="/transactions/{{ .ID }}"
+          class="inline-block font-bold text-red-600 text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
+          _="on htmx:confirm(issueRequest)
              halt the event
              call Swal.fire({title: 'Confirm', text:'Al transaction associated will be deleted. Are you sure ?'})
-             if result.isConfirmed issueRequest()">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-        </div>
-      </li>
-      <hr class="h-px my-0 bg-slate-500 border-1">
-      {{ end }}
-    </ul>
-  </div>
-</div>
+             if result.isConfirmed issueRequest() toggle .animate__backOutRight on #trans{{ .ID }} then wait 1s then remove #trans{{ .ID }}">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+    {{ end }}
+  </tbody>
+</table>

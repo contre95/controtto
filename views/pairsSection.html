@@ -19,7 +19,6 @@
               .st0 {
                 fill: #000000;
               }
-
               .st1 {
                 fill: #FFA700;
               }
@@ -58,7 +57,6 @@
               .st0 {
                 fill: #9AA1AD;
               }
-
               .st1 {
                 fill: #FFA700;
               }
@@ -93,7 +91,7 @@
   </div>
 
   <div class="flex justify-center items-center grow animate__animated animate__fadeInLeft">
-    <div class="m-4 w-full overflow-x-auto">
+    <div class="m-4 w-full overflow-x-clip hover:overflow-x-auto">
       <div id="pairsTable" hx-get="/ui/pairs/table" hx-swap="innerHTML" hx-target="this" hx-trigger="revealed,newPair from:body">
       </div>
     </div>
