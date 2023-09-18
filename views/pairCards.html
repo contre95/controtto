@@ -9,7 +9,7 @@
     </div>
     <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
-      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         You have {{ printf "%.2f" .Pair.Calculations.TotalBase }}
         <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
       </h3>
@@ -19,7 +19,7 @@
           <!-- <i class="fa-solid fa-arrows-rotate"></i> -->
           Worth
         </button>
-        <span class="font-bold text-gray-800 dark:text-gray-200">
+        <span class="font-bold text-gray-800 ">
           {{ printf "%.2f" .Pair.Calculations.TotalBaseInQuote }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
@@ -39,7 +39,7 @@
     </div>
     <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
-      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         {{ printf "%.2f" .Pair.Calculations.TotalFeeInBase }}
         <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> in fee
       </h3>
@@ -48,7 +48,7 @@
           class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
           Spent in fee
         </button>
-        <span class="font-bold text-gray-800 dark:text-gray-200">
+        <span class="font-bold text-gray-800 ">
           {{ printf "%.7g" .Pair.Calculations.TotalFeeInQuote }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
@@ -74,12 +74,12 @@
     {{end}}
     <div class="w-64 -mt-10 overflow-hidden rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
-      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         P & L
       </h3>
       <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
         {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
-        <span class="font-bold text-gray-800 dark:text-gray-200">
+        <span class="font-bold text-gray-800 ">
           +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
@@ -89,7 +89,7 @@
           + {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
         </span>
         {{ else }}
-        <span class="font-bold text-gray-800 dark:text-gray-200">
+        <span class="font-bold text-gray-800 ">
           {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
@@ -112,12 +112,12 @@
     </div>
     <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
-      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         Price for 1
         <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
       </h3>
       <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
-        <span class="font-bold text-gray-800 dark:text-gray-200">
+        <span class="font-bold text-gray-800 ">
           {{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
@@ -140,12 +140,12 @@
     </div>
     <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
-      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase dark:text-white">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         Price for 1
         <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
       </h3>
       <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
-        <span class="font-bold text-gray-800 dark:text-gray-200">
+        <span class="font-bold text-gray-800 ">
           --
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
