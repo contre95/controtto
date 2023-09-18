@@ -15,13 +15,13 @@
         <img src="/assets/img/import.svg" alt="import" class="h-6 w-6">
         <span>Import</span>
       </button>
-      <a href="/pairs/{{ .PairID }}/transactions/export" target="_blank">
-        <button
-          class="flex items-center border-2 border-gray-300  justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+      <button
+        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
           <img src="/assets/img/export.svg" alt="export" class="h-6 w-6">
+        <a href="/pairs/{{ .PairID }}/transactions/export" target="_blank">
           <span>Export</span>
-        </button>
-      </a>
+        </a>
+      </button>
 
       <button hx-get="/ui/pairs/{{ .PairID }}/transactions/form" hx-swap="innerHTML" hx-target="#transaction-form"
         hx-trigger="click"
