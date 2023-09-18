@@ -147,6 +147,7 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 			}
 		}
 		tok := int(tCount - len(failedTransactions))
+		c.Append("HX-Trigger", "newTransaction")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",
 			"Extra": "",
