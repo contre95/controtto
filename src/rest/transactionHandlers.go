@@ -147,12 +147,10 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 			}
 		}
 		tok := int(tCount - len(failedTransactions))
-		return c.Render("transactionsResponse", fiber.Map{
-			"Title":   "Info",
-			"TErr":    len(failedTransactions),
-			"TOk":     tok,
-			"TCount":  tCount,
-			"TFailed": failedTransactions,
+		return c.Render("toastOk", fiber.Map{
+			"Title": "Created",
+			"Extra": "",
+			"Msg":   fmt.Sprintf("%d/%d imported.\n%d/%d failed.", tok, tCount, len(failedTransactions), tCount),
 		})
 	}
 }
