@@ -6,26 +6,26 @@
   {{template "head"}}
 </head>
 
-<body
-  class="m-0 font-sans text-base font-normal bg-orange-500 leading-default overflow-none">
-    <div class="absolute w-full bg-gradient-to-tl from-blue-500 to-violet-500 min-h-50-screen"
-        style=" background: rgb(123,98,228); background: linear-gradient(180deg, rgba(123,98,228,1) 40%, rgba(184,170,240,1) 88%, rgba(255,255,255,1) 100%); ">
-    </div>
-    <!-- sidenav  -->
-    <!-- {{template "sidebar" .}} -->
+<body class="bg-gray-100 dark:bg-gray-800">
+  <!-- sidenav  -->
+  <div class="min-h-screen flex">
+    {{template "sidebar" .}}
     <!-- end sidenav -->
 
-    <main class="relative h-full max-h-screen transition-all duration-200 ease-in-out rounded-xl">
+    <main class="flex-1  dark:bg-gray-800 space-y-6 overflow-y-auto bg-gray-100 lg:h-screen md:space-y-8">
       <!-- Navbar -->
       {{template "navbar" .}}
       <!-- end Navbar -->
-      <!-- cards -->
-      <div class="w-full w-1/6 px-6 py-6 mx-auto">
-        <div id="contenido" class="tab-content">
-        </div>
+      <!-- Main -->
+      <div id="contenido">
       </div>
-      <!-- end cards -->
+      <!-- end Main -->
     </main>
+    <div class="absolute m-4 right-0 z-50 top-0 ">
+      <div id="mitoast">
+      </div>
+    </div>
+  </div>
 </body>
 {{template "scripts" .}}
 

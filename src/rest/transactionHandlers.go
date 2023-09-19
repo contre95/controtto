@@ -29,31 +29,9 @@ func deleteTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error 
 			})
 		}
 		slog.Info("Transaction deleted", "trasnaction", resp.ID)
-		return c.Render("toastErr", fiber.Map{
-			"Title": "Error",
-			"Msg":   "Deleted",
-		})
-	}
-}
-
-func deleteTradingPair(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		req := managing.DeleteTradingPairReq{
-			ID: c.Params("id"),
-		}
-		slog.Info("Delete", "id", req.ID)
-		resp, err := tpm.DeleteTradingPair(req)
-		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
-			})
-		}
-		slog.Info("Trading pair deleted", "trading-pair", resp.ID)
-		c.Append("HX-Trigger", "newPair")
-		return c.Render("toastErr", fiber.Map{
-			"Title": "Error",
-			"Msg":   "Deleted",
+		return c.Render("toastOk", fiber.Map{
+			"Title": "Deleted",
+			"Msg":   "Transaction deleted",
 		})
 	}
 }
@@ -169,12 +147,11 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 			}
 		}
 		tok := int(tCount - len(failedTransactions))
-		return c.Render("transactionsResponse", fiber.Map{
-			"Title":   "Info",
-			"TErr":    len(failedTransactions),
-			"TOk":     tok,
-			"TCount":  tCount,
-			"TFailed": failedTransactions,
+		c.Append("HX-Trigger", "newTransaction")
+		return c.Render("toastOk", fiber.Map{
+			"Title": "Created",
+			"Extra": "",
+			"Msg":   fmt.Sprintf("%d/%d imported.\n%d/%d failed.", tok, tCount, len(failedTransactions), tCount),
 		})
 	}
 }

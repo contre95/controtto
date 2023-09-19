@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"log/slog"
 
@@ -9,7 +10,9 @@ import (
 
 func pairsSection(c *fiber.Ctx) error {
 	slog.Info("Pairs Section")
-	return c.Render("pairsSection", fiber.Map{})
+	return c.Render("pairsSection", fiber.Map{
+		"Amount": 4,
+	})
 }
 
 func pairSection(c *fiber.Ctx) error {
@@ -52,5 +55,28 @@ func pairsTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			"Title": "Trading Pairs",
 			"Pairs": resp.Pairs,
 		})
+	}
+}
+
+func deleteTradingPair(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		req := managing.DeleteTradingPairReq{
+			ID: c.Params("id"),
+		}
+		slog.Info("Delete", "id", req.ID)
+		resp, err := tpm.DeleteTradingPair(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
+		slog.Info("Trading pair deleted", "trading-pair", resp.ID)
+		// c.Append("HX-Trigger", "newPair")
+		return c.Render("toastOk", fiber.Map{
+			"Title": "Deleted",
+			"Msg":   "Pair deleted",
+		})
+
 	}
 }

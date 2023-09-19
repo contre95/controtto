@@ -1,180 +1,164 @@
-<div class="p-4 w-full rounded-2xl flex justify-center" hx-get="/ui/pairs/{{ .Pair.ID }}/cards"
-  hx-trigger="refreshTransaction from:body">
-  <div class="mb-4 w-full animate__animated animate__fadeIn animate__fast">
-    <div
-      class="flex-wrap flex justify-center bg-white text-slate-500 shadow-xl border-emerlad-500 border-2 rounded-2xl bg-clip-border">
-      {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
-      <div class="mx-4">
-        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
-          <span class="font-bold leading-normal text-slate-700"> +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
-            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span></span>
-        </h1>
-      </div>
-      <div class="mx-4">
-        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
-          <small class="font-bold leading-normal text-emerald-500">{{ printf "%.2f" .Pair.Calculations.PNLPercent
-            }}%</small>
-        </h1>
-      </div>
-      {{ else }}
-      <div class="mx-4">
-        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
-          <span class="font-bold leading-normal text-slate-700"> {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
-            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span></span>
-        </h1>
-      </div>
-      <div class="mx-4">
-        <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
-          <small class="font-bold leading-normal text-red-500">{{ printf "%.2f" .Pair.Calculations.PNLPercent
-            }}%</small>
-        </h1>
-      </div>
-      {{ end }}
+<div class="grid w-full grid-cols-1 gap-4 mt-4 lg:grid-cols-2 2xl:grid-cols-4 animate__animated animate__fadeInDown">
+
+  <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+    <div class="w-full h-32 bg-center bg-cover rounded-lg shadow-md text-left uppercase text-clip overflow-hidden"
+      style="background-color: {{ .Pair.BaseAsset.Color }}">
+      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+        {{ .Pair.BaseAsset.Symbol }}
+      </span>
     </div>
-  </div>
-</div>
-
-<div class="flex flex-wrap -mx-3" hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this"
-  hx-trigger="refreshTransaction from:body">
-  <div
-    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeIn animate__fast">
-    <div
-      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-      <div class="flex-auto p-4">
-        <div class="flex flex-row -mx-3">
-          <div class="flex-none w-2/3 max-w-full px-3">
-            <div>
-              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
-                You have
-                ( <span class="font-bold leading-normal text-sm text-slate-500">
-                  {{ printf "%.2f" .Pair.Calculations.CurrentBaseAmountInQuote }}
-                </span>
-                <span class="font-bold leading-normal text-sm text-emerald-500"
-                  style="color:{{ .Pair.QuoteAsset.Color }}">
-                  {{ .Pair.QuoteAsset.Symbol }}
-                </span>)
-              </p>
-              <h5 class="mb-2 font-bold dark:text-white">
-                {{ printf "%.2f" .Pair.Calculations.TotalBase }}
-                <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
-              </h5>
-              <p class="mb-0 dark:text-white dark:opacity-60">
-                <!-- <span class="font-bold leading-normal text-sm text-emerald-500">+0%</span> -->
-                --
-              </p>
-
-            </div>
-          </div>
-          <div class="px-3 text-right basis-1/3">
-            <div class="inline-block w-12 h-12 text-center rounded-circle"
-              style="background-color:{{ .Pair.BaseAsset.Color }};">
-              <i
-                class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
-            </div>
-          </div>
-        </div>
+    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+      style="background-color: rgba(255, 255, 255, 0.9)">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
+        You have {{ printf "%.2f" .Pair.Calculations.TotalBase }}
+        <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+      </h3>
+      <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
+        <button
+          class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
+          <!-- <i class="fa-solid fa-arrows-rotate"></i> -->
+          Worth
+        </button>
+        <span class="font-bold text-gray-800 ">
+          {{ printf "%.2f" .Pair.Calculations.TotalBaseInQuote }}
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </span>
       </div>
     </div>
   </div>
 
-  <div
-    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeIn animate__fast">
+  <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
     <div
-      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-      <div class="flex-auto p-4">
-        <div class="flex flex-row -mx-3">
-          <div class="flex-none w-2/3 max-w-full px-3">
-            <div>
-              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
-                You spent </p>
-              <h5 class="mb-2 font-bold dark:text-white">
-                {{ printf "%.2f" .Pair.Calculations.TotalQuoteSpent }}
-                <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
-              </h5>
-              <p class="mb-0 dark:text-white dark:opacity-60">
-                <!-- <span class="font-bold leading-normal text-sm text-emerald-500">+0%</span> -->
-                --
-              </p>
-            </div>
-          </div>
-          <div class="px-3 text-right basis-1/3">
-            <div class="inline-block w-12 h-12 text-center rounded-circle"
-              style="background-color:{{ .Pair.QuoteAsset.Color }};">
-              <i
-                class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
-            </div>
-          </div>
-        </div>
+      class="w-full h-32 bg-gray-300 bg-center bg-cover rounded-lg shadow-md text-left uppercase text-clip overflow-hidden"
+      style="background-color: {{ .Pair.QuoteAsset.Color }}">
+      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+        {{ .Pair.QuoteAsset.Symbol }}
+      </span>
+    </div>
+    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+      style="background-color: rgba(255, 255, 255, 0.9)">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
+        {{ printf "%.2f" .Pair.Calculations.TotalFeeInBase }}
+        <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> in fee
+      </h3>
+      <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
+        <button
+          class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
+          Spent in fee
+        </button>
+        <span class="font-bold text-gray-800 ">
+          {{ printf "%.7g" .Pair.Calculations.TotalFeeInQuote }}
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </span>
       </div>
     </div>
   </div>
 
-  <div
-    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeIn animate__faster">
-    <div
-      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-      <div class="flex-auto p-4">
-        <div class="flex flex-row -mx-3">
-          <div class="flex-none w-2/3 max-w-full px-3">
-            <div>
-              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
-                Avg. Buy Price
-              </p>
-              <h5 class="mb-2 font-bold dark:text-white">
-                {{ printf "%.2f" .Pair.Calculations.AvgBuyPrice }}
-                <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}
-                </span>
-              </h5>
-              <span class=" text-slate-400">
-
-                <i class="fa-solid fa-circle-info"></i>
-                Info.
-              </span>
-            </div>
-          </div>
-          <div class="px-3 text-right basis-1/3">
-            <div class="cursor-pointer inline-block w-12 h-12 text-center rounded-circle"
-              style="background-color:#619BC6;">
-              <i class="leading-none fa-solid fa-coins text-lg relative top-3.5 text-white"></i>
-            </div>
-          </div>
-        </div>
+  <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+    {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
+    <div class="w-full h-32 rounded-lg shadow-md bg-emerald-300 uppercase truncate text-left text-clip overflow-hidden">
+      <span class="font-black scale-125 text-9xl text-right" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+        +%
+      </span>
+    </div>
+    {{else}}
+    <div class="w-full h-32 rounded-lg shadow-md bg-red-300 uppercase truncate text-left text-clip overflow-hidden">
+      <span class="font-black scale-125 text-9xl text-right" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+        -%
+      </span>
+    </div>
+    {{end}}
+    <div class="w-64 -mt-10 overflow-hidden rounded-lg shadow-lg dark:bg-gray-800"
+      style="background-color: rgba(255, 255, 255, 0.9)">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
+        P & L
+      </h3>
+      <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
+        {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
+        <span class="font-bold text-gray-800 ">
+          +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </span>
+        <span class="font-bold text-emerald-400 dark:text-emerald-200">
+          + {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
+        </span>
+        {{ else }}
+        <span class="font-bold text-gray-800 ">
+          {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </span>
+        <span class="font-bold text-red-600 dark:text-red-200">
+          {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
+        </span>
+        {{ end }}
       </div>
     </div>
   </div>
 
-  <div
-    class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeIn animate__faster">
-    <div
-      class="relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-      <div class="flex-auto p-4">
-        <div class="flex flex-row -mx-3">
-          <div class="flex-none w-2/3 max-w-full px-3">
-            <div>
-              <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:text-white dark:opacity-60 text-sm">
-                Current <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> price
-              </p>
-              <h5 class="mb-2 font-bold">
-                {{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }}
-                <span style="color:{{ .Pair.QuoteAsset.Color }}">
-                  {{ .Pair.QuoteAsset.Symbol }}
-                </span>
-              </h5>
-              {{ if ne .Pair.Calculations.MarketName "" }}
-              <span class="right-0 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color: {{ .Pair.Calculations.MarketColor }};">{{ .Pair.Calculations.MarketName }}</span><br>
-              {{ else }}
-              <span class="right-0 py-1.4 px-2.5 text-xs rounded-1.8 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background-color: gray;">Price not found</span><br>
-              {{ end }}
-            </div>
-          </div>
-          <div class="px-3 text-right basis-1/3">
-            <div class="cursor-pointer inline-block w-12 h-12 text-center rounded-circle"
-              style="background-color:#619BC6;">
-              <i class="leading-none fa-solid fa-coins text-lg relative top-3.5 text-white"></i>
-            </div>
-          </div>
-        </div>
+  {{ if (ne .Pair.Calculations.BaseMarketPrice 0.0) }}
+  <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+    <div class="w-full h-32 bg-gray-800 bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
+      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.4); font-size: 9rem;">
+        {{ .Pair.Calculations.MarketName }}
+      </span>
+    </div>
+    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+      style="background-color: rgba(255, 255, 255, 0.9)">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
+        Price for 1
+        <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+      </h3>
+      <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
+        <span class="font-bold text-gray-800 ">
+          {{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }}
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </span>
+        <button
+          class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none"
+          style="background-color: {{ .Pair.Calculations.MarketColor }}">
+          {{ .Pair.Calculations.MarketName }}
+        </button>
       </div>
     </div>
   </div>
+  {{ else }}
+  <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+    <div class="w-full h-32 bg-red-500 bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
+      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.4); font-size: 9rem;">
+        404 Not found
+      </span>
+    </div>
+    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+      style="background-color: rgba(255, 255, 255, 0.9)">
+      <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
+        Price for 1
+        <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+      </h3>
+      <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
+        <span class="font-bold text-gray-800 ">
+          --
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </span>
+        <button
+          class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none"
+          style="background-color: {{ .Pair.Calculations.MarketColor }}">
+          Not found
+        </button>
+      </div>
+    </div>
+  </div>
+  {{ end }}
+
 </div>

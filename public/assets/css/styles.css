@@ -44,11 +44,7 @@
     }
   }
 
-/* input[type="file"] { */
-/*     position: absolute; */
-/*     z-index: -1; */
-/*     top: 15px; */
-/*     left: 20px; */
-/*     font-size: 17px; */
-/*     color: #b8b8b8; */
-/* } */
+.animate__animated.htmx-swapping {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}

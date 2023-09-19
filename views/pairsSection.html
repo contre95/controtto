@@ -1,81 +1,80 @@
-<!-- table 1 -->
-<div class="flex flex-wrap -mx-3 animate__animated animate__fadeInUp animate__faster 500ms">
-  <div class="flex-none w-full max-w-full px-3">
-    <div
-      class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-      <div class="p-3 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent flex">
-        <div class="flex-none ml-1 justify px-3 py-2 font-bold text-center text-white">
-          <h6 class="dark:text-white">Trading Pairs</h6>
-        </div>
-        <div class="flex-1 w-64 ">
-        </div>
-        <div class=" flex flex-row flex-row-reverse">
-          <button
-            class="inline-block ml-4 justify px-3 font-bold text-center text-white uppercase transition-all rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
-            0 hx-get="/ui/assets/form" hx-target="#modals-here" hx-trigger="click" data-bs-toggle="modal"
-            data-bs-target="#modals-here">New asset</button>
-          <button
-            class="inline-block ml-4 justify px-3 font-bold text-center text-white uppercase transition-all rounded-lg cursor-pointer bg-gradient-to-tl from-blue-500 to-violet-500 leading-normal text-xs ease-in tracking-tight-rem shadow-xs bg-150 bg-x-25 hover:-translate-y-px active:opacity-85 hover:shadow-md"
-            hx-get="/ui/pairs/form" hx-target="#modals-here" hx-trigger="click" data-bs-toggle="modal"
-            data-bs-target="#modals-here">New pair</button>
-        </div>
-      </div>
-      <div class="flex-none w-full max-w-full">
-        <div id="modals-here"></div>
-        <!-- <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"> -->
-      </div>
-      <div class="flex-auto px-0 pt-0 pb-0">
-        <div class="p-0 overflow-x-auto">
-        </div>
+<section class="mx-auto max-w-screen-2xl">
+  <div class="flex items-center justify-center flex-wrap gap-x-1">
+
+    <div class="flex-none flex py-2 mx-6">
+      <h2 class="text-lg font-medium text-gray-800 dark:text-white">Asset pairs </h2>
+      <span class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full dark:bg-gray-800 dark:text-blue-400 mx-4 ">
+        {{ .Amount }} pairs</span>
+    </div>
+
+    <div class="flex-1 md:justify-end justify-center items-center flex lg:right-0 py-2 mx-4">
+      <button
+        class="sidebtn flex items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+        hx-get="/ui/pairs/form" hx-swap="innerHTML" hx-target="#x-form" hx-trigger="click">
+        <img class="mb-1 h-6 w-6" src="/assets/img/newpair.svg" alt="new pair">
+        <span class="mx-4 sidebtn">New pair</span>
+      </button>
+      <button
+        class="sidebtn flex block items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+        hx-get="/ui/assets/form" hx-swap="innerHTML" hx-target="#x-form" hx-trigger="click">
+        <img class="mb-1 h-6 w-6" src="/assets/img/newasset.svg" alt="new pair">
+        <span class="mx-4 text-dark sidebtn">New asset</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center grow">
+    <div id="x-form" class="m-4 w-full overflow-x-auto">
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center grow animate__animated animate__fadeIn">
+    <div class="m-4 w-full overflow-x-clip hover:overflow-x-auto">
+      <div id="pairsTable" hx-get="/ui/pairs/table" hx-swap="innerHTML" hx-target="this"
+        hx-trigger="revealed,newPair from:body">
       </div>
     </div>
   </div>
-</div>
 
-<!-- card 2 -->
-
-<div class="flex flex-wrap -mx-3 animate__animated animate__fadeInUp animate__faster">
-  <div class="flex-none w-full max-w-full px-3">
-    <div
-      class="relative flex flex-col min-w-0 mb-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-      <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-        <h6 class="dark:text-white">{{ .Title }}</h6>
-      </div>
-      <div class="flex-auto px-0 pt-0 pb-2">
-        <div class="p-0 overflow-x-auto">
-          <table
-            class="items-center justify-center w-full mb-0 align-top border-collapse dark:border-white/40 text-slate-500">
-            <thead class="align-bottom">
-              <tr>
-                <th
-                  class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                  Pair</th>
-                <th
-                  class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                  Base</th>
-                <th
-                  class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                  Quote</th>
-                <th
-                  class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b shadow-none dark:border-white/40 dark:text-white text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">
-                  Asset types</th>
-                <th
-                  class="px-6 py-3 font-semibold text-right capitalize align-middle bg-transparent border-b border-solid shadow-none dark:border-white/40 dark:text-white tracking-none whitespace-nowrap">
-                  <button 
-                  hx-get="/ui/pairs/table"
-                  hx-target="#tbody"
-                  hx-swap="outerHTML"
-                    type="button">
-                  <i class="fa-solid fa-arrows-rotate px-6"></i>
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody class="border-t" id="tbody" hx-get="/ui/pairs/table" hx-target="this" hx-trigger="revealed,newPair from:body">
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+  <!-- <div class="flex items-center justify-between mt-6"> -->
+  <!--   <a href="#" -->
+  <!--     class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"> -->
+  <!--     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" -->
+  <!--       class="w-5 h-5 rtl:-scale-x-100"> -->
+  <!--       <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /> -->
+  <!--     </svg> -->
+  <!---->
+  <!--     <span> -->
+  <!--       previous -->
+  <!--     </span> -->
+  <!--   </a> -->
+  <!---->
+  <!--   <div class="items-center hidden lg:flex gap-x-3"> -->
+  <!--     <a href="#" class="px-2 py-1 text-sm text-blue-500 rounded-md dark:bg-gray-800 bg-blue-100/60">1</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">2</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">3</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">...</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">12</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">13</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">14</a> -->
+  <!--   </div> -->
+  <!---->
+  <!--   <a href="#" -->
+  <!--     class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"> -->
+  <!--     <span> -->
+  <!--       Next -->
+  <!--     </span> -->
+  <!---->
+  <!--     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" -->
+  <!--       class="w-5 h-5 rtl:-scale-x-100"> -->
+  <!--       <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /> -->
+  <!--     </svg> -->
+  <!--   </a> -->
+  <!-- </div> -->
+</section>

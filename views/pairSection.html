@@ -1,174 +1,95 @@
-<div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body"
-  hx-trigger="refreshTransaction from:body">
-  <div class="p-4 w-full rounded-2xl flex justify-center" hx-get="/ui/pairs/{{ .Pair.ID }}/cards"
-    hx-trigger="refreshTransaction from:body">
-    <div class="mb-4 w-full animate__animated animate__fadeInDown animate__fast">
-      <div
-        class="loadingb flex-wrap flex justify-center bg-white text-slate-500 shadow-xl border-emerlad-500 border-2 rounded-2xl bg-clip-border">
-        <div class="mx-4">
-          <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
-            <span class="font-bold leading-normal text-slate-700"> &nbsp;
-              &nbsp;
-          </h1>
-        </div>
-        <div class="mx-4">
-          <h1 class="relative z-10 inline-block m-0font-semibold leading-normal text-transparent  bg-clip-text">
-            <small class="font-bold leading-normal text-emerald-500">&nbsp;</small>
-          </h1>
-        </div>
+<section class="mx-auto max-w-screen-2xl">
+
+  <div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body" class="">
+  </div>
+  <br>
+
+  <div class="flex items-center justify-between flex-wrap">
+    <div class="flex-none py-2 mx-6">
+      <h2 class="text-lg font-medium text-gray-800 dark:text-white">Transactions</h2>
+    </div>
+
+    <div class="flex-wrap gap-y-2 gap-x-2 md:justify-end gap-x-2 justify-center items-center flex lg:right-0 py-2 mx-4">
+      <form id="import-form" class="flex items-center">
+        <input id="upload"
+          class="inline-block px-3 py-2 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs active:opacity-85 hover:shadow-md "
+          name='trancsv' type="file">
+      </form>
+      <button hx-encoding='multipart/form-data' hx-post="/pairs/{{ .PairID }}/transactions/upload" hx-target="#mitoast"
+        hx-include="#import-form"
+        class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-gray-700 hover:bg-gray-600 rounded-lg sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-gray-300 dark:bg-blue-600">
+        <img src="/assets/img/import.svg" alt="import" class="h-6 w-6">
+        <span>Import</span>
+      </button>
+      <button
+        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+        <img src="/assets/img/export.svg" alt="export" class="h-6 w-6">
+        <a href="/pairs/{{ .PairID }}/transactions/export" target="_blank">
+          <span>Export</span>
+        </a>
+      </button>
+
+      <button hx-get="/ui/pairs/{{ .PairID }}/transactions/form" hx-swap="innerHTML" hx-target="#transaction-form"
+        hx-trigger="click"
+        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+        <img src="/assets/img/new.svg" alt="export" class="h-6 w-6">
+        <span>New</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center grow animate__animted animate__fadeInUp">
+    <div id="transaction-form" class="m-4 w-full overflow-x-auto">
+    </div>
+  </div>
+
+  <div class="flex justify-center items-center grow animate__animated animate__fadeInUp">
+    <div class="m-4 w-full overflow-x-clip hover:overflow-x-auto">
+      <div id="transactionsTable" hx-get="/ui/pairs/{{ .PairID }}/transactions/table" hx-swap="innerHTML"
+        hx-target="this" hx-trigger="revealed,newTransaction from:body">
       </div>
     </div>
   </div>
-  <div class="flex flex-wrap -mx-3">
-    <div
-      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
-      <div
-        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-        <div class="flex-auto p-4">
-          <div class="flex flex-row -mx-3">
-            <div class="flex-none w-2/3 max-w-full px-3">
-              <div>
-                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
-                  &nbsp;
-                  <span class="font-bold leading-normal text-sm text-slate-500">
-                    &nbsp;
-                  </span>
-                  <span class="font-bold leading-normal text-sm text-emerald-500">
-                    &nbsp;
-                  </span>
-                </p>
-                <h5 class="mb-2 font-bold dark:text-white">
-                  &nbsp;
-                </h5>
-                <p class="mb-0 dark:text-white dark:opacity-60">
-                </p>
-                &nbsp;
-              </div>
-            </div>
-            <div class="px-3 text-right basis-1/3">
-              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
-                <i
-                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
-      <div
-        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-        <div class="flex-auto p-4">
-          <div class="flex flex-row -mx-3">
-            <div class="flex-none w-2/3 max-w-full px-3">
-              <div>
-                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
-                  &nbsp;
-                  <span class="font-bold leading-normal text-sm text-slate-500">
-                    &nbsp;
-                  </span>
-                  <span class="font-bold leading-normal text-sm text-emerald-500">
-                    &nbsp;
-                  </span>
-                </p>
-                <h5 class="mb-2 font-bold dark:text-white">
-                  &nbsp;
-                </h5>
-                <p class="mb-0 dark:text-white dark:opacity-60">
-                </p>
-                &nbsp;
-              </div>
-            </div>
-            <div class="px-3 text-right basis-1/3">
-              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
-                <i
-                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
-      <div
-        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-        <div class="flex-auto p-4">
-          <div class="flex flex-row -mx-3">
-            <div class="flex-none w-2/3 max-w-full px-3">
-              <div>
-                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
-                  &nbsp;
-                  <span class="font-bold leading-normal text-sm text-slate-500">
-                    &nbsp;
-                  </span>
-                  <span class="font-bold leading-normal text-sm text-emerald-500">
-                    &nbsp;
-                  </span>
-                </p>
-                <h5 class="mb-2 font-bold dark:text-white">
-                  &nbsp;
-                </h5>
-                <p class="mb-0 dark:text-white dark:opacity-60">
-                </p>
-                &nbsp;
-              </div>
-            </div>
-            <div class="px-3 text-right basis-1/3">
-              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
-                <i
-                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4 animate__animated animate__fadeInDown animate__fast">
-      <div
-        class="loadingb relative flex flex-col min-w-0 break-words bg-white shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-        <div class="flex-auto p-4">
-          <div class="flex flex-row -mx-3">
-            <div class="flex-none w-2/3 max-w-full px-3">
-              <div>
-                <p class="mb-0 font-sans font-semibold leading-normal uppercase dark:opacity-60 text-sm">
-                  &nbsp;
-                  <span class="font-bold leading-normal text-sm text-slate-500">
-                    &nbsp;
-                  </span>
-                  <span class="font-bold leading-normal text-sm text-emerald-500">
-                    &nbsp;
-                  </span>
-                </p>
-                <h5 class="mb-2 font-bold dark:text-white">
-                  &nbsp;
-                </h5>
-                <p class="mb-0 dark:text-white dark:opacity-60">
-                </p>
-                &nbsp;
-              </div>
-            </div>
-            <div class="px-3 text-right basis-1/3">
-              <div class="inline-block w-12 h-12 text-center rounded-circle" style="">
-                <i
-                  class="leading-none fa-solid fa-money-bill-1-wave fa-solid fa-coins text-lg relative top-3 text-white"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-  </div>
-</div>
-
-<!-- Starts below section-->
-<div id="transaction-form"
-  class="rounded-lg bg-white p-8 shadow-lg lg:col-span-3  animate__animated animate__flipInX animate__faster">
-</div>
-
-<div hx-get="/ui/pairs/{{ .PairID }}/transactions/table" hx-target="this" hx-trigger="revealed,newTransaction from:body"
-  class="animate__animated animate__fadeInUp animate__faster shadow-xl">
-</div>
+  <!-- <div class="flex items-center justify-between mt-6"> -->
+  <!--   <a href="#" -->
+  <!--     class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"> -->
+  <!--     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" -->
+  <!--       class="w-5 h-5 rtl:-scale-x-100"> -->
+  <!--       <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" /> -->
+  <!--     </svg> -->
+  <!---->
+  <!--     <span> -->
+  <!--       previous -->
+  <!--     </span> -->
+  <!--   </a> -->
+  <!---->
+  <!--   <div class="items-center hidden md:flex gap-x-3"> -->
+  <!--     <a href="#" class="px-2 py-1 text-sm text-blue-500 rounded-md dark:bg-gray-800 bg-blue-100/60">1</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">2</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">3</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">...</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">12</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">13</a> -->
+  <!--     <a href="#" -->
+  <!--       class="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">14</a> -->
+  <!--   </div> -->
+  <!---->
+  <!--   <a href="#" -->
+  <!--     class="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"> -->
+  <!--     <span> -->
+  <!--       Next -->
+  <!--     </span> -->
+  <!---->
+  <!--     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" -->
+  <!--       class="w-5 h-5 rtl:-scale-x-100"> -->
+  <!--       <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" /> -->
+  <!--     </svg> -->
+  <!--   </a> -->
+  <!-- </div> -->
+</section>
