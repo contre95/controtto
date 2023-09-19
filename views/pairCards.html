@@ -2,7 +2,7 @@
 
   {{ if (ne .Pair.Calculations.BaseMarketPrice 0.0) }}
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
-    <div class="w-full h-32 bg-gray-800 bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
+    <div class="w-full h-32 bg-gray-600  bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
       <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.4); font-size: 9rem;">
         {{ .Pair.Calculations.MarketName }}
       </span>
@@ -15,7 +15,10 @@
       </h3>
       <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
         <span class="font-bold text-gray-800 ">
-          <input size="5" _="on click log my.size" class="bg-transparent" type="text" name="customprice" value="{{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }} ">
+          <!-- <input size="5" _="on click log my.size" class="bg-transparent" type="text" name="customprice" value="{{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }} "> -->
+          <span class="font-bold text-gray-800 ">
+            {{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }}
+          </span>
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
           </span>
@@ -165,5 +168,4 @@
       </div>
     </div>
   </div>
-
 </div>

@@ -2,25 +2,30 @@
 
   <div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body" class="">
   </div>
-  <br>
+
+  <div hx-get="/ui/pairs/{{ .PairID }}/chart" hx-target="this" hx-trigger="revealed" class="my-8">
+  </div>
 
   <div class="flex items-center justify-between flex-wrap">
     <div class="flex-none py-2 mx-6">
-      <h2 class="text-lg font-medium text-gray-800 dark:text-white">Transactions</h2>
+      <h1 class="text-lg font-medium text-gray-800 dark:text-white">Transactions</h1>
     </div>
 
     <div class="flex-wrap gap-y-2 gap-x-2 md:justify-end gap-x-2 justify-center items-center flex lg:right-0 py-2 mx-4">
-      <form id="import-form" class="flex items-center">
-        <input id="upload"
-          class="inline-block px-3 py-2 align-middle transition-all rounded-lg cursor-pointer leading-normal text-xs ease-in tracking-tight-rem shadow-xs active:opacity-85 hover:shadow-md "
-          name='trancsv' type="file">
-      </form>
-      <button hx-encoding='multipart/form-data' hx-post="/pairs/{{ .PairID }}/transactions/upload" hx-target="#mitoast"
-        hx-include="#import-form"
-        class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-gray-700 hover:bg-gray-600 rounded-lg sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-gray-300 dark:bg-blue-600">
-        <img src="/assets/img/import.svg" alt="import" class="h-6 w-6">
-        <span>Import</span>
-      </button>
+
+      <div class="group flex">
+        <form id="import-form" class="flex mx-2 items-center  scale-0 group-hover:scale-100 transition-transform duration-200">
+          <input type="file" name='trancsv'
+            class="block w-full px-3 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300" />
+        </form>
+        <button hx-encoding='multipart/form-data' hx-post="/pairs/{{ .PairID }}/transactions/upload"
+          hx-target="#mitoast" id="import" hx-include="#import-form"
+          class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-gray-700 hover:bg-gray-600 rounded-lg sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-gray-300 dark:bg-blue-600">
+          <img src="/assets/img/import.svg" alt="import" class="h-6 w-6">
+          <span>Import</span>
+        </button>
+      </div>
+
       <button
         class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
         <img src="/assets/img/export.svg" alt="export" class="h-6 w-6">
