@@ -15,10 +15,9 @@ In order to fetch the price of an asset, Controtto relies on mainly 4 APIs ([see
 * [Alpha Vantage](https://www.alphavantage.co/) - Stocks, free but short rate limit. ([get](https://www.alphavantage.co/support/#api-key) an token and set `CONTROTTO_AVANTAGE_TOKEN`)
 * [Tiingo](https://www.tiingo.com/documentation/) - Stocks, crypto and Forex. ([create](https://www.tiingo.com/) account/token and set `CONTROTTO_TIINGO_TOKEN`) 
 
-## Screenshots
-See some illustrative screenshorts.
-
-![controtto screenshot](./public/assets/img/screenshot.png)
+## Demo
+You can also check out the demo at [demo.contre.io](https://demo.contre.io)
+![controtto screenshot](./public/assets/demo.gif)
 
 ## Configurations
 
@@ -67,4 +66,5 @@ go test -cover ./...
 ### TODO
 * More tests
 * Wrappers for logging and metrics would be nice as well.
+* Add Accounts to keep track of the total net worth.
 * Remove all the CSS and use custom `style.css` + Tailwind CDN.
