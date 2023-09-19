@@ -28,7 +28,8 @@ func main() {
 	// Markets
 	binanceAPI := markets.NewBinanceAPI()
 	bingxAPI := markets.NewBingxAPI()
-	marketsAPIs := []pnl.Markets{binanceAPI, bingxAPI} // Defines query order
+	// marketsAPIs := []pnl.Markets{binanceAPI, bingxAPI} // Defines query order
+	marketsAPIs := []pnl.Markets{bingxAPI, binanceAPI} // Defines query order
 	avToken := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
 	if len(avToken) != 0 {
 		avantageAPI := markets.NewAVantageAPI(avToken)

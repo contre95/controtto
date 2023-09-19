@@ -154,7 +154,7 @@
             _="on htmx:confirm(issueRequest)
              halt the event
              call Swal.fire({title: 'Confirm', text:'All transactions associated will be deleted. Are you sure ?'})
-             if result.isConfirmed issueRequest() toggle .animate__backOutRight on #pair{{ .ID }} then wait 1s then remove #pair{{ .ID }}">
+             if result.isConfirmed toggle .animate__backOutRight on #pair{{ .ID }} then wait 1s then  issueRequest()">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-5 h-5">
               <path stroke-linecap="round" stroke-linejoin="round"

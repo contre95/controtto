@@ -72,7 +72,7 @@ func deleteTradingPair(tpm managing.TradingPairsManager) func(*fiber.Ctx) error 
 			})
 		}
 		slog.Info("Trading pair deleted", "trading-pair", resp.ID)
-		// c.Append("HX-Trigger", "newPair")
+		c.Append("HX-Trigger", "newPair")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Deleted",
 			"Msg":   "Pair deleted",
