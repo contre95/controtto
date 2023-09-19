@@ -29,40 +29,10 @@ func deleteTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error 
 			})
 		}
 		slog.Info("Transaction deleted", "trasnaction", resp.ID)
+		c.Append("HX-Trigger", "newTransaction")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Deleted",
 			"Msg":   "Transaction deleted",
-		})
-	}
-}
-
-func newTradingPair(tpc managing.TradingPairsManager) func(*fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		slog.Info("Creating new pair")
-		payload := struct {
-			Quote string `form:"quote"`
-			Base  string `form:"base"`
-		}{}
-		if err := c.BodyParser(&payload); err != nil {
-			fmt.Println(err)
-			return err
-		}
-		req := managing.CreateTradingPairReq{
-			BaseAssetSymbol:  payload.Base,
-			QuoteAssetSymbol: payload.Quote,
-		}
-		slog.Info("Creating", "req", req)
-		resp, err := tpc.Create(req)
-		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
-			})
-		}
-		c.Append("HX-Trigger", "newPair")
-		return c.Render("toastOk", fiber.Map{
-			"Title": "Created",
-			"Msg":   resp.Msg,
 		})
 	}
 }
