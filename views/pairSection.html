@@ -1,9 +1,10 @@
 <section class="mx-auto max-w-screen-2xl">
 
-  <div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body" class="">
+  <div id="tvChart{{ .PairID }}" hx-get="/ui/pairs/{{ .PairID }}/chart" hx-target="this" hx-trigger="revealed"
+    hw-swap="innerHTML" class="hidden">
   </div>
 
-  <div hx-get="/ui/pairs/{{ .PairID }}/chart" hx-target="this" hx-trigger="revealed" class="my-8">
+  <div hx-get="/ui/pairs/{{ .PairID }}/cards" hx-target="this" hx-trigger="revealed,newTransaction from:body" class="">
   </div>
 
   <div class="flex items-center justify-between flex-wrap">
@@ -11,23 +12,34 @@
       <h1 class="text-lg font-medium text-gray-800 dark:text-white">Transactions</h1>
     </div>
 
-    <div class="flex-wrap gap-y-2 gap-x-2 md:justify-end gap-x-2 justify-center items-center flex lg:right-0 py-2 mx-4">
+    <div class="flex-wrap gap-y-2 gap-x-2 md:justify-end justify-center items-center flex lg:right-0 py-2 mx-4">
 
-      <div class="group flex">
-        <form id="import-form" class="flex mx-2 items-center  scale-0 group-hover:scale-100 transition-transform duration-200">
+      <div class="group flex flex-wrap justify-center w-1/2 items-center">
+        <form id="import-form"
+          class="flex mx-2 items-center my-2 scale-0 group-hover:scale-100 transition-transform duration-200">
           <input type="file" name='trancsv'
             class="block w-full px-3 py-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300" />
         </form>
         <button hx-encoding='multipart/form-data' hx-post="/pairs/{{ .PairID }}/transactions/upload"
           hx-target="#mitoast" id="import" hx-include="#import-form"
-          class="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-gray-700 hover:bg-gray-600 rounded-lg sm:w-auto gap-x-2 hover:bg-blue-600 dark:hover:bg-gray-300 dark:bg-blue-600">
+          class="flex items-center justify-center py-2 w-full text-sm tracking-wide text-white transition-colors duration-200 bg-gray-700 hover:bg-gray-600 rounded-lg gap-x-2 hover:bg-blue-600 dark:hover:bg-gray-300 dark:bg-blue-600">
           <img src="/assets/img/import.svg" alt="import" class="h-6 w-6">
           <span>Import</span>
         </button>
       </div>
 
       <button
-        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+        _="on click toggle .hidden on #tvChart{{ .PairID }} then changeTradingViewTheme() then go to the top of the body"
+        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-black dark:text-black dark:bg-white rounded-lg  gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+        <svg width="36" height="28" viewBox="0 0 36 28" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 22H7V11H0V4h14v18zM28 22h-8l7.5-18h8L28 22z" fill="currentColor"></path>
+          <circle cx="20" cy="8" r="4" fill="currentColor"></circle>
+        </svg>
+        <span>View chart</span>
+      </button>
+
+      <button
+        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg  gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
         <img src="/assets/img/export.svg" alt="export" class="h-6 w-6">
         <a href="/pairs/{{ .PairID }}/transactions/export" target="_blank">
           <span>Export</span>
@@ -36,7 +48,7 @@
 
       <button hx-get="/ui/pairs/{{ .PairID }}/transactions/form" hx-swap="innerHTML" hx-target="#transaction-form"
         hx-trigger="click"
-        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg sm:w-auto gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+        class="flex items-center border-2 border-gray-300 border-solid justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg  gap-x-2 hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
         <img src="/assets/img/new.svg" alt="export" class="h-6 w-6">
         <span>New</span>
       </button>
