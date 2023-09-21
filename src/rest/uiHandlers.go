@@ -69,7 +69,7 @@ func pairChart(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
 			TPID:             id,
-			WithCalculations: true,
+			WithCalculations: false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -79,20 +79,30 @@ func pairChart(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			})
 		}
 		slices.Reverse(resp.Pair.Transactions)
-		var tvAssetType string
-		switch resp.Pair.BaseAsset.Type {
-		case pnl.Stock:
-			tvAssetType = "NASDAQ:"
-		case pnl.Forex:
-			tvAssetType = "FX:"
-		case pnl.Crypto:
-			tvAssetType = "COINBASE:"
+		return c.Render("pairChart", fiber.Map{
+			"Pair": resp.Pair,
+		})
+	}
+}
+
+func pairTape(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		id := c.Params("id")
+		req := querying.GetTradingPairReq{
+			TPID:             id,
+			WithCalculations: false,
+		}
+		resp, err := tpq.GetTradingPair(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
 		}
 		if resp.Pair.BaseAsset.Type == pnl.Stock {
 		}
-		return c.Render("pairChart", fiber.Map{
-			"Pair":                 resp.Pair,
-			"TradingViewAssetType": tvAssetType,
+		return c.Render("pairTape", fiber.Map{
+			"Pair": resp.Pair,
 		})
 	}
 }

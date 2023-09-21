@@ -5,6 +5,7 @@
 </div>
 
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+{{ if eq .Pair.BaseAsset.Type "Stock" }}
 <script type="text/javascript">
   function changeTradingViewTheme() {
     const classList = document.documentElement.classList;
@@ -13,7 +14,7 @@
       {
         "autosize": true,
         "interval": "D",
-        "symbol": "{{ .TradingViewAssetType }}{{ .Pair.ID }}",
+        "symbol":  "{{ .Pair.BaseAsset.Symbol }}",
         "timezone": "Etc/UTC",
         "theme": theme,
         "style": "1",
@@ -26,3 +27,26 @@
   }
   changeTradingViewTheme()
 </script>
+  {{ else }}
+<script type="text/javascript">
+  function changeTradingViewTheme() {
+    const classList = document.documentElement.classList;
+    var theme = classList.contains("dark") ? "dark" : "light"
+    new TradingView.widget(
+      {
+        "autosize": true,
+        "interval": "D",
+        "symbol":  "{{ .Pair.BaseAsset.Symbol }}{{ .Pair.QuoteAsset.Symbol }}",
+        "timezone": "Etc/UTC",
+        "theme": theme,
+        "style": "1",
+        "locale": "en",
+        "enable_publishing": false,
+        "allow_symbol_change": true,
+        "container_id": "tradingview_{{ .Pair.ID }}"
+      }
+    );
+  }
+  changeTradingViewTheme()
+</script>
+{{ end }}
