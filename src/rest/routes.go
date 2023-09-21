@@ -30,6 +30,8 @@ func Run(port string, m *managing.Service, q *querying.Service) {
 	app.Get("/ui/pairs/table", pairsTable(q.TradingPairQuerier))
 	app.Get("/dashboard", dashboardSection(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/cards", pairCards(q.TradingPairQuerier))
+	app.Get("/ui/pairs/:id/chart", pairChart(q.TradingPairQuerier))
+	app.Get("/ui/pairs/:id/tape", pairTape(q.TradingPairQuerier))
 	app.Get("/pairs/AvgBuyPrice/:id", avgBuyPrice(q.TradingPairQuerier))
 	app.Get("/pairs/:id/transactions/export", transactionExport(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/table", transactionTable(q.TradingPairQuerier))

@@ -1,4 +1,5 @@
-<section class="p-5 bg-white dark:bg-gray-700 w-full divide-y  rounded-md divide-gray-200 border border-gray-200 dark:border-gray-700  dark:divide-gray-700 animate__animated animate__fadeInUp">
+<section
+  class="p-5 bg-white dark:bg-gray-700 w-full divide-y  rounded-md divide-gray-200 border border-gray-200 dark:border-gray-700  dark:divide-gray-700 animate__animated animate__fadeInUp">
   <h2 class="text-lg font-semibold text-gray-700 capitalize dark:text-white">New Transaction</h2>
   <form id="trans-form">
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
@@ -103,11 +104,26 @@
       </div>
     </div>
 
-    <div class="flex justify-end mt-6">
-      <button hx-post="/pairs/{{ .Pair.ID }}/transactions" hx-include="#trans-form" hx-target="#mitoast" hx-swap="innerHTML"
-        class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-gray-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
-        Record
-      </button>
+    <div class="flex md:flex–nowrap flex-wrap md:justify-between justify-center mt-6 gap-y-4">
+      <div class="group flex items-center justify-center  w-full md:w-auto">
+        <form id="import-form" class="">
+          <button hx-encoding="multipart/form-data" hx-post="/pairs/BTCUSDT/transactions/upload" hx-target="#mitoast"
+            id="import" hx-include="#import-form"
+            class="flex items-center border-2 border-gray-300 border-solid justify-center  px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+            <img src="/assets/img/import.svg" alt="import" class="h-6 w-6">
+            <span>Import</span>
+          </button>
+          <input type="file" name="trancsv"
+            class="flex p-2 ml-2 group-hover:scale-100 lg:scale-0 transition-transform duration-200 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300">
+        </form>
+      </div>
+      <div class="flex w-full md:w-auto">
+        <button hx-post="/pairs/{{ .Pair.ID }}/transactions" hx-include="#trans-form" hx-target="#mitoast"
+          hx-swap="innerHTML"
+          class="px-8 py-2.5 justify-end leading-5 text-white transition-colors w-full duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-gray-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+          Record
+        </button>
+      </div>
     </div>
   </form>
 </section>

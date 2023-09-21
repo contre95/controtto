@@ -1,0 +1,25 @@
+<div class="w-full animate__animated animate__fadeInDown">
+
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+  </div>
+</div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+  {
+    "symbols": [
+      {
+        "description": "",
+        "proName": "{{ .Pair.BaseAsset.Symbol}}"
+      },
+      {
+        "description": "",
+        "proName": "{{ .Pair.QuoteAsset.Symbol}}"
+      }
+    ],
+      "showSymbolLogo": true,
+        "colorTheme": "light",
+          "isTransparent": true,
+            "displayMode": "adaptive",
+              "locale": "en"
+  }
+</script>
