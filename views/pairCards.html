@@ -1,13 +1,15 @@
-<div class="grid w-full grid-cols-1 gap-4 mt-4 lg:grid-cols-2 2xl:grid-cols-4 animate__animated animate__fadeInDown">
+<div class="grid w-full grid-cols-2 gap-4 mt-4 lg:grid-cols-2 2xl:grid-cols-4 animate__animated animate__fadeInDown">
 
   {{ if (ne .Pair.Calculations.BaseMarketPrice 0.0) }}
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
-    <div class="w-full h-44 bg-gray-600  bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
-      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.4); font-size: 9rem;">
+    <div
+      class="w-4/5 lg:w-full h-24 lg:h-44 bg-gray-600 bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
+      <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
+
         {{ .Pair.Calculations.MarketName }}
       </span>
     </div>
-    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+    <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         Price for 1
@@ -32,12 +34,13 @@
   </div>
   {{ else }}
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
-    <div class="w-full h-44 bg-red-500 bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
-      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.4); font-size: 9rem;">
-        404 Not found
+    <div
+      class="w-4/5 lg:w-full h-24 lg:h-44 bg-red-500 bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
+      <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
+        404<span>&#xfeff;</span>Not<span>&#xfeff;</span>Found
       </span>
     </div>
-    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+    <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         Price for 1
@@ -61,24 +64,26 @@
   {{ end }}
 
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
-    <div class="w-full h-44 bg-center bg-cover rounded-lg shadow-md text-left uppercase text-clip overflow-hidden"
+    <div
+      class="w-4/5 lg:w-full h-24 lg:h-44 bg-center bg-cover rounded-lg shadow-md text-left uppercase text-clip overflow-hidden"
       style="background-color: {{ .Pair.BaseAsset.Color }}">
-      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+      <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
+
         {{ .Pair.BaseAsset.Symbol }}
       </span>
     </div>
-    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+    <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         You have {{ printf "%.2f" .Pair.Calculations.TotalBase }}
         <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
       </h3>
-      <div class="flex items-center justify-between px-3 py-2 bg-gray-200 dark:bg-gray-700">
+      <div class="flex items-center justify-between text-center px-3 py-2 bg-gray-200 dark:bg-gray-700">
         <button
-          class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
+          class="px-2 py-1 text-xs hidden lg:flex font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
           Worth:
         </button>
-        <span class="font-bold text-gray-800 ">
+        <span class="font-bold text-gray-800 lg:w-auto w-full">
           {{ printf "%.2f" .Pair.Calculations.TotalBaseInQuote }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
@@ -90,13 +95,14 @@
 
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
     <div
-      class="w-full h-44 bg-gray-300 bg-center bg-cover rounded-lg shadow-md text-left uppercase text-clip overflow-hidden"
+      class="w-4/5 lg:w-full h-24 lg:h-44 bg-gray-300 bg-center bg-cover rounded-lg shadow-md text-left uppercase text-clip overflow-hidden"
       style="background-color: {{ .Pair.QuoteAsset.Color }}">
-      <span class="font-black scale-125 text-9xl" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+      <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
+
         {{ .Pair.QuoteAsset.Symbol }}
       </span>
     </div>
-    <div class="w-64 -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
+    <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         Avg. buy price.
@@ -118,19 +124,21 @@
 
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
     {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
-    <div class="w-full h-44 rounded-lg shadow-md bg-emerald-300 uppercase truncate text-left text-clip overflow-hidden">
-      <span class="font-black scale-125 text-9xl text-right" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+    <div
+      class="w-4/5 lg:w-full h-24 lg:h-44 rounded-lg shadow-md bg-emerald-300 uppercase truncate text-left text-clip overflow-hidden">
+      <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
         +%
       </span>
     </div>
     {{else}}
-    <div class="w-full h-44 rounded-lg shadow-md bg-red-300 uppercase truncate text-left text-clip overflow-hidden">
-      <span class="font-black scale-125 text-9xl text-right" style="color: rgba(255, 255, 255, 0.8); font-size: 10rem;">
+    <div
+      class="w-4/5 lg:w-full h-24 lg:h-44 rounded-lg shadow-md bg-red-300 uppercase truncate text-left text-clip overflow-hidden">
+      <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
         -%
       </span>
     </div>
     {{end}}
-    <div class="w-64 -mt-10 overflow-hidden rounded-lg shadow-lg dark:bg-gray-800"
+    <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         P & L
