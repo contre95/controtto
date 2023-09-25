@@ -29,16 +29,16 @@ func NewMarketQuerier(a []pnl.Markets) *MarketsQuerier {
 // If is fails to retrieve the value it will set it to 0 (zero)
 func (aq *MarketsQuerier) GetMarketPrice(req QueryMarketReq) (*QueryMarketResp, error) {
 	resp := QueryMarketResp{Price: 0}
-	for _, markets := range aq.markets {
-		price, err := markets.GetCurrentPrice(req.AssetSymbolA, req.AssetSymbolB)
+	for _, m := range aq.markets {
+		price, err := m.GetCurrentPrice(req.AssetSymbolA, req.AssetSymbolB)
 		if err != nil {
-			slog.Error("Could not get market current price", "base", req.AssetSymbolA, "quote", req.AssetSymbolB, "provider", markets.Name(), "error", err)
+			slog.Error("Could not get market current price", "base", req.AssetSymbolA, "quote", req.AssetSymbolB, "provider", m.Name(), "error", err)
 			continue
 		}
-		slog.Info("Market queried", "base", req.AssetSymbolA, "quote", req.AssetSymbolB, "price", price, "provider", markets.Name())
+		slog.Info("Market queried", "base", req.AssetSymbolA, "quote", req.AssetSymbolB, "price", price, "provider", m.Name())
 		resp.Price = price
-		resp.ProviderName = markets.Name()
-		resp.ProviderColor = markets.Color()
+		resp.ProviderName = m.Name()
+		resp.ProviderColor = m.Color()
 		return &resp, nil
 	}
 	return &resp, errors.New(fmt.Sprintf("Could not get the price of %s in %s", req.AssetSymbolA, req.AssetSymbolB))

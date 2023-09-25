@@ -26,9 +26,8 @@
         </a>
 
         <p class="mt-3 text-sm text-gray-500 dark:text-gray-300 md:text-sm">
-          All settings here, can be set up and are reflected as environment variables. Be ware that if you have set up
-          env variables, they should be reflected in these settings. Changing them here will affect the environemnt
-          variables.
+          All settings are set up with environment variables. This page only displays which setting where set. To check which configuratoins are available please read the documentation.
+          or check <a href="https://github.com/contre95/controtto/blob/main/.env.example" target="_blank" class="text-blue-400">.env.example</a> file.
         </p>
 
         <a href="https://github.com/contre95/controtto" target="_blank"
@@ -47,101 +46,100 @@
     </div>
   </div>
   <div class="container px-6 py-10 mx-auto">
-    <p class="text-sm text-blue-500 uppercase">APIs Token</p>
-    <br>
-    <form id="settings-form">
-
-      <div>
-        <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-          Alpha Vantage Stock API
-          <small class="text-blue-500 text-blue-500">
-            (<a href="https://www.alphavantage.co/support/#api-key" target="_blank">Get it here.</a>)
-          </small>
-        </label>
-        <div class="relative flex items-center mt-2">
-          <span class="absolute">
-            <img src="/assets/img/secret.svg" class="w-6 h-6 mx-3 text-gray-400 dark:text-gray-500"
-              alt="alpha-vantage-token">
-          </span>
-          <input type="password" placeholder="9FESNGXKKRX2QKVH" value="{{ .AlphaVantageToken }}" name="alphatoken"
-            class="block w-full py-2.5 text-gray-700 placeholder-gray-400/70 bg-white border border-gray-200 rounded-lg pl-11 pr-5 rtl:pr-11 rtl:pl-5 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40">
-        </div>
-      </div>
+      <p class="text-sm text-blue-500 uppercase">Market Providers API</p>
       <br>
-      <div>
-        <label for="password" class="block text-md text-gray-500 dark:text-gray-300">
-          Tiingo Markets API
-          <small class="text-blue-500 text-blue-500">
-            (<a href="https://www.tiingo.com/account/api/token" target="_blank">Get it here.</a>)
-          </small>
-        </label>
-        <div class="relative flex items-center mt-2">
-          <span class="absolute">
-            <img src="/assets/img/secret.svg" class="w-6 h-6 mx-3 text-gray-400 dark:text-gray-500"
-              alt="alpha-vantage-token">
-          </span>
-          <input type="password" placeholder="4da81e0947d460f5259d50b850656110b5ab82ba" value="{{ .TiingoToken }}" name="tiingoToken"
-            class="block w-full py-2.5 text-gray-700 placeholder-gray-400/70 bg-white border border-gray-200 rounded-lg pl-11 pr-5 rtl:pr-11 rtl:pl-5 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40">
+      <div class="flex flex-wrap items-center">
+        <div>
+          {{ if .AlphaVantageToken }}
+          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
+          {{ else }}
+          <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4">
+          {{ end }}
         </div>
-      </div>
-      <br>
-      <div>
-        <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-          Uncommond pairs.
-          <small class="text-gray-500">
-            (Public API)
-          </small>
-        </label>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
+            Alpha Vantage Stock API token set.
+            <small class="text-blue-500 text-blue-500">
+              (<a href="https://www.alphavantage.co/support/#api-key" target="_blank">Get it here.</a>)
+            </small>
+          </label>
+        </div>
         <div class="relative flex items-center mt-2">
           <div class="flex items-center gap-x-3">
             <span
               class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 ">
-              {{ if .Uncommon }}
-              <input type="checkbox" name="uncommon"
-              class="text-blue-500 border-gray-300 px-4 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700" checked>
-              {{ else }}
-              <input type="checkbox" name="uncommon"
-              class="text-blue-500 border-gray-300 px-4 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700">
-              {{ end  }}
-              Enable uncommon pairs would allow you to create unusual pair types that are not common.
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center">
+        <div>
+          {{ if .TiingoToken }}
+          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
+          {{ else }}
+          <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4">
+          {{ end }}
+        </div>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
+            Tiingo markets API token set 
+            <small class="text-blue-500 text-blue-500">
+              (<a href="https://www.tiingo.com/account/api/token" target="_blank">Get it here.</a>)
+            </small>
+          </label>
+        </div>
+        <div class="relative flex items-center mt-2">
+          <div class="flex items-center gap-x-3">
+            <span
+              class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 ">
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center">
+        <div>
+          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
+        </div>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
+            Public markets (Binance, BingX, etc.)
+          </label>
+        </div>
+        <div class="relative flex items-center mt-2">
+          <div class="flex items-center gap-x-3">
+            <span
+              class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 ">
             </span>
           </div>
         </div>
       </div>
       <br>
-      <!-- <div> -->
-      <!--   <label for="email" class="block text-md text-gray-500 dark:text-gray-300"> -->
-      <!--     BingX -->
-      <!--     <small class="text-gray-500"> -->
-      <!--       (Public API) -->
-      <!--     </small> -->
-      <!--   </label> -->
-      <!--   <div class="relative flex items-center mt-2"> -->
-      <!--     <span -->
-      <!--       class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 "> -->
-      <!--       Bingx doesn't require a token since we use their public API. -->
-      <!--     </span> -->
-      <!--   </div> -->
-      <!-- </div> -->
-      <!-- <br> -->
-      <!-- <div> -->
-      <!--   <label for="email" class="block text-md text-gray-500 dark:text-gray-300"> -->
-      <!--     Binance -->
-      <!--     <small class="text-gray-500"> -->
-      <!--       (Public API) -->
-      <!--     </small> -->
-      <!--   </label> -->
-      <!--   <div class="relative flex items-center mt-2"> -->
-      <!--     <span -->
-      <!--       class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 "> -->
-      <!--       Binance doesn't require a token since we use their public API. -->
-      <!--     </span> -->
-      <!--   </div> -->
-      <!-- </div> -->
-      <button type="button" hx-post="/pairs" hx-include="#settings-form" hx-target="#mitoast"
-        class="px-8 py-2.5 leading-5 text-white transition-colors mt-4 duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-gray-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
-        Save
-      </button>
-    </form>
+      <p class="text-sm text-blue-500 uppercase">Pairs settings</p>
+      <br>
+      <div class="flex flex-wrap items-center">
+        <div>
+          {{ if .Uncommon }}
+          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
+          {{ else }}
+          <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4">
+          {{ end }}
+        </div>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
+            Uncommon pairs.
+            <small class="text-gray-400 font-normal italic">
+              (soon)
+            </small>
+            <!-- <small class="text-gray-500 font-normal ml-2 hidden lg:inline"> -->
+            <!--   Show uncommon pairs in the UI while creating new Pairs. -->
+            <!-- </small> -->
+            <!-- <small class="text-gray-500 font-normal ml-2 inline lg:hidden"> -->
+            <!--   Show uncommon pairs in UI. -->
+            <!-- </small> -->
+          </label>
+        </div>
+      </div>
+      <br>
+
   </div>
 </section>
