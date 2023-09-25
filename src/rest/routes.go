@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"controtto/src/app/config"
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"log"
@@ -9,7 +10,7 @@ import (
 	"github.com/gofiber/template/html/v2"
 )
 
-func Run(port string, m *managing.Service, q *querying.Service) {
+func Run(cfg *config.Service, m *managing.Service, q *querying.Service) {
 	engine := html.New("./views", ".html")
 	engine.Debug(true)
 	app := fiber.New(fiber.Config{
@@ -36,6 +37,7 @@ func Run(port string, m *managing.Service, q *querying.Service) {
 	app.Get("/pairs/:id/transactions/export", transactionExport(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/table", transactionTable(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/form", newTransactionForm(q.TradingPairQuerier))
+	app.Get("/settings", settingsSection(cfg))
 	// DELETE
 	app.Delete("/empty", empty())
 	app.Delete("/pairs/:id", deleteTradingPair(m.TradingPairManager))
@@ -46,5 +48,5 @@ func Run(port string, m *managing.Service, q *querying.Service) {
 	app.Post("/pairs/:id/transactions", newTransaction(m.TradingPairManager))
 	app.Post("/pairs/:id/transactions/upload", newTransactionImport(m.TradingPairManager))
 
-	log.Fatal(app.Listen("0.0.0.0" + ":" + port))
+	log.Fatal(app.Listen("0.0.0.0" + ":" + cfg.Get().Port))
 }

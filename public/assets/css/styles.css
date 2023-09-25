@@ -1,3 +1,7 @@
+:root {
+  --animate-delay: 0.5s;
+}
+
 .loader {
   display: none;
 }

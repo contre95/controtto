@@ -1,6 +1,7 @@
 package main
 
 import (
+	"controtto/src/app/config"
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"controtto/src/domain/pnl"
@@ -23,21 +24,20 @@ func main() {
 	if err != nil {
 		slog.Error("Error creating SQLite:", "error", err)
 		panic("Bye")
-	}
 
+	}
+	cfg := config.NewConfig()
 	// Markets
 	binanceAPI := markets.NewBinanceAPI()
 	bingxAPI := markets.NewBingxAPI()
 	// marketsAPIs := []pnl.Markets{binanceAPI, bingxAPI} // Defines query order
 	marketsAPIs := []pnl.Markets{bingxAPI, binanceAPI} // Defines query order
-	avToken := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
-	if len(avToken) != 0 {
-		avantageAPI := markets.NewAVantageAPI(avToken)
+	if cfg.IsSet().AVantageAPIToken {
+		avantageAPI := markets.NewAVantageAPI(cfg.Get().AVantageAPIToken)
 		marketsAPIs = append(marketsAPIs, avantageAPI)
 	}
-	tToken := os.Getenv("CONTROTTO_TIINGO_TOKEN")
-	if len(tToken) != 0 {
-		tiingoAPI := markets.NewTiingoAPI(tToken)
+	if cfg.IsSet().TiingoAPIToken {
+		tiingoAPI := markets.NewTiingoAPI(cfg.Get().TiingoAPIToken)
 		marketsAPIs = append(marketsAPIs, tiingoAPI)
 	}
 	for _, m := range marketsAPIs {
@@ -45,17 +45,13 @@ func main() {
 	}
 	ac := managing.NewAssetCreator(sqlite)
 	tpc := managing.NewTradingPairManager(sqlite, sqlite)
+	manager := managing.NewService(*ac, *tpc)
 	aq := querying.NewAssetQuerier(sqlite)
 	mkq := querying.NewMarketQuerier(marketsAPIs)
 	tpq := querying.NewTradingPairQuerier(sqlite, marketsAPIs)
 	querier := querying.NewService(*aq, *mkq, *tpq)
-	manager := managing.NewService(*ac, *tpc)
 
-	port := "8000"
-	portEnv := os.Getenv("CONTROTTO_PORT")
-	if len(portEnv) > 0 {
-		port = portEnv
-	}
+	port := cfg.Get().Port
 	slog.Info("Initiating server", "port", port)
-	rest.Run(port, &manager, &querier)
+	rest.Run(cfg, &manager, &querier)
 }
