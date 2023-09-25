@@ -8,7 +8,6 @@ import (
 	"controtto/src/gateways/markets"
 	"controtto/src/gateways/sqlite"
 	"controtto/src/rest"
-	"fmt"
 	"log/slog"
 	"os"
 )
@@ -28,9 +27,6 @@ func main() {
 
 	}
 	cfg := config.NewConfig()
-	fmt.Println(cfg.Get())
-	fmt.Println(cfg.Get())
-	fmt.Println(cfg.Get())
 	// Markets
 	binanceAPI := markets.NewBinanceAPI()
 	bingxAPI := markets.NewBingxAPI()
