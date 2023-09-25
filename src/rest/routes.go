@@ -36,6 +36,7 @@ func Run(port string, m *managing.Service, q *querying.Service) {
 	app.Get("/pairs/:id/transactions/export", transactionExport(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/table", transactionTable(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/transactions/form", newTransactionForm(q.TradingPairQuerier))
+	app.Get("/settings", settingsSection())
 	// DELETE
 	app.Delete("/empty", empty())
 	app.Delete("/pairs/:id", deleteTradingPair(m.TradingPairManager))

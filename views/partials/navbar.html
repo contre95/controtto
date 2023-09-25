@@ -34,9 +34,9 @@
 
   </div>
 
-  <div
+  <div hx-get="/settings" hx-swap="innerHTML" hx-target="#contenido" hx-trigger="click"
     _="on click remove .dark:bg-gray-800 .dark:text-white .border-gray-400 .dark:text-gray-200 .font-semibold from .sidebtn then add .dark:bg-gray-800 .bg-gray-100 .dark:text-gray-200 .dark:text-white .font-semibold .border-1 .border-2 .border-gray-400 on me "
-    class="flex drop-shadow-2xl align-middle justify-center z-50 w-20 h-20 bg-gray-100 border-2 border-gray-300 rounded-full mx-5 align-middle text-center p-5 sidebtn text-gray-600 transition-colors float-left duration-200 transform groups dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700 pointer-events-none">
+    class="flex drop-shadow-2xl align-middle justify-center z-50 w-20 h-20 bg-gray-100 border-2 border-gray-300 rounded-full mx-5 align-middle text-center p-5 sidebtn text-gray-600 transition-colors float-left duration-200 transform groups dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700">
     <img src="/assets/img/settings.svg" class="z-50 w-10 h-10 scale-100 hover:scale-110 transition-all duration-400 grayscale"
       alt="settings">
     <span
