@@ -75,7 +75,7 @@
     <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
-        You have {{ printf "%.2f" .Pair.Calculations.TotalBase }}
+        You have {{ printf "%.6f" .Pair.Calculations.TotalBase }}
         <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
       </h3>
       <div class="flex items-center justify-between text-center px-2 py-2 bg-gray-200 dark:bg-gray-700">
