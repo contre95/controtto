@@ -22,7 +22,7 @@ func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
 	return tp.Validate()
 }
 
-// NewTransaction creates new transaction for the given TradingPair
+// NewTransaction creates new transaction for the given TradingPair and calculate the missing fields.
 func (tp *TradingPair) NewTransaction(baseAmount, quoteAmount, tFee, wFee float64, timestamp time.Time, tType TransactionType) (*Transaction, error) {
 	// Append the transaction to the Transactions slice.
 	transaction := &Transaction{
@@ -34,7 +34,11 @@ func (tp *TradingPair) NewTransaction(baseAmount, quoteAmount, tFee, wFee float6
 		FeeInQuote:      wFee,
 		TransactionType: tType,
 	}
-	tp.Transactions = append(tp.Transactions, *transaction)
+	// tp.Transactions = append(tp.Transactions, *transaction)
+	err := transaction.CalculateFields()
+	if err != nil {
+		return nil, err
+	}
 	return transaction.Validate()
 }
 

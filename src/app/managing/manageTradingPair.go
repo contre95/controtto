@@ -101,6 +101,7 @@ func (tpm *TradingPairsManager) RecordTransaction(req RecordTransactionReq) (*Re
 		slog.Error("Could not persist transaction", "error", err)
 		return nil, err
 	}
+	tradingPair.Transactions = append(tradingPair.Transactions, *transaction) // Append once persis was successful
 	slog.Info("Transaction created successfully.", "time", req.Timestamp.Format(time.UnixDate))
 	return &RecordTransactionResp{
 		ID:         transaction.ID,
