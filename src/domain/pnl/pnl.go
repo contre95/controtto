@@ -45,7 +45,8 @@ func (tp *TradingPair) calculateBuyPrice() error {
 		if t.TransactionType == Sell {
 			tp.Calculations.TotalBase -= t.BaseAmount
 			// TODO: Figure out what should happen here.
-			tp.Calculations.TotalQuoteSpent -= t.BaseAmount * tp.Calculations.AvgBuyPrice
+			// tp.Calculations.TotalQuoteSpent -= t.BaseAmount * tp.Calculations.AvgBuyPrice
+			tp.Calculations.TotalQuoteSpent -= t.QuoteAmount
 		}
 		tp.Calculations.TotalFeeInQuote += t.FeeInQuote
 		tp.Calculations.TotalFeeInBase += t.FeeInBase
