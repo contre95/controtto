@@ -42,7 +42,7 @@ func (api *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 		if err != nil {
 			return 0, err
 		}
-		return bPriceUSDT / aPriceUSDT, nil
+		return aPriceUSDT / bPriceUSDT, nil
 	}
 
 	url := fmt.Sprintf("%s?symbol=%s-%s", api.BaseURL, assetA, assetB)
