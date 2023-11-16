@@ -3,33 +3,17 @@ package querying
 import (
 	"controtto/src/domain/pnl"
 	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
 )
 
 func TestListAssets(t *testing.T) {
-	testAssets := []pnl.Asset{
-		{
-			Symbol:      "AAPL",
-			Color:       "#FFFFFF",
-			Name:        "Apple Stocks",
-			CountryCode: "US",
-		},
-		{
-			Symbol:      "GOOGL",
-			Color:       "#FF5370",
-			Name:        "Google Stocks",
-			CountryCode: "US",
-		},
-		{
-			Symbol:      "TSLA",
-			Color:       "#0F111A",
-			Name:        "Tesla Stocks",
-			CountryCode: "US",
-		},
-	}
-
+	a1, _ := pnl.NewAsset("AAPL", "#FFFFFF", "Apple Stocks", "US", "Stock")
+	a2, _ := pnl.NewAsset("GOOGL", "#FF5370", "Google Stocks", "US", "Stock")
+	a3, _ := pnl.NewAsset("TSLA", "#0F111A", "Tesla Stocks", "US", "Stock")
+	testAssets := []pnl.Asset{*a1, *a2, *a3}
 	t.Run("ListAssets_Success", func(t *testing.T) {
 		mockAssets := pnl.MockAssets{}
 		mockAssets.ListAssetsResponse = func() ([]pnl.Asset, error) {
@@ -108,64 +92,70 @@ func TestGetAsset(t *testing.T) {
 
 func TestGetTradingPair(t *testing.T) {
 	// TODO: Instanciate this assets from the domain, not like this.
-	testTradinPair := pnl.TradingPair{
-		ID: pnl.TradingPairID("BTCUSD"),
-		BaseAsset: pnl.Asset{
-			Symbol: "BTC",
-			Name:   "Bitcoin",
-		},
-		QuoteAsset: pnl.Asset{
-			Symbol: "USD",
-			Name:   "US Dollar",
-		},
-		Transactions: []pnl.Transaction{
-			{
-				ID:              "1",
-				Timestamp:       time.Now(),
-				BaseAmount:      1.0,
-				QuoteAmount:     50000.0,
-				FeeInBase:       0.1,
-				FeeInQuote:      0.0,
-				TransactionType: pnl.Buy,
-				Price:           50000.0,
-			},
-			{
-				ID:              "2",
-				Timestamp:       time.Now(),
-				BaseAmount:      0.5,
-				QuoteAmount:     25000.0,
-				FeeInBase:       0.05,
-				FeeInQuote:      0.0,
-				TransactionType: pnl.Sell,
-				Price:           50000.0,
-			},
-		},
-		Calculations: pnl.Calculations{
-			AvgBuyPrice:              50000.0,
-			BaseMarketPrice:          48000.0,
-			MarketName:               "Mock",
-			MarketColor:              "#FFFFFF",
-			CurrentBaseAmountInQuote: 48000.0,
-			TotalBase:                1.5,
-			TotalQuoteSpent:          75000.0,
-			PNLAmount:                2500.0,
-			PNLPercent:               5.0,
-			TotalFeeInQuote:          0.15,
-			TotalFeeInBase:           0.0,
-		},
+	// Create a new trading pair
+	mockMarkets := &pnl.MockMarkets{}
+	mockMarkets.GetCurrentPriceResponse = func(a, b string) (float64, error) {
+		return 65, nil
 	}
+	baseAsset, _ := pnl.NewAsset("BTC", "#FFFFFF", "Bitcoin", "", "Crypto")
+	quoteAsset, _ := pnl.NewAsset("USD", "#FFFFFF", "US Dollar", "US", "Forex")
+
+	tradingPair, _ := pnl.NewTradingPair(*baseAsset, *quoteAsset)
+	tradingPair.Calculations.MarketName = mockMarkets.Name()
+	tradingPair.Calculations.MarketColor = mockMarkets.Color()
+	// Create transactions
+	t1, _ := tradingPair.NewTransaction(1.0, 50000.0, 0.1, 0.0, time.Now(), "Buy")
+	t2, _ := tradingPair.NewTransaction(0.5, 25000.0, 0.05, 0.0, time.Now(), "Sell")
+	tp := *tradingPair // Pair without the transaction
+	tradingPair.Transactions = []pnl.Transaction{*t1, *t2}
+	// tradingPair.Calculate()
 	t.Run("GetTradingPair_Success", func(t *testing.T) {
 		mockTradingPairs := &pnl.MockTradingPairs{}
 		mockTradingPairs.GetTradingPairResponse = func(tpid string) (*pnl.TradingPair, error) {
-			return &testTradinPair, nil
+			return &tp, nil
 		}
-		mockMarkets := &pnl.MockMarkets{}
+		mockTradingPairs.ListTransactionsResponse = func(tpid string) ([]pnl.Transaction, error) {
+			return []pnl.Transaction{*t1, *t2}, nil
+		}
 		querier := NewTradingPairQuerier(mockTradingPairs, []pnl.Markets{mockMarkets})
 		req := GetTradingPairReq{
-			TPID: string(testTradinPair.ID),
+			TPID:                 string(tradingPair.ID),
+			WithCurrentBasePrice: false,
+			WithTransactions:     true,
+			WithCalculations:     false,
 		}
 		want := GetTradingPairResp{
-			Pair: testTradinPair,
+			Pair: *tradingPair,
+		}
+		got, err := querier.GetTradingPair(req)
+		if err != nil {
+			t.Errorf("Expected no error, got %v", err)
+		}
+		if !reflect.DeepEqual(*got, want) {
+			t.Errorf("GetTradingPair() = %v, want %v", *got, want)
+		}
+	})
+
+	t.Run("GetTradingPairWithoutTransactions_Success", func(t *testing.T) {
+		mockTradingPairs := &pnl.MockTradingPairs{}
+		mockTradingPairs.GetTradingPairResponse = func(tpid string) (*pnl.TradingPair, error) {
+			return &tp, nil
+		}
+		// mockTradingPairs.ListTransactionsResponse = func(tpid string) ([]pnl.Transaction, error) {
+		// 	return []pnl.Transaction{*t1, *t2}, nil
+		// }
+		querier := NewTradingPairQuerier(mockTradingPairs, []pnl.Markets{mockMarkets})
+		req := GetTradingPairReq{
+			TPID:                 string(tradingPair.ID),
+			WithCurrentBasePrice: false,
+			WithTransactions:     false,
+			WithCalculations:     false,
+		}
+		fmt.Println(tradingPair.Transactions)
+		tradingPair.Transactions = []pnl.Transaction{}
+		fmt.Println(tradingPair.Transactions)
+		want := GetTradingPairResp{
+			Pair: *tradingPair,
 		}
 		got, err := querier.GetTradingPair(req)
 		if err != nil {
@@ -179,19 +169,19 @@ func TestGetTradingPair(t *testing.T) {
 	t.Run("GetTradingPairWithBasePrice_Success", func(t *testing.T) {
 		mockTradingPairs := &pnl.MockTradingPairs{}
 		mockTradingPairs.GetTradingPairResponse = func(tpid string) (*pnl.TradingPair, error) {
-			return &testTradinPair, nil
+			return tradingPair, nil
 		}
 		mockMarkets := &pnl.MockMarkets{}
 		mockMarkets.GetCurrentPriceResponse = func(assetA, assetB string) (float64, error) {
-			return testTradinPair.Calculations.BaseMarketPrice, nil
+			return tradingPair.Calculations.BaseMarketPrice, nil
 		}
 		querier := NewTradingPairQuerier(mockTradingPairs, []pnl.Markets{mockMarkets})
 		req := GetTradingPairReq{
-			TPID:                 string(testTradinPair.ID),
+			TPID:                 string(tradingPair.ID),
 			WithCurrentBasePrice: true,
 		}
 		want := GetTradingPairResp{
-			Pair: testTradinPair,
+			Pair: *tradingPair,
 		}
 		got, err := querier.GetTradingPair(req)
 		if err != nil {
