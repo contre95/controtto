@@ -41,7 +41,8 @@ air -c air.toml
 and access [localhost:3000](http://localhost:3000)
 
 ## Run with Podman
-If you want to use Docker, simply replace `podman` with `docker`.
+A [Container image](https://hub.docker.com/r/contre95/controtto) is available on Docker's public registry.
+If you want to use Docker, simply replace `podman` with `docker`. 
 
 ```sh
 mkdir data
