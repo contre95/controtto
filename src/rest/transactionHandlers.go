@@ -15,31 +15,31 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func deleteTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+func deleteTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		req := managing.DeleteTransactionReq{
+		req := managing.DeleteTradeReq{
 			ID: c.Params("id"),
 		}
-		slog.Info("Transaction delete requested.", "id", req.ID)
-		resp, err := tpm.DeleteTransaction(req)
+		slog.Info("Trade delete requested.", "id", req.ID)
+		resp, err := tpm.DeleteTrade(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
 				"Msg":   err,
 			})
 		}
-		slog.Info("Transaction deleted", "trasnaction", resp.ID)
-		c.Append("HX-Trigger", "newTransaction")
+		slog.Info("Trade deleted", "trasnaction", resp.ID)
+		c.Append("HX-Trigger", "newTrade")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Deleted",
-			"Msg":   "Transaction deleted",
+			"Msg":   "Trade deleted",
 		})
 	}
 }
 
-func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		slog.Info("Importing transactions")
+		slog.Info("Importing trades")
 		file, err := c.FormFile("trancsv")
 		if err != nil {
 			slog.Error("error", err)
@@ -65,7 +65,7 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 		// Iterate over the CSV records
 		csvReader.Read() // Skip column
 		tCount := 0
-		reqs := []managing.RecordTransactionReq{}
+		reqs := []managing.RecordTradeReq{}
 		for {
 			line, err := csvReader.Read()
 			if err == io.EOF {
@@ -77,58 +77,58 @@ func newTransactionImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) err
 					"Msg":   fmt.Sprintln("Error reading CSV req:", err),
 				})
 			}
-			req := managing.RecordTransactionReq{}
+			req := managing.RecordTradeReq{}
 			req.TradingPairID = c.Params("id")
 			req.Type = line[0]
 			req.Timestamp, err = time.Parse("2006-01-02 15:04", line[1])
 			if err != nil {
-				slog.Error("Error parsing imported transaction.", "error", err)
+				slog.Error("Error parsing imported trade.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 0)})
 			}
 			req.BaseAmount, err = strconv.ParseFloat(line[2], 64)
 			if err != nil {
-				slog.Error("Error parsing imported transaction.", "error", err)
+				slog.Error("Error parsing imported trade.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 1)})
 			}
 			req.QuoteAmount, err = strconv.ParseFloat(line[3], 64)
 			if err != nil {
-				slog.Error("Error parsing imported transaction.", "error", err)
+				slog.Error("Error parsing imported trade.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 2)})
 			}
 			req.FeeInBase, err = strconv.ParseFloat(line[4], 64)
 			if err != nil {
-				slog.Error("Error parsing imported transaction.", "error", err)
+				slog.Error("Error parsing imported trade.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 3)})
 			}
 			req.FeeInQuote, err = strconv.ParseFloat(line[5], 64)
 			if err != nil {
-				slog.Error("Error parsing imported transaction.", "error", err)
+				slog.Error("Error parsing imported trade.", "error", err)
 				return c.Render("toastErr", fiber.Map{"Title": "Created", "Msg": fmt.Sprintf("Error on row %d col %d", tCount, 4)})
 			}
 			reqs = append(reqs, req)
 			tCount++
 		}
-		failedTransactions := []string{}
+		failedTrades := []string{}
 		for i, r := range reqs {
-			_, err := tpm.RecordTransaction(r)
+			_, err := tpm.RecordTrade(r)
 			if err != nil {
-				slog.Error("Attempt to import transaction failed.", "error", err, "row", i)
-				failedTransactions = append(failedTransactions, fmt.Sprint(i))
+				slog.Error("Attempt to import trade failed.", "error", err, "row", i)
+				failedTrades = append(failedTrades, fmt.Sprint(i))
 			}
 		}
-		tok := int(tCount - len(failedTransactions))
-		c.Append("HX-Trigger", "newTransaction")
+		tok := int(tCount - len(failedTrades))
+		c.Append("HX-Trigger", "newTrade")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",
 			"Extra": "",
-			"Msg":   fmt.Sprintf("%d/%d imported.\n%d/%d failed.", tok, tCount, len(failedTransactions), tCount),
+			"Msg":   fmt.Sprintf("%d/%d imported.\n%d/%d failed.", tok, tCount, len(failedTrades), tCount),
 		})
 	}
 }
 
-func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+func newTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		slog.Info("Recording new transaction")
+		slog.Info("Recording new trade")
 		payload := struct {
 			Base   float64 `form:"base"`
 			Quote  float64 `form:"quote"`
@@ -148,7 +148,7 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		req := managing.RecordTransactionReq{
+		req := managing.RecordTradeReq{
 			TradingPairID: c.Params("id"),
 			Timestamp:     tdate,
 			BaseAmount:    payload.Base,
@@ -157,14 +157,14 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 			FeeInQuote:    payload.QFee,
 			Type:          payload.TType,
 		}
-		resp, err := tpm.RecordTransaction(req)
+		resp, err := tpm.RecordTrade(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
 				"Msg":   err,
 			})
 		}
-		c.Append("HX-Trigger", "newTransaction")
+		c.Append("HX-Trigger", "newTrade")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",
 			"Msg":   resp.Msg,
@@ -174,14 +174,14 @@ func newTransaction(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func newTradingForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		slog.Info("Create Transaction UI requested")
+		slog.Info("Create Trade UI requested")
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
 			TPID:                 id,
 			WithCurrentBasePrice: true,
-			WithTransactions:     false,
+			WithTrades:           false,
 			WithCalculations:     false,
 		}
 		resp, err := tpq.GetTradingPair(req)
@@ -191,20 +191,20 @@ func newTransactionForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error
 				"Msg":   err,
 			})
 		}
-		return c.Render("transactionForm", fiber.Map{
+		return c.Render("tradingForm", fiber.Map{
 			"Pair":  resp.Pair,
 			"Today": time.Now().Format("2006-01-02"),
 		})
 	}
 }
 
-func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func tradingTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
 			TPID:                 id,
 			WithCurrentBasePrice: false,
-			WithTransactions:     true,
+			WithTrades:           true,
 			WithCalculations:     false,
 		}
 		resp, err := tpq.GetTradingPair(req)
@@ -215,10 +215,10 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			})
 		}
 		// TODO: Should this happen here? or in the app layer ?
-		slices.Reverse(resp.Pair.Transactions)
+		slices.Reverse(resp.Pair.Trades)
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
-		c.Append("HX-Trigger", "refreshTransaction")
-		return c.Render("transactionTable", fiber.Map{
+		c.Append("HX-Trigger", "refreshTrade")
+		return c.Render("tradingTable", fiber.Map{
 			"Today":      time.Now().Format(time.UnixDate),
 			"TodayShort": time.Now().Format("02/01/2006"),
 			"Pair":       resp.Pair,
@@ -226,22 +226,22 @@ func transactionTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
-func transactionExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func tradingExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
 			TPID:                 id,
 			WithCurrentBasePrice: false,
-			WithTransactions:     true,
+			WithTrades:           true,
 			WithCalculations:     false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
-			return c.SendString(fmt.Sprintf("Error exporting transactions. %s", err))
+			return c.SendString(fmt.Sprintf("Error exporting trades. %s", err))
 		}
-		file := "TransactionType,Timestamp,BaseAmount,QuoteAmount,FeeInBase,FeeInQuote\n"
-		for _, t := range resp.Pair.Transactions {
-			file += fmt.Sprintf("%s,%s,%f,%f,%f,%f\n", t.TransactionType, t.Timestamp.Format("2006-01-02 15:04"), t.BaseAmount, t.QuoteAmount, t.FeeInBase, t.FeeInQuote)
+		file := "TradeType,Timestamp,BaseAmount,QuoteAmount,FeeInBase,FeeInQuote\n"
+		for _, t := range resp.Pair.Trades {
+			file += fmt.Sprintf("%s,%s,%f,%f,%f,%f\n", t.TradeType, t.Timestamp.Format("2006-01-02 15:04"), t.BaseAmount, t.QuoteAmount, t.FeeInBase, t.FeeInQuote)
 		}
 		c.Set("Content-Disposition", fmt.Sprintf("attachment; filename=export_%s_%s.csv", resp.Pair.BaseAsset.Symbol, resp.Pair.QuoteAsset.Symbol))
 		c.Set("Content-Type", "application/octet-stream")

@@ -36,25 +36,25 @@ func (tpq *TradingPairsQuerier) ListTradingPairs(req ListTradingPairsReq) (*List
 	return &resp, nil
 }
 
-// List Transactions
+// List Trades
 
-type TransactionsReq struct {
+type TradesReq struct {
 	TradingPairID string
 }
-type TransactionsResp struct {
-	Transactions []pnl.Transaction
+type TradesResp struct {
+	Trades []pnl.Trade
 }
 
-func (tpq *TradingPairsQuerier) ListTransactions(req TransactionsReq) (*TransactionsResp, error) {
+func (tpq *TradingPairsQuerier) ListTrades(req TradesReq) (*TradesResp, error) {
 	var err error
-	transactions, err := tpq.getTransactions(req.TradingPairID)
+	trades, err := tpq.getTrades(req.TradingPairID)
 	if err != nil {
 		slog.Error("Error getting list from DB", "TradingPair", req.TradingPairID, "error", err)
 		return nil, err
 	}
-	slog.Error("Transactions retrieved succesfully", "TradingPair", req.TradingPairID, "TransactionCount", len(transactions))
-	resp := TransactionsResp{
-		Transactions: transactions,
+	slog.Error("Trades retrieved succesfully", "TradingPair", req.TradingPairID, "TradeCount", len(trades))
+	resp := TradesResp{
+		Trades: trades,
 	}
 	return &resp, nil
 }
@@ -65,7 +65,7 @@ func (tpq *TradingPairsQuerier) ListTransactions(req TransactionsReq) (*Transact
 type GetTradingPairReq struct {
 	TPID                 string
 	WithCurrentBasePrice bool
-	WithTransactions     bool
+	WithTrades     bool
 	WithCalculations     bool
 }
 
@@ -81,18 +81,18 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 	}
 
 	if req.WithCalculations {
-		req.WithTransactions = true
+		req.WithTrades = true
 		req.WithCurrentBasePrice = true
 	}
 
-	if req.WithTransactions {
-		transactions, err := tpq.getTransactions(req.TPID)
+	if req.WithTrades {
+		trades, err := tpq.getTrades(req.TPID)
 		if err != nil {
 			return nil, err
 		}
-		for _, t := range transactions {
+		for _, t := range trades {
 			t.CalculateFields()
-			pair.Transactions = append(pair.Transactions, t)
+			pair.Trades = append(pair.Trades, t)
 		}
 	}
 
@@ -114,13 +114,13 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 	return &resp, nil
 }
 
-func (tpq *TradingPairsQuerier) getTransactions(tpid string) ([]pnl.Transaction, error) {
-	transactions, err := tpq.tradingPairs.ListTransactions(tpid)
+func (tpq *TradingPairsQuerier) getTrades(tpid string) ([]pnl.Trade, error) {
+	trades, err := tpq.tradingPairs.ListTrades(tpid)
 	if err != nil {
-		slog.Error("Error getting transaction", "Trading Pair", tpid, "error", err)
+		slog.Error("Error getting trade", "Trading Pair", tpid, "error", err)
 		return nil, err
 	}
-	return transactions, nil
+	return trades, nil
 }
 
 func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (float64, string, string, error) {

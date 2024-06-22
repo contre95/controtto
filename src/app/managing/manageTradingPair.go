@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type RecordTransactionReq struct {
+type RecordTradeReq struct {
 	TradingPairID string
 	Timestamp     time.Time
 	BaseAmount    float64
@@ -17,7 +17,7 @@ type RecordTransactionReq struct {
 	Type          string
 }
 
-type RecordTransactionResp struct {
+type RecordTradeResp struct {
 	ID         string
 	Msg        string
 	RecordTime time.Time
@@ -37,11 +37,11 @@ type DeleteTradingPairResp struct {
 	Msg string
 }
 
-type DeleteTransactionReq struct {
+type DeleteTradeReq struct {
 	ID string
 }
 
-type DeleteTransactionResp struct {
+type DeleteTradeResp struct {
 	ID  string
 	Msg string
 }
@@ -68,43 +68,43 @@ func (tpm *TradingPairsManager) DeleteTradingPair(req DeleteTradingPairReq) (*De
 	}
 	return &DeleteTradingPairResp{
 		ID:  req.ID,
-		Msg: fmt.Sprintf("Transaction %s deleted successfully!", req.ID),
+		Msg: fmt.Sprintf("Trade %s deleted successfully!", req.ID),
 	}, nil
 }
 
-func (tpm *TradingPairsManager) DeleteTransaction(req DeleteTransactionReq) (*DeleteTransactionResp, error) {
-	err := tpm.tradingPairs.DeleteTransaction(req.ID)
+func (tpm *TradingPairsManager) DeleteTrade(req DeleteTradeReq) (*DeleteTradeResp, error) {
+	err := tpm.tradingPairs.DeleteTrade(req.ID)
 	if err != nil {
 		slog.Error("Error deleting trading pair", "error", err)
 		return nil, err
 	}
-	return &DeleteTransactionResp{
+	return &DeleteTradeResp{
 		ID:  req.ID,
-		Msg: fmt.Sprintf("%s Transaction deleted successfully!", req.ID),
+		Msg: fmt.Sprintf("%s Trade deleted successfully!", req.ID),
 	}, nil
 }
 
-func (tpm *TradingPairsManager) RecordTransaction(req RecordTransactionReq) (*RecordTransactionResp, error) {
+func (tpm *TradingPairsManager) RecordTrade(req RecordTradeReq) (*RecordTradeResp, error) {
 	var err error
 	tradingPair, err := tpm.tradingPairs.GetTradingPair(string(req.TradingPairID))
 	if err != nil {
 		slog.Error("Could not retrieve TradingPair", "error", err)
 		return nil, err
 	}
-	transaction, err := tradingPair.NewTransaction(req.BaseAmount, req.QuoteAmount, req.FeeInBase, req.FeeInQuote, req.Timestamp, pnl.TransactionType(req.Type))
+	trade, err := tradingPair.NewTrade(req.BaseAmount, req.QuoteAmount, req.FeeInBase, req.FeeInQuote, req.Timestamp, pnl.TradeType(req.Type))
 	if err != nil {
-		slog.Error("Could create transaction", "error", err)
+		slog.Error("Could create trade", "error", err)
 		return nil, err
 	}
-	err = tpm.tradingPairs.RecordTransaction(*transaction, tradingPair.ID)
+	err = tpm.tradingPairs.RecordTrade(*trade, tradingPair.ID)
 	if err != nil {
-		slog.Error("Could not persist transaction", "error", err)
+		slog.Error("Could not persist trade", "error", err)
 		return nil, err
 	}
-	slog.Info("Transaction created successfully.", "time", req.Timestamp.Format(time.UnixDate))
-	return &RecordTransactionResp{
-		ID:         transaction.ID,
-		Msg:        "Transaction created successfully",
+	slog.Info("Trade created successfully.", "time", req.Timestamp.Format(time.UnixDate))
+	return &RecordTradeResp{
+		ID:         trade.ID,
+		Msg:        "Trade created successfully",
 		RecordTime: time.Now(),
 	}, nil
 }

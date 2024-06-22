@@ -34,19 +34,19 @@ func Run(cfg *config.Service, m *managing.Service, q *querying.Service) {
 	app.Get("/ui/pairs/:id/chart", pairChart(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/tape", pairTape(q.TradingPairQuerier))
 	app.Get("/pairs/AvgBuyPrice/:id", avgBuyPrice(q.TradingPairQuerier))
-	app.Get("/pairs/:id/transactions/export", transactionExport(q.TradingPairQuerier))
-	app.Get("/ui/pairs/:id/transactions/table", transactionTable(q.TradingPairQuerier))
-	app.Get("/ui/pairs/:id/transactions/form", newTransactionForm(q.TradingPairQuerier))
+	app.Get("/pairs/:id/trades/export", tradingExport(q.TradingPairQuerier))
+	app.Get("/ui/pairs/:id/trades/table", tradingTable(q.TradingPairQuerier))
+	app.Get("/ui/pairs/:id/trades/form", newTradeForm(q.TradingPairQuerier))
 	app.Get("/settings", settingsSection(cfg))
 	// DELETE
 	app.Delete("/empty", empty())
 	app.Delete("/pairs/:id", deleteTradingPair(m.TradingPairManager))
-	app.Delete("/transactions/:id", deleteTransaction(m.TradingPairManager))
+	app.Delete("/trades/:id", deleteTrade(m.TradingPairManager))
 	// POST
 	app.Post("/assets", newAsset(m.AssetCreator))
 	app.Post("/pairs", newTradingPair(m.TradingPairManager))
-	app.Post("/pairs/:id/transactions", newTransaction(m.TradingPairManager))
-	app.Post("/pairs/:id/transactions/upload", newTransactionImport(m.TradingPairManager))
+	app.Post("/pairs/:id/trades", newTrade(m.TradingPairManager))
+	app.Post("/pairs/:id/trades/upload", newTradeImport(m.TradingPairManager))
 
 	log.Fatal(app.Listen("0.0.0.0" + ":" + cfg.Get().Port))
 }

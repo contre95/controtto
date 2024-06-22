@@ -9,11 +9,11 @@ type TradingPair struct {
 	ID           TradingPairID
 	BaseAsset    Asset
 	QuoteAsset   Asset
-	Transactions []Transaction
+	Trades []Trade
 	Calculations Calculations
 }
 
-// Calculation is a value object for a TradingPair and it is populated with the function Calculate. It hold the data inferred from the TradingPair transactions
+// Calculation is a value object for a TradingPair and it is populated with the function Calculate. It hold the data inferred from the TradingPair trades
 type Calculations struct {
 	AvgBuyPrice              float64
 	BaseMarketPrice          float64
@@ -30,27 +30,27 @@ type Calculations struct {
 }
 
 const (
-	Buy TransactionType = "Buy"
-	// Withdraw TransactionType = "Withdraw"
-	Sell TransactionType = "Sell"
+	Buy TradeType = "Buy"
+	// Withdraw TradeType = "Withdraw"
+	Sell TradeType = "Sell"
 )
 
-type TransactionType string
+type TradeType string
 
-func GetValidTransactionTypes() []TransactionType {
-	return []TransactionType{Buy, Sell}
+func GetValidTradeTypes() []TradeType {
+	return []TradeType{Buy, Sell}
 }
 
-// Transaction represents individual exchange transactions between the asset pair.
+// Trade represents individual exchange trades between the asset pair.
 // The first listed currency of a currency pair is called the base currency, and the second currency is called the quote currency.
-type Transaction struct {
+type Trade struct {
 	ID              string
 	Timestamp       time.Time
 	BaseAmount      float64
 	QuoteAmount     float64
 	FeeInBase       float64
 	FeeInQuote      float64
-	TransactionType TransactionType
+	TradeType TradeType
 	Price           float64
 }
 
@@ -60,9 +60,9 @@ type TradingPairs interface {
 	ListTradingPairs() ([]TradingPair, error)
 	GetTradingPair(tpid string) (*TradingPair, error)
 	DeleteTradingPair(tpid string) error
-	DeleteTransaction(tid string) error
-	RecordTransaction(t Transaction, tpid TradingPairID) error
-	ListTransactions(tpid string) ([]Transaction, error)
+	DeleteTrade(tid string) error
+	RecordTrade(t Trade, tpid TradingPairID) error
+	ListTrades(tpid string) ([]Trade, error)
 }
 
 type MarketNotFound error

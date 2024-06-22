@@ -30,7 +30,7 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		slices.Reverse(resp.Pair.Transactions)
+		slices.Reverse(resp.Pair.Trades)
 		return c.Render("pairCards", fiber.Map{
 			"Today": time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Pair":  resp.Pair,
@@ -78,7 +78,7 @@ func pairChart(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		slices.Reverse(resp.Pair.Transactions)
+		slices.Reverse(resp.Pair.Trades)
 		return c.Render("pairChart", fiber.Map{
 			"Pair": resp.Pair,
 		})

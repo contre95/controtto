@@ -17,43 +17,43 @@ func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
 		ID:           TradingPairID(fmt.Sprintf("%s%s", base.Symbol, quote.Symbol)),
 		BaseAsset:    base,
 		QuoteAsset:   quote,
-		Transactions: []Transaction{},
+		Trades: []Trade{},
 	}
 	return tp.Validate()
 }
 
-// NewTransaction creates new transaction for the given TradingPair
-func (tp *TradingPair) NewTransaction(baseAmount, quoteAmount, tFee, wFee float64, timestamp time.Time, tType TransactionType) (*Transaction, error) {
-	// Append the transaction to the Transactions slice.
-	transaction := &Transaction{
+// NewTrade creates new trade for the given TradingPair
+func (tp *TradingPair) NewTrade(baseAmount, quoteAmount, tFee, wFee float64, timestamp time.Time, tType TradeType) (*Trade, error) {
+	// Append the trade to the Trades slice.
+	trade := &Trade{
 		ID:              uuid.New().String(),
 		Timestamp:       timestamp,
 		BaseAmount:      baseAmount,
 		QuoteAmount:     quoteAmount,
 		FeeInBase:       tFee,
 		FeeInQuote:      wFee,
-		TransactionType: tType,
+		TradeType: tType,
 	}
-	tp.Transactions = append(tp.Transactions, *transaction)
-	return transaction.Validate()
+	tp.Trades = append(tp.Trades, *trade)
+	return trade.Validate()
 }
 
-type InvalidTransaction error
+type InvalidTrade error
 
 // Validate validates a TradingPair, if all fields are valid it returns itself, otherwise it returns an InvalidTradingPair error.
-func (t *Transaction) Validate() (*Transaction, error) {
+func (t *Trade) Validate() (*Trade, error) {
 	// Perform any necessary validation or business logic checks here.
 	if t.FeeInBase > 0 && t.FeeInQuote > 0 {
-		slog.Error("Transaction Validation error", "error", "Invalid fee, can't have both on a single transaction.", "FeeInQuote", t.FeeInQuote, "FeeInBase", t.FeeInBase)
-		return nil, InvalidTransaction(errors.New("Invalid base/quote amounts"))
+		slog.Error("Trade Validation error", "error", "Invalid fee, can't have both on a single trade.", "FeeInQuote", t.FeeInQuote, "FeeInBase", t.FeeInBase)
+		return nil, InvalidTrade(errors.New("Invalid base/quote amounts"))
 	}
 	if t.BaseAmount <= 0 || t.QuoteAmount <= 0 {
-		slog.Error("Transaction Validation error", "error", "Invalid base/quote amount")
-		return nil, InvalidTransaction(errors.New("Invalid base/quote amounts"))
+		slog.Error("Trade Validation error", "error", "Invalid base/quote amount")
+		return nil, InvalidTrade(errors.New("Invalid base/quote amounts"))
 	}
-	if !slices.Contains(GetValidTransactionTypes(), t.TransactionType) {
-		slog.Error("Transaction Validation error", "error", "Invalid transaction type")
-		return nil, InvalidTransaction(errors.New("Invalid transaction"))
+	if !slices.Contains(GetValidTradeTypes(), t.TradeType) {
+		slog.Error("Trade Validation error", "error", "Invalid trade type")
+		return nil, InvalidTrade(errors.New("Invalid trade"))
 	}
 	return t, nil
 }

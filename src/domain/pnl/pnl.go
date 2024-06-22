@@ -31,18 +31,18 @@ func (tp *TradingPair) calculateProfit() error {
 
 func (tp *TradingPair) calculateBuyPrice() error {
 	// Perform any necessary validation or business logic checks here.
-	if len(tp.Transactions) == 0 {
-		slog.Error("Error calculating P&L", "error", "TradingPair doens't have any transactions")
-		return errors.New("Please add some transactions in order to calculate you profit and loss")
+	if len(tp.Trades) == 0 {
+		slog.Error("Error calculating P&L", "error", "TradingPair doens't have any trades")
+		return errors.New("Please add some trades in order to calculate you profit and loss")
 	}
 	// tp.Calculations.TotalBase = 0
 	// tp.Calculations.TotalQuoteSpent = 0
-	for _, t := range tp.Transactions {
-		if t.TransactionType == Buy {
+	for _, t := range tp.Trades {
+		if t.TradeType == Buy {
 			tp.Calculations.TotalBase += t.BaseAmount
 			tp.Calculations.TotalQuoteSpent += t.QuoteAmount
 		}
-		if t.TransactionType == Sell {
+		if t.TradeType == Sell {
 			tp.Calculations.TotalBase -= t.BaseAmount
 			tp.Calculations.TotalQuoteSpent -= t.QuoteAmount
 		}
@@ -56,7 +56,7 @@ func (tp *TradingPair) calculateBuyPrice() error {
 
 }
 
-func (t *Transaction) CalculateFields() error {
+func (t *Trade) CalculateFields() error {
 	t.Price = t.QuoteAmount / t.BaseAmount
 	return nil
 }

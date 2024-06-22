@@ -16,12 +16,12 @@ const tables string = `
           QuoteAsset TEXT
 		);
 		
-        CREATE TABLE IF NOT EXISTS Transactions (
+        CREATE TABLE IF NOT EXISTS Trades (
           ID INTEGER PRIMARY KEY,
           Timestamp DATETIME,
           BaseAmount REAL,
           QuoteAmount REAL,
-          TransactionType TEXT,
+          TradeType TEXT,
           TradingPairID TEXT,
           FOREIGN KEY (TradingPairID) REFERENCES TradingPairs (ID)
 		);
@@ -90,7 +90,7 @@ func NewSQLite(dbPath string) (*SQLiteStorage, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Create the TradingPair and Transaction tables if they don't exist.
+	// Create the TradingPair and Trade tables if they don't exist.
 	_, err = db.Exec(tables)
 	if err != nil {
 		slog.Error("Error creating tables", "error", err)
@@ -205,31 +205,31 @@ func (s *SQLiteStorage) ListTradingPairs() ([]pnl.TradingPair, error) {
 	return tradingPairs, nil
 }
 
-// RecordTransaction records a new transaction for a trading pair.
-func (s *SQLiteStorage) RecordTransaction(t pnl.Transaction, tpid pnl.TradingPairID) error {
-	_, err := s.db.Exec("INSERT INTO Transactions (Timestamp, BaseAmount, QuoteAmount, TransactionType, TradingPairID) VALUES (?, ?, ?, ?, ?)",
-		t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TransactionType, string(tpid))
+// RecordTrade records a new trade for a trading pair.
+func (s *SQLiteStorage) RecordTrade(t pnl.Trade, tpid pnl.TradingPairID) error {
+	_, err := s.db.Exec("INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES (?, ?, ?, ?, ?)",
+		t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TradeType, string(tpid))
 	return err
 }
 
-// ListTransactions returns a list of transactions for a given trading pair ID.
-func (s *SQLiteStorage) ListTransactions(tpid string) ([]pnl.Transaction, error) {
-	rows, err := s.db.Query("SELECT ID, Timestamp, BaseAmount, QuoteAmount, TransactionType FROM Transactions WHERE TradingPairID = ?", tpid)
+// ListTrades returns a list of trades for a given trading pair ID.
+func (s *SQLiteStorage) ListTrades(tpid string) ([]pnl.Trade, error) {
+	rows, err := s.db.Query("SELECT ID, Timestamp, BaseAmount, QuoteAmount, TradeType FROM Trades WHERE TradingPairID = ?", tpid)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var transactions []pnl.Transaction
+	var trades []pnl.Trade
 	for rows.Next() {
-		var t pnl.Transaction
-		if err := rows.Scan(&t.ID, &t.Timestamp, &t.BaseAmount, &t.QuoteAmount, &t.TransactionType); err != nil {
+		var t pnl.Trade
+		if err := rows.Scan(&t.ID, &t.Timestamp, &t.BaseAmount, &t.QuoteAmount, &t.TradeType); err != nil {
 			return nil, err
 		}
-		transactions = append(transactions, t)
+		trades = append(trades, t)
 	}
 
-	return transactions, nil
+	return trades, nil
 }
 
 // DeleteTradingPair deletes a trading pair by its ID.
@@ -242,11 +242,11 @@ func (s *SQLiteStorage) DeleteTradingPair(tpid string) error {
 	return nil
 }
 
-// DeleteTransaction deletes a transaction by its ID.
-func (s *SQLiteStorage) DeleteTransaction(tpid string) error {
-	_, err := s.db.Exec("DELETE FROM Transactions WHERE ID = ?", tpid)
+// DeleteTrade deletes a trade by its ID.
+func (s *SQLiteStorage) DeleteTrade(tpid string) error {
+	_, err := s.db.Exec("DELETE FROM Trades WHERE ID = ?", tpid)
 	if err != nil {
-		slog.Error("Error deleting transaction", "error", err)
+		slog.Error("Error deleting trade", "error", err)
 		return err
 	}
 	return nil

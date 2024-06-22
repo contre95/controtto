@@ -118,7 +118,7 @@ func TestGetTradingPair(t *testing.T) {
 			Symbol: "USD",
 			Name:   "US Dollar",
 		},
-		Transactions: []pnl.Transaction{
+		Trades: []pnl.Trade{
 			{
 				ID:              "1",
 				Timestamp:       time.Now(),
@@ -126,7 +126,7 @@ func TestGetTradingPair(t *testing.T) {
 				QuoteAmount:     50000.0,
 				FeeInBase:       0.1,
 				FeeInQuote:      0.0,
-				TransactionType: pnl.Buy,
+				TradeType: pnl.Buy,
 				Price:           50000.0,
 			},
 			{
@@ -136,7 +136,7 @@ func TestGetTradingPair(t *testing.T) {
 				QuoteAmount:     25000.0,
 				FeeInBase:       0.05,
 				FeeInQuote:      0.0,
-				TransactionType: pnl.Sell,
+				TradeType: pnl.Sell,
 				Price:           50000.0,
 			},
 		},

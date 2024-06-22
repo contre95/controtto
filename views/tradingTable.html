@@ -5,7 +5,7 @@
         <div class="flex items-center gap-x-3">
           <input type="checkbox"
             class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700">
-          <span>Transaction type</span>
+          <span>Trade type</span>
         </div>
       </th>
 
@@ -27,7 +27,7 @@
 
       <th scope="col">
         <button class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
-                hx-get="/ui/pairs/{{ .Pair.ID }}/transactions/table" hx-target="#transactionsTable" hx-trigger="click" hx-swap="innerHTML" type="button">
+                hx-get="/ui/pairs/{{ .Pair.ID }}/trades/table" hx-target="#tradesTable" hx-trigger="click" hx-swap="innerHTML" type="button">
           <i class="fa-solid fa-arrows-rotate px-6"></i>
         </button>
       </th>
@@ -35,14 +35,14 @@
     </tr>
   </thead>
   <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900 animate__headShake animate__animated">
-    {{ range .Pair.Transactions }}
+    {{ range .Pair.Trades }}
     <tr id="trans{{ .ID }}" class="animate__animated">
       <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
         <div class="inline-flex items-center gap-x-3">
           <input type="checkbox"
             class="text-blue-500 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700" disabled>
           <div class="flex items-center gap-x-2">
-            {{ if eq .TransactionType "Buy" }}
+            {{ if eq .TradeType "Buy" }}
             <div class="flex items-center border-0 justify-center w-8 h-8 bg-green-500 rounded-full dark:bg-gray-800">
               <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full dark:bg-gray-800">
                 <img src="/assets/img/buy.svg" alt="buy">
@@ -56,7 +56,7 @@
             </div>
             {{ end }}
             <div>
-              <h2 class="font-normal text-gray-800 dark:text-white ">{{ .TransactionType }}</h2>
+              <h2 class="font-normal text-gray-800 dark:text-white ">{{ .TradeType }}</h2>
               <p class="text-xs font-normal text-gray-500 dark:text-gray-400">
                 {{ .BaseAmount }}
                 <span style="color:{{ $.Pair.BaseAsset.Color }}">
@@ -68,7 +68,7 @@
         </div>
       </td>
       <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-        {{ if eq .TransactionType "Sell" }}
+        {{ if eq .TradeType "Sell" }}
         <span class="text-emerald-500">
           + {{ .QuoteAmount }}
         </span>
@@ -91,11 +91,11 @@
         {{ .Timestamp.Format "Jan 02, 2006 15:04" }}
       </td>
       <td class="px-4 py-4 text-sm text-center">
-        <button hx-target="#mitoast" hx-delete="/transactions/{{ .ID }}"
+        <button hx-target="#mitoast" hx-delete="/trades/{{ .ID }}"
           class="inline-block font-bold text-red-600 text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
           _="on htmx:confirm(issueRequest)
              halt the event
-             call Swal.fire({title: 'Confirm', text:'Al transaction associated will be deleted. Are you sure ?'})
+             call Swal.fire({title: 'Confirm', text:'Al trade associated will be deleted. Are you sure ?'})
              if result.isConfirmed toggle .animate__backOutRight on #trans{{ .ID }} then wait 1s then issueRequest()">
           <i class="fa-solid fa-trash"></i>
         </button>
