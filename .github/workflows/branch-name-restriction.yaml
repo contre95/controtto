@@ -1,0 +1,24 @@
+name: 'Enforce Branch Naming Conventions'
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check_branch_name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate source branch name
+        run: |
+          ALLOWED_PATTERNS=("^feature/" "^fix/" "^release/" "^dev/")
+          BRANCH_NAME="${{ github.head_ref }}"
+          for PATTERN in "${ALLOWED_PATTERNS[@]}"; do
+            if [[ "$BRANCH_NAME" =~ $PATTERN ]]; then
+              echo "Branch name '$BRANCH_NAME' is allowed."
+              exit 0
+            fi
+          done
+          echo "Error: Branch name '$BRANCH_NAME' is not allowed to merge into 'main'."
+          exit 1
+
