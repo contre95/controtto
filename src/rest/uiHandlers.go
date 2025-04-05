@@ -3,7 +3,9 @@ package rest
 import (
 	"controtto/src/app/querying"
 	"controtto/src/domain/pnl"
+	"encoding/json"
 	"log/slog"
+	"math/rand"
 	"slices"
 	"time"
 
@@ -38,6 +40,26 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
+type PricePoint struct {
+	Time  int64   `json:"time"` // Changed to Unix timestamp
+	Value float64 `json:"value"`
+}
+
+func generateMockPriceData(pairID string, numPoints int) []PricePoint {
+	now := time.Now()
+	data := make([]PricePoint, numPoints)
+	basePrice := 100.0 + rand.Float64()*50 // Initial price
+	for i := 0; i < numPoints; i++ {
+		time := now.Add(time.Duration(-i) * time.Hour) // Go back in time
+		price := basePrice + rand.Float64()*10 - 5  // Price fluctuation
+		data[i] = PricePoint{
+			Time:  time.Unix(), // Convert to Unix timestamp (seconds)
+			Value: price,
+		}
+	}
+	return data
+}
+
 func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Dashboard requested")
@@ -56,10 +78,18 @@ func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			totalPNL += pair.Calculations.PNLAmount
 		}
 
+		// Generate Mock Chart Data
+		chartData := make(map[string][]PricePoint)
+		for _, pair := range resp.Pairs {
+			chartData[string(pair.ID)] = generateMockPriceData(string(pair.ID), 50) // 50 data points
+		}
+        
+
 		return c.Render("dashboardSection", fiber.Map{
 			"Title":     "Trading Pairs",
 			"Pairs":     resp.Pairs,
-			"TotalPNL":  totalPNL, // Pass TotalPNL to the template
+			"TotalPNL":  totalPNL,
+			"ChartData": chartData, // Pass chart data to the template
 		})
 	}
 

@@ -30,13 +30,69 @@
 
 <!-- Existing Pair Cards Section -->
 {{ range .Pairs }}
-<div hx-get="/ui/pairs/{{ .ID }}/cards" hx-target="this" hx-trigger="revealed,newTrade from:body" class="mb-4"> {{/* Added mb-4 for spacing */}}
-    <!-- Loading state for individual cards -->
-     <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 animate-pulse">
-        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-        <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-    </div>
-</div>
-{{/* Removed the <br> and <hr> from inside the loop */}}
-{{ end }}
+    <div class="mb-4">
+        <!-- Chart Container -->
+        <div id="chart-{{.ID}}" class="chart-container h-48"></div>
 
+        <!-- Pair Cards (Loaded with HTMX) -->
+        <div hx-get="/ui/pairs/{{ .ID }}/cards" hx-target="this" hx-trigger="revealed,newTrade from:body" class="">
+            <!-- Loading state for individual cards -->
+            <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 animate-pulse">
+                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Initialization Script (Inline for Simplicity) -->
+    <script>
+        (function() {
+            const chartDiv = document.getElementById('chart-{{.ID}}');
+            if (chartDiv) {
+                const chart = LightweightCharts.createChart(chartDiv, {
+                    width: chartDiv.clientWidth, // Use container width
+                    height: 300,
+                    layout: {
+                        background: { color: 'rgba(255, 255, 255, 0)' }, // Transparent background
+                        textColor: 'rgba(33, 33, 33, 0.8)'
+                    },
+                    grid: {
+                        vertLines: { color: 'rgba(55, 55, 55, 0.2)' },
+                        horzLines: { color: 'rgba(55, 55, 55, 0.2)' }
+                    },
+                    crosshair: {
+                        mode: LightweightCharts.CrosshairMode.Normal
+                    },
+                    priceScale: {
+                        borderColor: 'rgba(55, 55, 55, 0.8)'
+                    },
+                    timeScale: {
+                        borderColor: 'rgba(55, 55, 55, 0.8)',
+                        timeVisible: true, // Show the time axis
+                        secondsVisible: false,
+                    }
+                });
+
+                const series = chart.addLineSeries({
+                    color: 'rgba(38, 166, 154, 0.9)'
+                });
+
+                // Fetch chart data from the template
+                const chartData = {{ index .ChartData .ID }};
+
+                // Convert Go time to Unix timestamp (seconds) and create TradingView data
+                const tvData = chartData.map(item => ({
+                    time: item.Time,
+                    value: item.Value
+                }));
+
+                series.setData(tvData);
+
+                // Responsive Chart (Resize on window resize)
+                window.addEventListener('resize', () => {
+                    chart.resize(chartDiv.clientWidth, 300);
+                });
+            }
+        })();
+    </script>
+{{ end }}
