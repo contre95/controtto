@@ -1,10 +1,8 @@
 {{define "head"}}
 <meta charset="UTF-8" />
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="UTF-8" />
 
-
+<!-- Favicons and Meta -->
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
@@ -13,32 +11,66 @@
 <link rel="shortcut icon" href="/assets/icons/favicon.ico">
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="msapplication-config" content="/assets/icons/browserconfig.xml">
-<meta name="theme-color" content="#ffffff">
-
-
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1f2937" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-status-bar" content="#db4938" />
+
 <title>{{ .Title }}</title>
+
+<!-- Theme Persistence Script -->
+<script>
+  // Apply theme immediately to avoid FOUC (Flash of Unstyled Content)
+  (function() {
+    const theme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (theme === 'dark' || (!theme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  })();
+</script>
+
 <!-- Font Awesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-  integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-  crossorigin="anonymous" referrerpolicy="no-referrer" />
-<!-- Main Styling -->
-<link rel="stylesheet" type="css" href="/assets/css/styles.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Tailwind CSS via CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://unpkg.com/htmx.org@1.9.5"></script>
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://unpkg.com/htmx.org/dist/ext/class-tools.js"></script>
-<script src="https://unpkg.com/hyperscript.org@0.9.11"></script>
+
+<!-- Project Specific Styles (If any, loaded after Tailwind) -->
+<!-- <link rel="stylesheet" type="css" href="/assets/css/styles.css"> -->
+
+<!-- Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/htmx.org@1.9.5" defer></script>
+<script src="https://unpkg.com/htmx.org/dist/ext/class-tools.js" defer></script>
+<script src="https://unpkg.com/hyperscript.org@0.9.11" defer></script>
+<!-- Popper JS (often used by dropdowns/tooltips, check if needed) -->
+<!-- <script src="https://unpkg.com/@popperjs/core@2" defer></script> -->
+
+<!-- Tailwind Config -->
 <script>
   tailwind.config = {
-    darkMode: 'class',
+    darkMode: 'class', // Mandatory for 'class' strategy
+    theme: {
+      extend: {
+        // You can add custom theme configurations here
+        colors: {
+          // Example: Define custom colors if needed
+          // primary: '#...',
+        },
+      }
+    },
     variants: {
       extend: {
         display: ["group-hover"],
       },
     },
+    plugins: [],
   }
 </script>
+
+<!-- Animate.css (Optional, remove if not used) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
 {{end}}

@@ -1,35 +1,52 @@
 {{define "main"}}
 <!DOCTYPE html>
-<html>
+<html lang="en" class=""> <!-- Add class="" here for the theme script -->
 
 <head>
   {{template "head"}}
 </head>
 
-<body class="bg-gray-100 dark:bg-gray-800">
-  <!-- sidenav  -->
-  <div class="flex">
+<body class="bg-gray-100 dark:bg-gray-900 font-sans antialiased"> <!-- Adjusted dark bg color -->
+
+  <!-- Main Application Layout -->
+  <div class="flex h-screen overflow-hidden"> <!-- Use full screen height -->
+
+    <!-- Sidebar (Desktop) -->
     {{template "sidebar" .}}
-    <!-- end sidenav -->
 
-    <main class="flex-1  dark:bg-gray-800 overflow-y-auto bg-gray-100 lg:h-screen">
-      <!-- Navbar -->
-      {{template "navbar" .}}
-      <!-- end Navbar -->
-      <!-- Main -->
-      <div id="contenido" class="">
-      </div>
-      <div class="h-36">
-      </div>
-      <!-- end Main -->
-    </main>
-    <div class="absolute m-4 right-0 z-50 top-0 ">
-      <div id="mitoast">
-      </div>
-    </div>
-  </div>
+    <!-- Content Area -->
+    <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+
+      <!-- Site Header -->
+      {{template "header"}} <!-- Include the new header -->
+
+      <!-- Main Content -->
+      <main class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+        <div id="contenido" class="">
+            <!-- HTMX content will be loaded here -->
+            <!-- Consider loading initial content like the dashboard here -->
+            <div hx-get="/dashboard" hx-trigger="load" hx-swap="innerHTML">
+              <p class="text-center text-gray-500 dark:text-gray-400">Loading Dashboard...</p>
+            </div>
+        </div>
+      </main>
+
+       <!-- Toast Notification Area -->
+       <div class="fixed top-20 right-4 z-50 w-full max-w-xs sm:max-w-sm"> <!-- Adjusted position -->
+         <div id="mitoast">
+           <!-- Toast messages will appear here -->
+         </div>
+       </div>
+
+    </div> <!-- End Content Area -->
+
+  </div> <!-- End Main Application Layout -->
+
+  <!-- Mobile Bottom Navigation (replaces old navbar.html content) -->
+  {{template "navbar" .}}
+
+  {{template "scripts" .}}
+
 </body>
-{{template "scripts" .}}
-
 </html>
 {{end}}
