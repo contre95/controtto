@@ -42,7 +42,7 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 		slog.Info("Importing trades")
 		file, err := c.FormFile("trancsv")
 		if err != nil {
-			slog.Error("error", err)
+			slog.Error("error", "error", err)
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
 				"Msg":   fmt.Sprintln("Error reading CSV req:", err),
@@ -51,7 +51,7 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 		}
 		uploadedFile, err := file.Open()
 		if err != nil {
-			slog.Error("error", err)
+			slog.Error("error", "error", err)
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
 				"Msg":   fmt.Sprintln("Error reading CSV req:", err),

@@ -6,15 +6,15 @@ type TradingPairID string
 
 // TradingPair represents the primary aggregate root. It contains the main context for profit and loss calculations between two assets
 type TradingPair struct {
-	ID           TradingPairID
-	BaseAsset    Asset
-	QuoteAsset   Asset
-	Trades []Trade
-	Calculations Calculations
+	ID          TradingPairID
+	BaseAsset   Asset
+	QuoteAsset  Asset
+	Trades      []Trade
+	Performance Performance
 }
 
 // Calculation is a value object for a TradingPair and it is populated with the function Calculate. It hold the data inferred from the TradingPair trades
-type Calculations struct {
+type Performance struct {
 	AvgBuyPrice              float64
 	BaseMarketPrice          float64
 	MarketName               string
@@ -44,14 +44,14 @@ func GetValidTradeTypes() []TradeType {
 // Trade represents individual exchange trades between the asset pair.
 // The first listed currency of a currency pair is called the base currency, and the second currency is called the quote currency.
 type Trade struct {
-	ID              string
-	Timestamp       time.Time
-	BaseAmount      float64
-	QuoteAmount     float64
-	FeeInBase       float64
-	FeeInQuote      float64
-	TradeType TradeType
-	Price           float64
+	ID          string
+	Timestamp   time.Time
+	BaseAmount  float64
+	QuoteAmount float64
+	FeeInBase   float64
+	FeeInQuote  float64
+	TradeType   TradeType
+	Price       float64
 }
 
 // TrasingPairs repository interface
@@ -74,3 +74,4 @@ type Markets interface {
 	Color() string
 	Name() string
 }
+

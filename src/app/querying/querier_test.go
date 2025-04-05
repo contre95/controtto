@@ -120,27 +120,27 @@ func TestGetTradingPair(t *testing.T) {
 		},
 		Trades: []pnl.Trade{
 			{
-				ID:              "1",
-				Timestamp:       time.Now(),
-				BaseAmount:      1.0,
-				QuoteAmount:     50000.0,
-				FeeInBase:       0.1,
-				FeeInQuote:      0.0,
-				TradeType: pnl.Buy,
-				Price:           50000.0,
+				ID:          "1",
+				Timestamp:   time.Now(),
+				BaseAmount:  1.0,
+				QuoteAmount: 50000.0,
+				FeeInBase:   0.1,
+				FeeInQuote:  0.0,
+				TradeType:   pnl.Buy,
+				Price:       50000.0,
 			},
 			{
-				ID:              "2",
-				Timestamp:       time.Now(),
-				BaseAmount:      0.5,
-				QuoteAmount:     25000.0,
-				FeeInBase:       0.05,
-				FeeInQuote:      0.0,
-				TradeType: pnl.Sell,
-				Price:           50000.0,
+				ID:          "2",
+				Timestamp:   time.Now(),
+				BaseAmount:  0.5,
+				QuoteAmount: 25000.0,
+				FeeInBase:   0.05,
+				FeeInQuote:  0.0,
+				TradeType:   pnl.Sell,
+				Price:       50000.0,
 			},
 		},
-		Calculations: pnl.Calculations{
+		Performance: pnl.Performance{
 			AvgBuyPrice:              50000.0,
 			BaseMarketPrice:          48000.0,
 			MarketName:               "Mock",
@@ -183,7 +183,7 @@ func TestGetTradingPair(t *testing.T) {
 		}
 		mockMarkets := &pnl.MockMarkets{}
 		mockMarkets.GetCurrentPriceResponse = func(assetA, assetB string) (float64, error) {
-			return testTradinPair.Calculations.BaseMarketPrice, nil
+			return testTradinPair.Performance.BaseMarketPrice, nil
 		}
 		querier := NewTradingPairQuerier(mockTradingPairs, []pnl.Markets{mockMarkets})
 		req := GetTradingPairReq{

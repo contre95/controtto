@@ -65,7 +65,7 @@ func (tpq *TradingPairsQuerier) ListTrades(req TradesReq) (*TradesResp, error) {
 type GetTradingPairReq struct {
 	TPID                 string
 	WithCurrentBasePrice bool
-	WithTrades     bool
+	WithTrades           bool
 	WithCalculations     bool
 }
 
@@ -97,7 +97,7 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 	}
 
 	if req.WithCurrentBasePrice {
-		pair.Calculations.BaseMarketPrice, pair.Calculations.MarketName, pair.Calculations.MarketColor, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
+		pair.Performance.BaseMarketPrice, pair.Performance.MarketName, pair.Performance.MarketColor, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
 	}
 
 	if req.WithCalculations {

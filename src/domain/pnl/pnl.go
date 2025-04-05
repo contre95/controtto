@@ -9,7 +9,7 @@ func (tp *TradingPair) Calculate() error {
 	if err := tp.calculateBuyPrice(); err != nil {
 		return err
 	}
-	if tp.Calculations.BaseMarketPrice > 0 {
+	if tp.Performance.BaseMarketPrice > 0 {
 		if err := tp.calculateProfit(); err != nil {
 			return err
 		}
@@ -19,13 +19,13 @@ func (tp *TradingPair) Calculate() error {
 
 func (tp *TradingPair) calculateProfit() error {
 	// Perform any necessary validation or business logic checks here.
-	if tp.Calculations.BaseMarketPrice == 0 {
+	if tp.Performance.BaseMarketPrice == 0 {
 		slog.Error("Error calculating P&L", "error", "TradingPair doens't have current base price.")
 		return errors.New("Error calculating P&L. No current base price.")
 	}
-	tp.Calculations.PNLAmount = tp.Calculations.BaseMarketPrice*tp.Calculations.TotalBase - tp.Calculations.TotalQuoteSpent
-	tp.Calculations.CurrentBaseAmountInQuote = tp.Calculations.BaseMarketPrice * tp.Calculations.TotalBase
-	tp.Calculations.PNLPercent = (100 * tp.Calculations.PNLAmount) / tp.Calculations.TotalQuoteSpent
+	tp.Performance.PNLAmount = tp.Performance.BaseMarketPrice*tp.Performance.TotalBase - tp.Performance.TotalQuoteSpent
+	tp.Performance.CurrentBaseAmountInQuote = tp.Performance.BaseMarketPrice * tp.Performance.TotalBase
+	tp.Performance.PNLPercent = (100 * tp.Performance.PNLAmount) / tp.Performance.TotalQuoteSpent
 	return nil
 }
 
@@ -39,19 +39,19 @@ func (tp *TradingPair) calculateBuyPrice() error {
 	// tp.Calculations.TotalQuoteSpent = 0
 	for _, t := range tp.Trades {
 		if t.TradeType == Buy {
-			tp.Calculations.TotalBase += t.BaseAmount
-			tp.Calculations.TotalQuoteSpent += t.QuoteAmount
+			tp.Performance.TotalBase += t.BaseAmount
+			tp.Performance.TotalQuoteSpent += t.QuoteAmount
 		}
 		if t.TradeType == Sell {
-			tp.Calculations.TotalBase -= t.BaseAmount
-			tp.Calculations.TotalQuoteSpent -= t.QuoteAmount
+			tp.Performance.TotalBase -= t.BaseAmount
+			tp.Performance.TotalQuoteSpent -= t.QuoteAmount
 		}
-		tp.Calculations.TotalFeeInQuote += t.FeeInQuote
-		tp.Calculations.TotalFeeInBase += t.FeeInBase
-		tp.Calculations.AvgBuyPrice = float64(tp.Calculations.TotalQuoteSpent / tp.Calculations.TotalBase)
+		tp.Performance.TotalFeeInQuote += t.FeeInQuote
+		tp.Performance.TotalFeeInBase += t.FeeInBase
+		tp.Performance.AvgBuyPrice = float64(tp.Performance.TotalQuoteSpent / tp.Performance.TotalBase)
 	}
-	tp.Calculations.TotalBaseInQuote = tp.Calculations.TotalBase * tp.Calculations.BaseMarketPrice
-	slog.Info("Fields calculated", "base", tp.Calculations.TotalBase, "quote", tp.Calculations.TotalQuoteSpent, "avg-buy-price", tp.Calculations.AvgBuyPrice)
+	tp.Performance.TotalBaseInQuote = tp.Performance.TotalBase * tp.Performance.BaseMarketPrice
+	slog.Info("Fields calculated", "base", tp.Performance.TotalBase, "quote", tp.Performance.TotalQuoteSpent, "avg-buy-price", tp.Performance.AvgBuyPrice)
 	return nil
 
 }
