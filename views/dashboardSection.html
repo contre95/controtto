@@ -1,6 +1,42 @@
-{{ range .Pairs }}
-<div hx-get="/ui/pairs/{{ .ID }}/cards" hx-target="this" hx-trigger="revealed,newTrade from:body" class="">
+<!-- PNL Summary Card -->
+<div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+    <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Overall Performance</h2>
+    <div class="flex items-center justify-center space-x-2">
+        <span class="text-lg text-gray-600 dark:text-gray-400">Total PNL:</span>
+        {{/* Check if TotalPNL is positive, negative or zero for styling */}}
+        {{ $pnl := .TotalPNL }} {{/* Assign to variable for easier checking */}}
+        {{ if gt $pnl 0 }}
+            <span class="text-2xl font-bold text-green-600 dark:text-green-500">
+                +{{ printf "%.2f" $pnl }} {{/* Format to 2 decimal places */}}
+            </span>
+            <svg class="w-6 h-6 text-green-600 dark:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg> {{/* Up arrow / Positive trend icon */}}
+        {{ else if lt $pnl 0 }}
+            <span class="text-2xl font-bold text-red-600 dark:text-red-500">
+                {{ printf "%.2f" $pnl }} {{/* Format to 2 decimal places */}}
+            </span>
+             <svg class="w-6 h-6 text-red-600 dark:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17l5-5m0 0l-5-5m5 5H6"></path></svg> {{/* Down arrow / Negative trend icon */}}
+        {{ else }}
+            <span class="text-2xl font-bold text-gray-700 dark:text-gray-300">
+                {{ printf "%.2f" $pnl }}
+            </span>
+            {{/* Optional: Add a neutral icon here if desired */}}
+        {{ end }}
+    </div>
+    {{/* You could add more details here later, like % change, date range, etc. */}}
 </div>
-<br>
+
+<!-- Separator -->
 <hr class="my-6 border-gray-300 dark:border-gray-600" />
+
+<!-- Existing Pair Cards Section -->
+{{ range .Pairs }}
+<div hx-get="/ui/pairs/{{ .ID }}/cards" hx-target="this" hx-trigger="revealed,newTrade from:body" class="mb-4"> {{/* Added mb-4 for spacing */}}
+    <!-- Loading state for individual cards -->
+     <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 animate-pulse">
+        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+        <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+    </div>
+</div>
+{{/* Removed the <br> and <hr> from inside the loop */}}
 {{ end }}
+

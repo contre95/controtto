@@ -49,9 +49,17 @@ func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
+
+		// Calculate Total PNL
+		totalPNL := 0.0
+		for _, pair := range resp.Pairs {
+			totalPNL += pair.Calculations.PNLAmount
+		}
+
 		return c.Render("dashboardSection", fiber.Map{
-			"Title": "Trading Pairs",
-			"Pairs": resp.Pairs,
+			"Title":     "Trading Pairs",
+			"Pairs":     resp.Pairs,
+			"TotalPNL":  totalPNL, // Pass TotalPNL to the template
 		})
 	}
 
