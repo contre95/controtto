@@ -9,12 +9,12 @@
           <small class="text-xs italic">
             (
             <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
-            {{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }}
+            {{ printf "%.7g" .Pair.Performance.BaseMarketPrice }}
             )
           </small>
         </label>
         <input name="base" id="base"
-          _="on change set global x to my.value * {{ .Pair.Calculations.BaseMarketPrice }} then put x into #quote.value"
+          _="on change set global x to my.value * {{ .Pair.Performance.BaseMarketPrice }} then put x into #quote.value"
           class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="number" placeholder="0.029578 {{ .Pair.BaseAsset.Symbol }}">
       </div>
@@ -52,7 +52,7 @@
           <option selected><span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span></option>
           <option><span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span></option>
         </select>
-        {{ if eq .Pair.BaseAsset.Type "Crypto" }}
+        {{ if eq .Pair.BaseAsset.Type 0 }}
         <small class="text-xs leading-tight text-white/80">
           Usually, when <span class="text-emerald-500 font-semibold">buying</span>
           <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span> fee is charge in

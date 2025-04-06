@@ -3,6 +3,7 @@ package rest
 import (
 	"controtto/src/app/managing"
 	"controtto/src/domain/pnl"
+	"fmt"
 	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
@@ -28,10 +29,24 @@ func newAsset(ac managing.AssetsCreator) func(*fiber.Ctx) error {
 		if err := c.BodyParser(&payload); err != nil {
 			return err
 		}
+		var assetType pnl.AssetType
+		switch payload.Type {
+		case "Crypto":
+			assetType = pnl.Crypto
+		case "Forex":
+			assetType = pnl.Forex
+		case "Stock":
+			assetType = pnl.Stock
+		default:
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   fmt.Sprintf("invalid asset type: %s", payload.Type),
+			})
+		}
 		req := managing.CreateAssetReq{
 			Symbol:      payload.Symbol,
 			Color:       payload.Color,
-			Type:        payload.Type,
+			Type:        assetType,
 			Name:        payload.Name,
 			CountryCode: "-",
 		}
@@ -46,6 +61,5 @@ func newAsset(ac managing.AssetsCreator) func(*fiber.Ctx) error {
 			"Title": "Created",
 			"Msg":   resp.Msg,
 		})
-
 	}
 }

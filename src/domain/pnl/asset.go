@@ -12,13 +12,19 @@ package pnl
 // 	UDST Symbol = "UDST"
 // )
 
+type AssetType int
+
+// Define constants for AssetType using iota
 const (
-	Crypto AssetType = "Crypto"
-	Forex  AssetType = "Forex"
-	Stock  AssetType = "Stock"
+	Crypto AssetType = iota // 0
+	Forex                   // 1
+	Stock                   // 2
 )
 
-type AssetType string
+// String returns the string representation of the AssetType
+func (a AssetType) String() string {
+	return [...]string{"Crypto", "Forex", "Stock"}[a]
+}
 
 func GetValidTypes() []AssetType {
 	return []AssetType{Crypto, Forex, Stock}

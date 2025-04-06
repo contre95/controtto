@@ -1,39 +1,46 @@
 package pnl
 
 import (
-	"errors"
-	"regexp"
+	"fmt"
 	"slices"
 )
 
 type InvalidAsset error
 
-func (a *Asset) Validate() (*Asset, error) {
-	hexColorPattern := `^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$`
-	re := regexp.MustCompile(hexColorPattern)
-	if !re.MatchString(a.Color) {
-		return nil, InvalidAsset(errors.New("Wrong color string"))
+// Validate checks the invariants of the Asset
+func (a Asset) Validate() (*Asset, error) {
+	// Validate Symbol
+	if a.Symbol == "" {
+		return nil, fmt.Errorf("symbol cannot be empty")
 	}
-	if !slices.Contains(GetValidTypes(), a.Type) {
-		return nil, InvalidAsset(errors.New("Invalid Asset Type"))
+
+	// Validate Name
+	if a.Name == "" {
+		return nil, fmt.Errorf("name cannot be empty")
 	}
-	if len(a.Symbol) < 3 || len(a.Symbol) > 8 {
-		return nil, InvalidAsset(errors.New("Invalid Asset Symbol"))
+
+	// Validate AssetType
+	validTypes := GetValidTypes()
+	isValidType := slices.Contains(validTypes, a.Type)
+	if !isValidType {
+		return nil, fmt.Errorf("invalid asset type: %v", a.Type)
 	}
-	if len(a.Name) < 1 || len(a.Name) > 24 {
-		return nil, InvalidAsset(errors.New("Invalid Asset Name"))
+
+	// Validate CountryCode (optional, depending on asset type)
+	if a.Type == Forex && a.CountryCode == "" {
+		return nil, fmt.Errorf("country code is required for Forex assets")
 	}
-	return a, nil
+
+	return &a, nil
 }
 
-// TODO: Define invariants
 // NewAsset reutrns a new Asset and validates it's invariants
-func NewAsset(symbol, color, name, countryCode, assetType string) (*Asset, error) {
+func NewAsset(symbol, color, name, countryCode string, assetType AssetType) (*Asset, error) {
 	a := Asset{
 		Symbol:      symbol,
 		Color:       color,
 		Name:        name,
-		Type:        AssetType(assetType),
+		Type:        assetType,
 		CountryCode: countryCode,
 	}
 	return a.Validate()

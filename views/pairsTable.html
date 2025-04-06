@@ -97,32 +97,32 @@
       </td>
 
       <th scope="col" class="px-2 py-3.5 text-sm font-normal text-gray-500 dark:text-gray-400">
-          {{ if eq .BaseAsset.Type "Stock" }}
+          {{ if eq .BaseAsset.Type 2 }}
           <span class="px-3 py-1 text-xs text-indigo-500 rounded-l-lg dark:bg-gray-800 bg-indigo-100/60">
             {{ .BaseAsset.Type }}
           </span>
           {{ end }}
-          {{ if eq .BaseAsset.Type "Crypto" }}
+          {{ if eq .BaseAsset.Type 0 }}
           <span class="px-3 py-1 text-xs text-pink-500 rounded-l-lg dark:bg-gray-800 bg-pink-100/60">
             {{ .BaseAsset.Type }}
           </span>
           {{ end }}
-          {{ if eq .BaseAsset.Type "Forex" }}
+          {{ if eq .BaseAsset.Type 1 }}
           <span class="px-3 py-1 text-xs text-blue-500 rounded-l-lg dark:bg-gray-800 bg-blue-100/60">
             {{ .BaseAsset.Type }}
           </span>
           {{ end }}
-          {{ if eq .QuoteAsset.Type "Stock" }}
+          {{ if eq .QuoteAsset.Type 2 }}
           <span class="px-3 py-1 text-xs text-indigo-500 rounded-r-lg dark:bg-gray-800 bg-indigo-100/60">
             {{ .QuoteAsset.Type }}
           </span>
           {{ end }}
-          {{ if eq .QuoteAsset.Type "Crypto" }}
+          {{ if eq .QuoteAsset.Type 0 }}
           <span class="px-3 py-1 text-xs text-pink-500 rounded-r-lg dark:bg-gray-800 bg-pink-100/60">
             {{ .QuoteAsset.Type }}
           </span>
           {{ end }}
-          {{ if eq .QuoteAsset.Type "Forex" }}
+          {{ if eq .QuoteAsset.Type 1 }}
           <span class="px-3 py-1 text-xs text-blue-500 rounded-r-lg dark:bg-gray-800 bg-blue-100/60">
             {{ .QuoteAsset.Type }}
           </span>

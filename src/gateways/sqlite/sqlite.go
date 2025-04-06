@@ -21,7 +21,7 @@ const tables string = `
           Timestamp DATETIME,
           BaseAmount REAL,
           QuoteAmount REAL,
-          TradeType TEXT,
+          TradeType INTEGER,
           TradingPairID TEXT,
           FOREIGN KEY (TradingPairID) REFERENCES TradingPairs (ID)
 		);
@@ -30,53 +30,53 @@ const tables string = `
           Symbol TEXT PRIMARY KEY,
           Name TEXT,
           Color TEXT,
-          Type TEXT,
+          Type INTEGER,
           CountryCode TEXT
         );
 
         -- Forex
 
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('JPY', 'Japanese Yen', 'Forex', '#C91400', 'JP');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('GBP', 'British Pound', 'Forex', '#1C7CDD', 'GB');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('CAD', 'Canadian Dollar', 'Forex', '#CA9832', 'CA');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('AUD', 'Australian Dollar', 'Forex', '#029547', 'AU');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('CHF', 'Swiss Franc', 'Forex', '#FF8C00', 'CH');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('ARS', 'Argentine Peso', 'Forex', '#40AAF3', 'AR');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('EUR', 'Euro', 'Forex', '#004C8D', 'EU');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('USD', 'US Dollar', 'Forex', '#809862', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('NZD', 'New Zealand Dollar', 'Forex', '#009F3D', 'NZ');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('HKD', 'Hong Kong Dollar', 'Forex', '#6D4C42', 'HK');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('INR', 'Indian Rupee', 'Forex', '#FF9933', 'IN');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('CNY', 'Chinese Yuan', 'Forex', '#DE2910', 'CN');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('SGD', 'Singapore Dollar', 'Forex', '#FF6F61', 'SG');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('SEK', 'Swedish Krona', 'Forex', '#0076A8', 'SE');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('NOK', 'Norwegian Krone', 'Forex', '#C8102E', 'NO');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('JPY', 'Japanese Yen', 1, '#C91400', 'JP');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('GBP', 'British Pound', 1, '#1C7CDD', 'GB');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('CAD', 'Canadian Dollar', 1, '#CA9832', 'CA');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('AUD', 'Australian Dollar', 1, '#029547', 'AU');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('CHF', 'Swiss Franc', 1, '#FF8C00', 'CH');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('ARS', 'Argentine Peso', 1, '#40AAF3', 'AR');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('EUR', 'Euro', 1, '#004C8D', 'EU');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('USD', 'US Dollar', 1, '#809862', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('NZD', 'New Zealand Dollar', 1, '#009F3D', 'NZ');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('HKD', 'Hong Kong Dollar', 1, '#6D4C42', 'HK');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('INR', 'Indian Rupee', 1, '#FF9933', 'IN');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('CNY', 'Chinese Yuan', 1, '#DE2910', 'CN');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('SGD', 'Singapore Dollar', 1, '#FF6F61', 'SG');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('SEK', 'Swedish Krona', 1, '#0076A8', 'SE');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('NOK', 'Norwegian Krone', 1, '#C8102E', 'NO');
 
 
         -- Crypto
 
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('BTC', 'Bitcoin', 'Crypto', '#F7931A', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('DOT', 'Polkadot', 'Crypto', '#DF0076', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('USDT', 'Tether', 'Crypto', '#009393', 'US');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('ETH', 'Ethereum', 'Crypto', '#c061cb', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('XRP', 'Ripple', 'Crypto', '#005FF9', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('LTC', 'Litecoin', 'Crypto', '#838383', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('ADA', 'Cardano', 'Crypto', '#1C366D', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('DOGE', 'Dogecoin', 'Crypto', '#C3A634', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('XMR', 'Monero', 'Crypto', '#FF6600', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('BTC', 'Bitcoin', 0, '#F7931A', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('DOT', 'Polkadot', 0, '#DF0076', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('USDT', 'Tether', 0, '#009393', 'US');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('ETH', 'Ethereum', 0, '#c061cb', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('XRP', 'Ripple', 0, '#005FF9', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('LTC', 'Litecoin', 0, '#838383', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('ADA', 'Cardano', 0, '#1C366D', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('DOGE', 'Dogecoin', 0, '#C3A634', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Type, Color, CountryCode) VALUES ('XMR', 'Monero', 0, '#FF6600', '-');
 
 
         -- Stocks
 
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('GOOGL', 'Alphabet', '#4285F4', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('MSFT', 'Microsoft', '#00A3E0', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('TSLA', 'Tesla', '#E82127', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('AAPL', 'Apple', '#5e5c64', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('AMZN', 'Amazon', '#ffa348', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('META', 'Meta Platforms', '#1877F2', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('NFLX', 'Netflix', '#E50914', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('GOOG', 'Alphabet Inc.', '#4285F4', 'Stock', '-');
-        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('TSLA', 'Tesla', '#E82127', 'Stock', '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('GOOGL', 'Alphabet', '#4285F4', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('MSFT', 'Microsoft', '#00A3E0', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('TSLA', 'Tesla', '#E82127', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('AAPL', 'Apple', '#5e5c64', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('AMZN', 'Amazon', '#ffa348', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('META', 'Meta Platforms', '#1877F2', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('NFLX', 'Netflix', '#E50914', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('GOOG', 'Alphabet Inc.', '#4285F4', 2, '-');
+        INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('TSLA', 'Tesla', '#E82127', 2, '-');
 	`
 
 // SQLiteStorage implements the TradingPairs interface using SQLiteStorage.

@@ -13,7 +13,7 @@ type CreateAssetResp struct {
 type CreateAssetReq struct {
 	Symbol      string
 	Color       string
-	Type        string
+	Type        pnl.AssetType
 	Name        string // Optional
 	CountryCode string // Optional
 }

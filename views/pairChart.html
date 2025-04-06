@@ -5,7 +5,7 @@
 </div>
 
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-{{ if eq .Pair.BaseAsset.Type "Stock" }}
+{{ if eq .Pair.BaseAsset.Type 2 }}
 <script type="text/javascript">
   function changeTradingViewTheme() {
     const classList = document.documentElement.classList;
