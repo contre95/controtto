@@ -66,7 +66,7 @@ func TestListAssets(t *testing.T) {
 func TestGetAsset(t *testing.T) {
 
 	t.Run("GetAsset_Success", func(t *testing.T) {
-		testAsset, err := pnl.NewAsset("AAPL", "#FFFFFF", "Apple", "US", "Forex")
+		testAsset, err := pnl.NewAsset("AAPL", "#FFFFFF", "Apple", "US", 1)
 		if err != nil {
 			t.Errorf("Invalid test, asset should be valid for testing.")
 		}
