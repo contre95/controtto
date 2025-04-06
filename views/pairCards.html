@@ -1,12 +1,12 @@
 <div class="grid w-full grid-cols-2 gap-2 mt-4  justify-center lg:grid-cols-2 2xl:grid-cols-4 animate__animated animate__fadeInDown">
 
-  {{ if (ne .Pair.Calculations.BaseMarketPrice 0.0) }}
+  {{ if (ne .Pair.Performance.BaseMarketPrice 0.0) }}
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
     <div
       class="w-4/5 lg:w-full h-24 lg:h-44 bg-gray-600 bg-center bg-cover rounded-lg shadow-md text-left text-clip overflow-hidden">
       <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
 
-        {{ .Pair.Calculations.MarketName }}
+        {{ .Pair.Performance.MarketName }}
       </span>
     </div>
     <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
@@ -18,7 +18,7 @@
       <div class="flex items-center justify-between px-2 py-2 bg-gray-200 dark:bg-gray-700">
         <span class="font-bold text-gray-800 ">
           <span class="font-bold text-gray-800 ">
-            {{ printf "%.7g" .Pair.Calculations.BaseMarketPrice }}
+            {{ printf "%.7g" .Pair.Performance.BaseMarketPrice }}
           </span>
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
@@ -26,8 +26,8 @@
         </span>
         <button
           class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none"
-          style="background-color: {{ .Pair.Calculations.MarketColor }}">
-          {{ .Pair.Calculations.MarketName }}
+          style="background-color: {{ .Pair.Performance.MarketColor }}">
+          {{ .Pair.Performance.MarketName }}
         </button>
       </div>
     </div>
@@ -55,7 +55,7 @@
         </span>
         <button
           class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none"
-          style="background-color: {{ .Pair.Calculations.MarketColor }}">
+          style="background-color: {{ .Pair.Performance.MarketColor }}">
           Not found
         </button>
       </div>
@@ -75,7 +75,7 @@
     <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
-        You have {{ printf "%.6f" .Pair.Calculations.TotalBase }}
+        You have {{ printf "%.6f" .Pair.Performance.TotalBase }}
         <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
       </h3>
       <div class="flex items-center justify-between text-center px-2 py-2 bg-gray-200 dark:bg-gray-700">
@@ -84,7 +84,7 @@
           Worth:
         </button>
         <span class="font-bold text-gray-800 lg:w-auto w-full">
-          {{ printf "%.2f" .Pair.Calculations.TotalBaseInQuote }}
+          {{ printf "%.2f" .Pair.Performance.TotalBaseInQuote }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
           </span>
@@ -113,7 +113,7 @@
           Info.
         </button>
         <span class="font-bold text-gray-800 ">
-          {{ printf "%.7g" .Pair.Calculations.AvgBuyPrice }}
+          {{ printf "%.7g" .Pair.Performance.AvgBuyPrice }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
           </span>
@@ -123,7 +123,7 @@
   </div>
 
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
-    {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
+    {{ if (gt .Pair.Performance.PNLAmount 0.0) }}
     <div
       class="w-4/5 lg:w-full h-24 lg:h-44 rounded-lg shadow-md bg-emerald-300 uppercase truncate text-left text-clip overflow-hidden">
       <span class="font-black lg:scale-150 lg:text-9xl scale-100 text-7xl" style="color: rgba(255, 255, 255, 0.4);">
@@ -144,9 +144,9 @@
         P & L
       </h3>
       <div class="flex items-center justify-between px-2 py-2 bg-gray-200 dark:bg-gray-700">
-        {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
+        {{ if (gt .Pair.Performance.PNLAmount 0.0) }}
         <span class="font-bold text-emerald-500 ">
-          +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+          +{{ printf "%.2f" .Pair.Performance.PNLAmount }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
           </span>
@@ -154,12 +154,12 @@
         <button
           class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
           <span class="font-bold text-emerald-400 dark:text-emerald-200">
-            +{{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
+            +{{ printf "%.2f" .Pair.Performance.PNLPercent }}%
           </span>
         </button>
         {{ else }}
         <span class="font-bold text-red-500 ">
-          {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+          {{ printf "%.2f" .Pair.Performance.PNLAmount }}
           <span style="color:{{ .Pair.QuoteAsset.Color }}">
             {{ .Pair.QuoteAsset.Symbol }}
           </span>
@@ -167,7 +167,7 @@
         <button
           class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-gray-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
           <span class="font-bold text-red-600 dark:text-red-200">
-            {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
+            {{ printf "%.2f" .Pair.Performance.PNLPercent }}%
           </span>
         </button>
         {{ end }}
