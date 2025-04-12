@@ -28,7 +28,7 @@ func main() {
 
 	// Markets
 	ac := managing.NewAssetCreator(sqliteDB)
-	tpc := managing.NewTradingPairManager(sqliteDB, sqliteDB)
+	tpc := managing.NewTradingPairManager(cfg, sqliteDB, sqliteDB)
 	manager := managing.NewService(*ac, *tpc)
 	aq := querying.NewAssetQuerier(sqliteDB)
 	mkq := querying.NewPriceQuerier(cfg.PriceProviders)

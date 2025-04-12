@@ -37,7 +37,7 @@
   <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-neutral-900 animate__headShake animate__animated">
     {{ range .Pair.Trades }}
     <tr id="trans{{ .ID }}" class="animate__animated">
-      <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+      <td class="px-4 text-sm font-medium text-gray-700 whitespace-nowrap">
         <div class="inline-flex items-center gap-x-3">
           <input type="checkbox"
             class="text-blue-500 rounded dark:bg-neutral-900 dark:ring-offset-gray-900 dark:border-neutral-700" disabled>
@@ -67,7 +67,7 @@
           </div>
         </div>
       </td>
-      <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+      <td class="px-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
         {{ if eq .TradeType "Sell" }}
         <span class="text-emerald-500">
           + {{ .QuoteAmount }}
@@ -81,16 +81,16 @@
           {{ $.Pair.QuoteAsset.Symbol }}
         </span>
       </td>
-      <td class="px-4 py-4 text-sm text-gray-500 font-semibold dark:text-gray-300 whitespace-nowrap">
+      <td class="px-4  text-sm text-gray-500 font-semibold dark:text-gray-300 whitespace-nowrap">
         {{ printf "%.2f" .Price }}
         <span class="mb-1 text-sm leading-normal dark:text-white" style="color:{{ $.Pair.QuoteAsset.Color }}">
           {{ $.Pair.QuoteAsset.Symbol }}
         </span>
       </td>
-      <td class="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+      <td class="px-4  text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
         {{ .Timestamp.Format "Jan 02, 2006 15:04" }}
       </td>
-      <td class="px-4 py-4 text-sm text-center">
+      <td class="px-4  text-sm text-center">
         <button hx-target="#mitoast" hx-delete="/trades/{{ .ID }}"
           class="inline-block font-bold text-red-600 text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none leading-normal text-sm ease-in bg-150 tracking-tight-rem bg-x-25"
           _="on htmx:confirm(issueRequest)
