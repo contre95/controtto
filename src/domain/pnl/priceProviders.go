@@ -8,7 +8,7 @@ type PriceProvider struct {
 	ProviderInputName string
 	Token             string
 	ProviderURL       string
-	Env               []string
+	Env               string
 	API
 }
 

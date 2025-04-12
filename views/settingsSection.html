@@ -1,5 +1,6 @@
-<section class="bg-white dark:bg-neutral-900 animate__animated animate__fadeIn">
-  <div class="container px-6 py-10 mx-auto animate__animated animate__fadeInRight">
+<section class="mx-auto max-w-screen-2xl">
+
+  <div class = "rounded-md m-4 p-4 flex items-center justify-center flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800  animate__animated animate__fadeIn">
     <div class="flex flex-wrap items-center">
       <svg class="flex w-7 h-7 mx-2 text-gray-700 dark:text-white" viewBox="0 0 24 24" fill="none"
         xmlns="http://www.w3.org/2000/svg">
@@ -16,7 +17,7 @@
     </div>
 
     <div class="mt-8 lg:-mx-6 lg:flex lg:items-center">
-      <img class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-96"
+      <img class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-68 lg:h-72"
         src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
         alt="" />
 
@@ -38,41 +39,49 @@
 
         <a href="https://github.com/contre95/controtto" target="_blank"
           class="inline-block mt-2 text-blue-500 underline hover:text-blue-400">Read more</a>
-
-        <div class="flex items-center mt-6">
-          <!-- <img class="object-cover object-center w-10 h-10 rounded-full" -->
-          <!--   src="https://images.unsplash.com/photo-1531590878845-12627191e687?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80" -->
-          <!--   alt="trading-image"> -->
-          <!-- <div class="mx-4"> -->
-          <!--   <h1 class="text-sm text-gray-700 dark:text-gray-200"></h1> -->
-          <!--   <p class="text-sm text-gray-500 dark:text-gray-400">Lead Developer</p> -->
-          <!-- </div> -->
-        </div>
       </div>
     </div>
   </div>
-  <hr class="my-4 border-neutral-300 dark:border-neutral-600" />
-  <div class="container px-6 py-10 mx-auto animate__animated animate__fadeInLeft">
-    <form hx-post="/settings/edit" hx-swap="none" _="on submit add .loading to me">
+
+
+  <div class="rounded-md m-4 p-4 flex flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800  animate__animated animate__fadeIn">
+    <!-- <form> -->
+    <form hx-ext="debug">
       <p class="text-sm text-blue-500 uppercase">Market Providers API</p>
       <br />
 
       {{ range .PriceProviders }}
       <div class="flex flex-wrap items-center">
         <div>
-          {{ if .ProviderSet }}
+          {{ if .TokenSet }}
           <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
           {{ else }}
           <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
           {{ end }}
         </div>
         <div>
-          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-            {{ .ProviderTitle }}
-            <small class="text-blue-500 text-blue-500">
-              (<a href="{{ .ProviderURL }}" target="_blank">Get it here.</a>)
-              <input type="password" name="{{ .ProviderInputName }}" value="{{ .Token }}"
-              class="w-full mt-1 px-1 py-1 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700" autocomplete="off">
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
+            {{ .ProviderName }}
+            <small>
+              (Get it
+              <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>
+              and set
+              <code
+                class="p-0.5 text-center bg-red-100 text-red-700 dark:bg-gray-800 dark:text-gray-200 px-1 rounded">{{
+                .Env }}</code>
+              )
+              <div class="relative">
+                <input type="password" name="{{ .ProviderInputName }}" value="{{ .Token }}"
+                  id="provider-{{ .ProviderInputName }}"
+                  class="w-full px-1 my-3 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700"
+                  autocomplete="off" />
+                <button type="button"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500"
+                  onclick="togglePasswordVisibility('provider-{{ .ProviderInputName }}')">
+                  Reveal
+                  <img src="/assets/img/pass.svg" class="w-6 h-6 mx-4" /> 
+                </button>
+              </div>
             </small>
           </label>
         </div>
@@ -84,10 +93,17 @@
           </div>
         </div>
       </div>
-      <br>
+      <br />
       {{ end }}
 
-      <br>
+      <script>
+        function togglePasswordVisibility(inputId) {
+          const inputField = document.getElementById(inputId);
+          const type = inputField.type === "password" ? "text" : "password";
+          inputField.type = type;
+        }
+      </script>
+
       <div class="flex flex-wrap items-center">
         <div>
           <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
@@ -108,45 +124,25 @@
       <br />
       <p class="text-sm text-blue-500 uppercase">Pairs settings</p>
       <br />
-      <div class="flex flex-wrap items-center">
-        <div>
-          {{ if .Uncommon }}
-          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
-          {{ else }}
-          <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
-          {{ end }}
-        </div>
-        <div>
-          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-            Uncommon pairs.
-            <small class="text-gray-400 font-normal italic"> (soon) </small>
-            <!-- <small class="text-gray-500 font-normal ml-2 hidden lg:inline"> -->
-            <!--   Show uncommon pairs in the UI while creating new Pairs. -->
-            <!-- </small> -->
-            <!-- <small class="text-gray-500 font-normal ml-2 inline lg:hidden"> -->
-            <!--   Show uncommon pairs in UI. -->
-            <!-- </small> -->
-          </label>
-        </div>
-      </div>
-      <div class="mt-6" _="on htmx:afterRequest
-              if event.detail.successful
-                add .animate-fade-in then wait 3s then remove .animate-fade-in
-                add .bg-green-100 .text-green-700
-                put 'Settings updated successfully!' into me
-              else
-                add .animate-fade-in then wait 3s then remove .animate-fade-in
-                add .bg-red-100 .text-red-700
-                put 'Error updating settings!' into me
-              end"></div>
-      <button type="submit"
-        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+      
+      <label class="inline-flex items-center cursor-pointer my-2 ">
+        <input class="sr-only peer" type="checkbox" id="uncommon" name="uncommon_pairs" value="true" {{ if .Uncommon }}checked{{ end }}>
+        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+        <span class="ms-3 block text-md text-gray-500 dark:text-gray-300">Uncommon pairs</span>
+            <small class="ml-3 text-gray-400 font-normal italic">
+                Restrict pairs such as Base: BTC, Quote: MSFT are not allowed.
+            </small>
+      </label>
+      <br />
+      <button type="submit" hx-post="/settings/edit" hx-target="#mitoast"
+        class="my-4 relative inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-slate-600 border border-slate-700 rounded-xl shadow-sm transition-all hover:bg-slate-700 active:scale-95 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 dark:bg-slate-500 dark:hover:bg-slate-400 dark:border-slate-600 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed">
         Save Changes
       </button>
     </form>
   </div>
 
-  <div class="container px-6 pb-10 mx-auto animate__animated animate__fadeInLeft">
+  <br />
+  <div class=" px-6 pb-10 mx-auto animate__animated animate__fadeInLeft">
     <small class="text-gray-400 font-normal italic">
       For further information on how to deploy or set up the product plese refer
       to

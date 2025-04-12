@@ -23,7 +23,7 @@ func Run(cfg *config.Config, m *managing.Service, q *querying.Service) {
 
 	// GET
 	app.Get("/", Home)
-	app.Get("/trades/", tradesSection)
+	app.Get("/trades", tradesSection)
 	app.Get("/ui/trades/table", tradesTable(q.TradingPairQuerier))
 	app.Get("/pairs/:id/", pairSection)
 	app.Get("/ui/assets/form", newAssetForm)

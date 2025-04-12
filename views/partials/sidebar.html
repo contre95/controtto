@@ -34,12 +34,12 @@
     </span>
   </div>
 
-  <div class="flex flex-col justify-between flex-1 mt-6">
-    <nav>
+  <div class="flex flex-col flex-1 mt-6">
+    <nav class="flex-grow">
       <button type="button" class="w-full">
         <a
           hx-get="/dashboard"
-          hx-trigger="click,{{ .DashboardTrigger }}"
+          hx-trigger="click,reloadDashboard from:body{{ .DashboardTrigger }}"
           hx-push-url="true"
           hx-swap="innerHTML"
           hx-target="#contenido"
@@ -65,7 +65,7 @@
       <button type="button" class="w-full">
         <a
           hx-get="/trades"
-          hx-trigger="click,{{ .TradesTrigger }}"
+          hx-trigger="click,reloadTrades from:body{{ .TradesTrigger }}"
           hx-push-url="true"
           hx-swap="innerHTML"
           hx-target="#contenido"
@@ -89,7 +89,7 @@
       <button type="button" class="w-full">
         <a
           hx-get="/accounts"
-          hx-trigger="click,{{ .AccountsTrigger }}"
+          hx-trigger="click,reloadAccounts from:body"
           hx-push-url="true"
           hx-swap="innerHTML"
           hx-target="#contenido"
@@ -119,10 +119,11 @@
           <span class="mx-4">Accounts</span>
         </a>
       </button>
-      <button type="button" class="w-full">
+      <button type="button" hx-ext="debug" class="w-full">
         <a
           hx-get="/settings"
-          hx-trigger="click,{{ .SettingsTrigger }}"
+          hx-ext="debug"
+          hx-trigger="click,reloadSettings from:body{{ .SettingsTrigger }}"
           hx-push-url="true"
           hx-swap="innerHTML"
           hx-target="#contenido"
@@ -166,6 +167,19 @@
 <script>
   function toggleDarkMode() {
     document.documentElement.classList.toggle("dark");
+    // Optional: Persist the theme preference
+    // if (document.documentElement.classList.contains('dark')) {
+    //   localStorage.theme = 'dark';
+    // } else {
+    //   localStorage.theme = 'light';
+    // }
   }
+
+  // Optional: Apply the theme on initial load
+  // if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  //   document.documentElement.classList.add('dark')
+  // } else {
+  //   document.documentElement.classList.remove('dark')
+  // }
 </script>
 {{end}}

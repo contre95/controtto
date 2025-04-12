@@ -2,6 +2,7 @@ package rest
 
 import (
 	"controtto/src/app/config"
+	"log/slog"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -19,11 +20,18 @@ func editSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 
 func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		// // If the form checkbox for "Uncommon" is checked, the value might be "on"
-		for key := range cfg.GetPriceProviders() {
-			token := c.FormValue(key)
+		for key, p := range cfg.GetPriceProviders() {
+			token := c.FormValue(p.ProviderInputName)
 			cfg.UpdateProviderToken(key, token)
 		}
-		return c.Redirect("/settings")
+		uncommon := c.FormValue("uncommon_pairs") != ""
+		cfg.SetUncommonPairs(uncommon)
+		slog.Info("Config updated")
+		c.Append("HX-Trigger", "reloadSettings")
+		return c.Render("toastOk", fiber.Map{
+			"Title": "Created",
+			"Msg":   "Config upated",
+		})
+
 	}
 }

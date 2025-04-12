@@ -45,7 +45,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 	return map[string]pnl.PriceProvider{
 		"avantage": {
 			TokenSet:          avantageToken != "",
-			Env:               []string{"CONTROTTO_AVANTAGE_TOKEN"},
+			Env:               "CONTROTTO_AVANTAGE_TOKEN",
 			ProviderName:      "Alpha Vantage",
 			ProviderURL:       "https://www.alphavantage.co/support/#api-key",
 			ProviderInputName: "vantage_token",
@@ -55,7 +55,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 		},
 		"tiingo": {
 			TokenSet:          tingoToken != "",
-			Env:               []string{"CONTROTTO_TIINGO_TOKEN"},
+			Env:               "CONTROTTO_TIINGO_TOKEN",
 			ProviderName:      "Tiingo",
 			ProviderURL:       "https://www.tiingo.com/account/api/token",
 			ProviderInputName: "tiingo_token",
@@ -71,6 +71,19 @@ func (c *Config) GetPort() string {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	return c.Port
+}
+
+// SetUncommonPairs sets or unsets the uncommon pairs flag and updates the env var.
+func (c *Config) SetUncommonPairs(enabled bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	c.UncommonPairs = enabled
+	if enabled {
+		os.Setenv(UNCOMMON_PAIRS, "true")
+	} else {
+		os.Setenv(UNCOMMON_PAIRS, "false")
+	}
 }
 
 // GetUncommonPairs returns whether uncommon pairs are enabled.
