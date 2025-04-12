@@ -2,7 +2,7 @@ package pnl
 
 type PriceProvider struct {
 	Public            bool
-	AuthSet           bool
+	IsSet             bool
 	Color             string
 	ProviderName      string
 	ProviderInputName string

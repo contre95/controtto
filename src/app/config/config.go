@@ -4,6 +4,7 @@ import (
 	"controtto/src/domain/pnl"
 	"controtto/src/gateways/priceProviders"
 	"fmt"
+	"maps"
 	"os"
 	"sync"
 )
@@ -44,7 +45,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 	avantageToken := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
 	return map[string]pnl.PriceProvider{
 		"bingx": {
-			AuthSet:           true, // No token needed for Coinbase API
+			IsSet:             true, // No token needed for BingX
 			Env:               "",
 			ProviderName:      "BingX",
 			ProviderURL:       "https://docs.cdp.coinbase.com/",
@@ -54,7 +55,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			API:               priceProviders.NewCoinbaseAPI(),
 		},
 		"binance": {
-			AuthSet:           false, // No token needed for Coinbase API
+			IsSet:             false, // No token needed for Binance
 			ProviderName:      "Binance",
 			ProviderURL:       "https://docs.cdp.coinbase.com/",
 			ProviderInputName: "binance_toggle",
@@ -63,7 +64,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			API:               priceProviders.NewCoinbaseAPI(),
 		},
 		"coinbase": {
-			AuthSet:           true, // No token needed for Coinbase API
+			IsSet:             true, // No token needed for Coinbase
 			Env:               "",
 			ProviderName:      "Coinbase",
 			ProviderURL:       "https://docs.cdp.coinbase.com/",
@@ -74,7 +75,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			API:               priceProviders.NewCoinbaseAPI(),
 		},
 		"avantage": {
-			AuthSet:           avantageToken != "",
+			IsSet:             avantageToken != "",
 			Env:               "CONTROTTO_AVANTAGE_TOKEN",
 			ProviderName:      "Alpha Vantage",
 			NeedsToken:        true,
@@ -85,7 +86,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			API:               priceProviders.NewAVantageAPI(avantageToken),
 		},
 		"tiingo": {
-			AuthSet:           tingoToken != "",
+			IsSet:             tingoToken != "",
 			Env:               "CONTROTTO_TIINGO_TOKEN",
 			NeedsToken:        true,
 			ProviderName:      "Tiingo",
@@ -131,14 +132,11 @@ func (c *Config) GetPriceProviders() map[string]pnl.PriceProvider {
 	defer c.mu.RUnlock()
 	// Return a copy to prevent external modification
 	providers := make(map[string]pnl.PriceProvider, len(c.PriceProviders))
-	for k, v := range c.PriceProviders {
-		providers[k] = v
-	}
+	maps.Copy(providers, c.PriceProviders)
 	return providers
 }
 
-// UpdateProviderToken updates the token for the specified price provider and its corresponding environment variable.
-func (c *Config) UpdateProviderToken(key, token string) error {
+func (c *Config) UpdateProviderToken(key, token string, toggle bool) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -147,16 +145,23 @@ func (c *Config) UpdateProviderToken(key, token string) error {
 		return fmt.Errorf("price provider %q not found", key)
 	}
 
-	// Update the provider's token and related fields
-	provider.Token = token
-	provider.AuthSet = token != ""
+	// Update the provider based on the key
 	switch key {
 	case "avantage":
+		provider.Token = token
 		provider.API = priceProviders.NewAVantageAPI(token)
 		os.Setenv("CONTROTTO_AVANTAGE_TOKEN", token)
+		// Set IsSet to true if either toggle is true or a non-empty token is provided
+		provider.IsSet = toggle || token != ""
 	case "tiingo":
+		provider.Token = token
 		provider.API = priceProviders.NewTiingoAPI(token)
 		os.Setenv("CONTROTTO_TIINGO_TOKEN", token)
+		// Set IsSet to true if either toggle is true or a non-empty token is provided
+		provider.IsSet = toggle || token != ""
+	case "bingx", "binance", "coinbase":
+		// For providers that don't need a token, IsSet is controlled by toggle only
+		provider.IsSet = toggle
 	default:
 		return fmt.Errorf("unsupported price provider %q", key)
 	}
