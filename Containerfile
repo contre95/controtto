@@ -1,8 +1,12 @@
-FROM golang:alpine AS builder
+FROM golang:bookworm AS builder
 
 # Required for alpine + sqlite3 driver
 ENV CGO_ENABLED=1
-RUN apk add --no-cache gcc musl-dev
+# RUN apk add --no-cache gcc musl-dev
+# RUN apk add --no-cache sqlite-libs sqlite-dev
+# RUN apk --no-cache add sqlite
+# RUN apk add --no-cache git
+# RUN apk add --no-cache build-base
 
 # Copy files
 WORKDIR /app
