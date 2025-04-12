@@ -1,4 +1,4 @@
-package markets
+package priceProviders
 
 import (
 	"encoding/json"

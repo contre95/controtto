@@ -1,10 +1,10 @@
 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-  <thead class="bg-gray-50 dark:bg-gray-800">
+  <thead class="bg-gray-50 dark:bg-neutral-900">
     <tr>
       <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <div class="flex items-center gap-x-3">
           <input type="checkbox"
-            class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700">
+            class="text-blue-500 border-neutral-300 rounded dark:bg-neutral-900 dark:ring-offset-gray-900 dark:border-neutral-700">
           <span>Trade type</span>
         </div>
       </th>
@@ -34,23 +34,23 @@
 
     </tr>
   </thead>
-  <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900 animate__headShake animate__animated">
+  <tbody class="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-neutral-900 animate__headShake animate__animated">
     {{ range .Pair.Trades }}
     <tr id="trans{{ .ID }}" class="animate__animated">
       <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
         <div class="inline-flex items-center gap-x-3">
           <input type="checkbox"
-            class="text-blue-500 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700" disabled>
+            class="text-blue-500 rounded dark:bg-neutral-900 dark:ring-offset-gray-900 dark:border-neutral-700" disabled>
           <div class="flex items-center gap-x-2">
             {{ if eq .TradeType "Buy" }}
-            <div class="flex items-center border-0 justify-center w-8 h-8 bg-green-500 rounded-full dark:bg-gray-800">
-              <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full dark:bg-gray-800">
+            <div class="flex items-center border-0 justify-center w-8 h-8 bg-green-500 rounded-full dark:bg-neutral-900">
+              <div class="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full dark:bg-neutral-900">
                 <img src="/assets/img/buy.svg" alt="buy">
               </div>
             </div>
             {{ else }}
-            <div class="flex items-center justify-center w-8 h-8 text-red-500 bg-red-100 rounded-full dark:bg-gray-800">
-              <div class="flex items-center justify-center w-8 h-8 bg-red-100 rounded-full dark:bg-gray-800">
+            <div class="flex items-center justify-center w-8 h-8 text-red-500 bg-red-100 rounded-full dark:bg-neutral-900">
+              <div class="flex items-center justify-center w-8 h-8 bg-red-100 rounded-full dark:bg-neutral-900">
                 <img src="/assets/img/sell.svg" alt="sell">
               </div>
             </div>

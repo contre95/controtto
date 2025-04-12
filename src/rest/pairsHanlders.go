@@ -4,22 +4,32 @@ import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"log/slog"
+	"slices"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func pairsSection(c *fiber.Ctx) error {
-	slog.Info("Pairs Section")
-	return c.Render("pairsSection", fiber.Map{
-		"Amount": 4,
-	})
-}
-
-func pairSection(c *fiber.Ctx) error {
-	slog.Info("Pair Section")
-	return c.Render("pairSection", fiber.Map{
-		"PairID": c.Params("id"),
-	})
+func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		id := c.Params("id")
+		req := querying.GetTradingPairReq{
+			TPID:             id,
+			WithCalculations: true,
+		}
+		resp, err := tpq.GetTradingPair(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
+		slices.Reverse(resp.Pair.Trades)
+		return c.Render("pairCards", fiber.Map{
+			"Today": time.Now().Format("Mon Jan 02 15:04 2006"),
+			"Pair":  resp.Pair,
+		})
+	}
 }
 
 func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
@@ -40,9 +50,9 @@ func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 }
 
 // Tables handler that renderizer the tables view and returns it to the client
-func pairsTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func tradesTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		slog.Info("Pairs table requested")
+		slog.Info("Trades table requested")
 		req := querying.ListTradingPairsReq{}
 		resp, err := aq.ListTradingPairs(req)
 		if err != nil {
@@ -51,7 +61,7 @@ func pairsTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		return c.Render("pairsTable", fiber.Map{
+		return c.Render("tradesTable", fiber.Map{
 			"Title": "Trading Pairs",
 			"Pairs": resp.Pairs,
 		})

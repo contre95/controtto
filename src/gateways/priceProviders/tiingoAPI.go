@@ -1,20 +1,12 @@
-package markets
+package priceProviders
 
 import (
-	"controtto/src/domain/pnl"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"slices"
 )
-
-// Markets repository interface
-type Markets interface {
-	GetCurrentPrice(assetA, assetB string) (float64, error)
-	Color() string
-	Name() string
-}
 
 // TiingoAPI struct implements the Markets interface
 type TiingoAPI struct {
@@ -67,7 +59,7 @@ func (api *TiingoAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 	}
 	// Check if the market data is found
 	if len(tiingoResp) == 0 || tiingoResp[0].Price == 0.0 {
-		return 0.0, pnl.MarketNotFound(errors.New(assetA + " market not found"))
+		return 0.0, PriceProviderNotFound(errors.New(assetA + " market not found"))
 	}
 
 	return tiingoResp[0].Price / abPrice, nil

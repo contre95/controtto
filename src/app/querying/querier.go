@@ -4,10 +4,10 @@ package querying
 // TODO: No, the trading pair querier will receive as well the MarketQuerier use case bundle
 type Service struct {
 	AssetQuerier       AssetsQuerier
-	MarketQuerier      MarketsQuerier
+	PriceQuerier       PriceQuerier
 	TradingPairQuerier TradingPairsQuerier
 }
 
-func NewService(aq AssetsQuerier, mq MarketsQuerier, tpq TradingPairsQuerier) Service {
-	return Service{aq, mq, tpq}
+func NewService(aq AssetsQuerier, pq PriceQuerier, tpq TradingPairsQuerier) Service {
+	return Service{aq, pq, tpq}
 }

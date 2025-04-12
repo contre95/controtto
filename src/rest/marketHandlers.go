@@ -8,11 +8,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func marketPrice(aq querying.MarketsQuerier) func(*fiber.Ctx) error {
+func marketPrice(aq querying.PriceQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		slog.Info("Requesting market price", "market", id)
-		req := querying.QueryMarketReq{
+		req := querying.QueryPriceReq{
 			AssetSymbolA: id,
 		}
 		resp, err := aq.GetMarketPrice(req)
@@ -24,11 +24,11 @@ func marketPrice(aq querying.MarketsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
-func checkPrice(mq querying.MarketsQuerier) func(*fiber.Ctx) error {
+func checkPrice(mq querying.PriceQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		base := c.Query("base")
 		quote := c.Query("quote")
-		req := querying.QueryMarketReq{
+		req := querying.QueryPriceReq{
 			AssetSymbolA: base,
 			AssetSymbolB: quote,
 		}

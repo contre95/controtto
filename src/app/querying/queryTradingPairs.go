@@ -8,11 +8,11 @@ import (
 
 type TradingPairsQuerier struct {
 	tradingPairs pnl.TradingPairs
-	markets      []pnl.Markets
+	providers    pnl.PriceProviders
 }
 
 // NewTradingPairQuerier returns a new intereactor with all the Trading Pair related use cases.
-func NewTradingPairQuerier(a pnl.TradingPairs, m []pnl.Markets) *TradingPairsQuerier {
+func NewTradingPairQuerier(a pnl.TradingPairs, m pnl.PriceProviders) *TradingPairsQuerier {
 	return &TradingPairsQuerier{a, m}
 }
 
@@ -65,7 +65,7 @@ func (tpq *TradingPairsQuerier) ListTrades(req TradesReq) (*TradesResp, error) {
 type GetTradingPairReq struct {
 	TPID                 string
 	WithCurrentBasePrice bool
-	WithTrades     bool
+	WithTrades           bool
 	WithCalculations     bool
 }
 
@@ -129,20 +129,20 @@ func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (floa
 	marketName := ""
 	marketColor := ""
 	failedMarkets := 0
-	for _, m := range tpq.markets {
-		slog.Info("Querying markets", "market", m.Name())
+	for _, m := range tpq.providers {
+		slog.Info("Querying providers", "market", m.ProviderName)
 		baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
-		marketName = m.Name()
-		marketColor = m.Color()
+		marketName = m.ProviderName
+		marketColor = m.Color
 		if err != nil {
-			slog.Error("Error getting base asset price.", "market", m.Name(), "error", err)
+			slog.Error("Error getting base asset price.", "market", m.ProviderName, "error", err)
 			failedMarkets++
 		} else {
 			break
 		}
 	}
-	if failedMarkets == len(tpq.markets) {
-		slog.Error("All markets failed to find the price.", "asset1", asset1, "asset2", asset2)
+	if failedMarkets == len(tpq.providers) {
+		slog.Error("All providers failed to find the price.", "asset1", asset1, "asset2", asset2)
 		return 0, "", "", err
 	}
 	return baseAssetPrice, marketName, marketColor, nil

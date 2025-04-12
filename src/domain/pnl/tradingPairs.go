@@ -14,10 +14,10 @@ import (
 func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
 	// I'll leave uniqueness of this to an exception https://stackoverflow.com/questions/2660817/ddd-validation-of-unique-constraint
 	tp := TradingPair{
-		ID:           TradingPairID(fmt.Sprintf("%s%s", base.Symbol, quote.Symbol)),
-		BaseAsset:    base,
-		QuoteAsset:   quote,
-		Trades: []Trade{},
+		ID:         TradingPairID(fmt.Sprintf("%s%s", base.Symbol, quote.Symbol)),
+		BaseAsset:  base,
+		QuoteAsset: quote,
+		Trades:     []Trade{},
 	}
 	return tp.Validate()
 }
@@ -26,13 +26,13 @@ func NewTradingPair(base Asset, quote Asset) (*TradingPair, error) {
 func (tp *TradingPair) NewTrade(baseAmount, quoteAmount, tFee, wFee float64, timestamp time.Time, tType TradeType) (*Trade, error) {
 	// Append the trade to the Trades slice.
 	trade := &Trade{
-		ID:              uuid.New().String(),
-		Timestamp:       timestamp,
-		BaseAmount:      baseAmount,
-		QuoteAmount:     quoteAmount,
-		FeeInBase:       tFee,
-		FeeInQuote:      wFee,
-		TradeType: tType,
+		ID:          uuid.New().String(),
+		Timestamp:   timestamp,
+		BaseAmount:  baseAmount,
+		QuoteAmount: quoteAmount,
+		FeeInBase:   tFee,
+		FeeInQuote:  wFee,
+		TradeType:   tType,
 	}
 	tp.Trades = append(tp.Trades, *trade)
 	return trade.Validate()

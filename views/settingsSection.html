@@ -1,5 +1,5 @@
-<section class="bg-white dark:bg-gray-900 animate__animated animate__fadeIn">
-  <div class="container px-6 py-10 mx-auto  animate__animated animate__fadeInRight">
+<section class="bg-white dark:bg-neutral-900 animate__animated animate__fadeIn">
+  <div class="container px-6 py-10 mx-auto animate__animated animate__fadeInRight">
     <div class="flex flex-wrap items-center">
       <svg class="flex w-7 h-7 mx-2 text-gray-700 dark:text-white" viewBox="0 0 24 24" fill="none"
         xmlns="http://www.w3.org/2000/svg">
@@ -10,15 +10,17 @@
           d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      <h1 class="flex text-2xl font-semibold text-gray-700 capitalize lg:text-3xl dark:text-white">Settings</h1>
+      <h1 class="flex text-2xl font-semibold text-gray-700 capitalize lg:text-3xl dark:text-white">
+        Settings
+      </h1>
     </div>
 
     <div class="mt-8 lg:-mx-6 lg:flex lg:items-center">
       <img class="object-cover w-full lg:mx-6 lg:w-1/2 rounded-xl h-72 lg:h-96"
         src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-        alt="">
+        alt="" />
 
-      <div class="mt-6 lg:w-1/2 lg:mt-0 lg:mx-6 ">
+      <div class="mt-6 lg:w-1/2 lg:mt-0 lg:mx-6">
         <p class="text-sm text-blue-500 uppercase">Settings</p>
 
         <a href="#" class="block mt-4 text-2xl font-semibold text-gray-800 hover:underline dark:text-white">
@@ -26,10 +28,12 @@
         </a>
 
         <p class="mt-3 text-sm text-gray-500 dark:text-gray-300 md:text-sm">
-          All settings are set up with environment variables. This page only displays which setting where set. To check
-          which configuratoins are available please read the documentation.
-          or check <a href="https://github.com/contre95/controtto/blob/main/.env.example" target="_blank"
-            class="text-blue-400">.env.example</a> file.
+          All settings are set up with environment variables. This page only
+          displays which setting where set. To check which configuratoins are
+          available please read the documentation. or check
+          <a href="https://github.com/contre95/controtto/blob/main/.env.example" target="_blank"
+            class="text-blue-400">.env.example</a>
+          file.
         </p>
 
         <a href="https://github.com/contre95/controtto" target="_blank"
@@ -47,107 +51,107 @@
       </div>
     </div>
   </div>
-  <hr class="my-4 border-gray-300 dark:border-gray-600" />
+  <hr class="my-4 border-neutral-300 dark:border-neutral-600" />
   <div class="container px-6 py-10 mx-auto animate__animated animate__fadeInLeft">
-    <p class="text-sm text-blue-500 uppercase">Market Providers API</p>
-    <br>
-    <div class="flex flex-wrap items-center">
-      <div>
-        {{ if .AlphaVantageToken }}
-        <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
-        {{ else }}
-        <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4">
-        {{ end }}
-      </div>
-      <div>
-        <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-          Alpha Vantage Stock API token set.
-          <small class="text-blue-500 text-blue-500">
-            (<a href="https://www.alphavantage.co/support/#api-key" target="_blank">Get it here.</a>)
-          </small>
-        </label>
-      </div>
-      <div class="relative flex items-center mt-2">
-        <div class="flex items-center gap-x-3">
-          <span
-            class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 ">
-          </span>
+    <form hx-post="/settings/edit" hx-swap="none" _="on submit add .loading to me">
+      <p class="text-sm text-blue-500 uppercase">Market Providers API</p>
+      <br />
+
+      {{ range .PriceProviders }}
+      <div class="flex flex-wrap items-center">
+        <div>
+          {{ if .ProviderSet }}
+          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
+          {{ else }}
+          <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
+          {{ end }}
+        </div>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
+            {{ .ProviderTitle }}
+            <small class="text-blue-500 text-blue-500">
+              (<a href="{{ .ProviderURL }}" target="_blank">Get it here.</a>)
+              <input type="password" name="{{ .ProviderInputName }}" value="{{ .Token }}"
+              class="w-full mt-1 px-1 py-1 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700" autocomplete="off">
+            </small>
+          </label>
+        </div>
+        <div class="relative flex items-center mt-2">
+          <div class="flex items-center gap-x-3">
+            <span
+              class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-neutral-900 dark:text-gray-300">
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-wrap items-center">
-      <div>
-        {{ if .TiingoToken }}
-        <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
-        {{ else }}
-        <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4">
-        {{ end }}
-      </div>
-      <div>
-        <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-          Tiingo markets API token set
-          <small class="text-blue-500">
-            (<a href="https://www.tiingo.com/account/api/token" target="_blank">Get it here.</a>)
-          </small>
-        </label>
-      </div>
-      <div class="relative flex items-center mt-2">
-        <div class="flex items-center gap-x-3">
-          <span
-            class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 ">
-          </span>
+      <br>
+      {{ end }}
+
+      <br>
+      <div class="flex flex-wrap items-center">
+        <div>
+          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
+        </div>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
+            Public markets (Binance, BingX, etc.)
+          </label>
+        </div>
+        <div class="relative flex items-center mt-2">
+          <div class="flex items-center gap-x-3">
+            <span
+              class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-neutral-900 dark:text-gray-300">
+            </span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-wrap items-center">
-      <div>
-        <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
-      </div>
-      <div>
-        <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-          Public markets (Binance, BingX, etc.)
-        </label>
-      </div>
-      <div class="relative flex items-center mt-2">
-        <div class="flex items-center gap-x-3">
-          <span
-            class="block w-full py-2.5 text-gray-400 text-md placeholder-gray-400/70 bg-white rounded-lg px-4 dark:bg-gray-900 dark:text-gray-300 ">
-          </span>
+      <br />
+      <p class="text-sm text-blue-500 uppercase">Pairs settings</p>
+      <br />
+      <div class="flex flex-wrap items-center">
+        <div>
+          {{ if .Uncommon }}
+          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
+          {{ else }}
+          <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
+          {{ end }}
+        </div>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
+            Uncommon pairs.
+            <small class="text-gray-400 font-normal italic"> (soon) </small>
+            <!-- <small class="text-gray-500 font-normal ml-2 hidden lg:inline"> -->
+            <!--   Show uncommon pairs in the UI while creating new Pairs. -->
+            <!-- </small> -->
+            <!-- <small class="text-gray-500 font-normal ml-2 inline lg:hidden"> -->
+            <!--   Show uncommon pairs in UI. -->
+            <!-- </small> -->
+          </label>
         </div>
       </div>
-    </div>
-    <br>
-    <p class="text-sm text-blue-500 uppercase">Pairs settings</p>
-    <br>
-    <div class="flex flex-wrap items-center">
-      <div>
-        {{ if .Uncommon }}
-        <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4">
-        {{ else }}
-        <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4">
-        {{ end }}
-      </div>
-      <div>
-        <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-          Uncommon pairs.
-          <small class="text-gray-400 font-normal italic">
-            (soon)
-          </small>
-          <!-- <small class="text-gray-500 font-normal ml-2 hidden lg:inline"> -->
-          <!--   Show uncommon pairs in the UI while creating new Pairs. -->
-          <!-- </small> -->
-          <!-- <small class="text-gray-500 font-normal ml-2 inline lg:hidden"> -->
-          <!--   Show uncommon pairs in UI. -->
-          <!-- </small> -->
-        </label>
-      </div>
-    </div>
+      <div class="mt-6" _="on htmx:afterRequest
+              if event.detail.successful
+                add .animate-fade-in then wait 3s then remove .animate-fade-in
+                add .bg-green-100 .text-green-700
+                put 'Settings updated successfully!' into me
+              else
+                add .animate-fade-in then wait 3s then remove .animate-fade-in
+                add .bg-red-100 .text-red-700
+                put 'Error updating settings!' into me
+              end"></div>
+      <button type="submit"
+        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900">
+        Save Changes
+      </button>
+    </form>
   </div>
+
   <div class="container px-6 pb-10 mx-auto animate__animated animate__fadeInLeft">
     <small class="text-gray-400 font-normal italic">
-      For further information on how to deploy or set up the product plese refer to <a
-        href="https://github.com/contre95/controtto" target="_blank" class="text-blue-300">github.com/contre95/controtto</a>
+      For further information on how to deploy or set up the product plese refer
+      to
+      <a href="https://github.com/contre95/controtto" target="_blank"
+        class="text-blue-300">github.com/contre95/controtto</a>
     </small>
-
   </div>
 </section>

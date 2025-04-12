@@ -1,12 +1,12 @@
 <table
-  class="w-full divide-y divide-gray-200 border border-gray-200 dark:border-gray-700 dark:divide-gray-700 transition-all"
+  class="w-full divide-y divide-gray-200 border border-neutral-200 dark:border-neutral-700 dark:divide-gray-700 transition-all"
   id="table">
-  <thead class="bg-gray-50 dark:bg-gray-800">
+  <thead class="bg-gray-50 dark:bg-neutral-900">
     <tr>
       <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <div class="flex items-center gap-x-3">
           <input type="checkbox"
-            class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700">
+            class="text-blue-500 border-neutral-300 rounded dark:bg-neutral-900 dark:ring-offset-gray-900 dark:border-neutral-700">
           <span>Pair</span>
         </div>
       </th>
@@ -42,13 +42,13 @@
     </tr>
   </thead>
   <tbody id="tbody"
-    class="bg-white divide-y divide-gray-200 dark:divide-gray-900 dark:bg-gray-700 animate__headShake animate__animated">
+    class="bg-white divide-y divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800 animate__headShake animate__animated">
     {{ range .Pairs }}
     <tr id="pair{{ .ID }}" class="animate__animated">
       <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
         <div class="inline-flex items-center gap-x-3">
           <input type="checkbox"
-            class="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 dark:border-gray-700"
+            class="text-blue-500 border-neutral-300 rounded dark:bg-neutral-900 dark:ring-offset-gray-900 dark:border-neutral-700"
             disabled>
 
           <div class="flex items-center gap-x-2">
@@ -75,7 +75,7 @@
       </td>
       <td
         class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
-        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-gray-800">
+        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-neutral-900">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <h2 class="text-sm font-normal text-gray-500"> <span class="font-bold leading-normal text-sm text-emerald-500"
               style="color:{{ .BaseAsset.Color }}">
@@ -86,7 +86,7 @@
       </td>
       <td
         class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
-        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-gray-800">
+        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-neutral-900">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <h2 class="text-sm font-normal text-gray-500"> <span class="font-bold leading-normal text-sm text-emerald-500"
               style="color:{{ .QuoteAsset.Color }}">
@@ -97,36 +97,36 @@
       </td>
 
       <th scope="col" class="px-2 py-3.5 text-sm font-normal text-gray-500 dark:text-gray-400">
-          {{ if eq .BaseAsset.Type "Stock" }}
-          <span class="px-3 py-1 text-xs text-indigo-500 rounded-l-lg dark:bg-gray-800 bg-indigo-100/60">
-            {{ .BaseAsset.Type }}
-          </span>
-          {{ end }}
-          {{ if eq .BaseAsset.Type "Crypto" }}
-          <span class="px-3 py-1 text-xs text-pink-500 rounded-l-lg dark:bg-gray-800 bg-pink-100/60">
-            {{ .BaseAsset.Type }}
-          </span>
-          {{ end }}
-          {{ if eq .BaseAsset.Type "Forex" }}
-          <span class="px-3 py-1 text-xs text-blue-500 rounded-l-lg dark:bg-gray-800 bg-blue-100/60">
-            {{ .BaseAsset.Type }}
-          </span>
-          {{ end }}
-          {{ if eq .QuoteAsset.Type "Stock" }}
-          <span class="px-3 py-1 text-xs text-indigo-500 rounded-r-lg dark:bg-gray-800 bg-indigo-100/60">
-            {{ .QuoteAsset.Type }}
-          </span>
-          {{ end }}
-          {{ if eq .QuoteAsset.Type "Crypto" }}
-          <span class="px-3 py-1 text-xs text-pink-500 rounded-r-lg dark:bg-gray-800 bg-pink-100/60">
-            {{ .QuoteAsset.Type }}
-          </span>
-          {{ end }}
-          {{ if eq .QuoteAsset.Type "Forex" }}
-          <span class="px-3 py-1 text-xs text-blue-500 rounded-r-lg dark:bg-gray-800 bg-blue-100/60">
-            {{ .QuoteAsset.Type }}
-          </span>
-          {{ end }}
+        {{ if eq .BaseAsset.Type "Stock" }}
+        <span class="px-3 py-1 text-xs text-indigo-500 rounded-l-lg dark:bg-neutral-900 bg-indigo-100/60">
+          {{ .BaseAsset.Type }}
+        </span>
+        {{ end }}
+        {{ if eq .BaseAsset.Type "Crypto" }}
+        <span class="px-3 py-1 text-xs text-pink-500 rounded-l-lg dark:bg-neutral-900 bg-pink-100/60">
+          {{ .BaseAsset.Type }}
+        </span>
+        {{ end }}
+        {{ if eq .BaseAsset.Type "Forex" }}
+        <span class="px-3 py-1 text-xs text-blue-500 rounded-l-lg dark:bg-neutral-900 bg-blue-100/60">
+          {{ .BaseAsset.Type }}
+        </span>
+        {{ end }}
+        {{ if eq .QuoteAsset.Type "Stock" }}
+        <span class="px-3 py-1 text-xs text-indigo-500 rounded-r-lg dark:bg-neutral-900 bg-indigo-100/60">
+          {{ .QuoteAsset.Type }}
+        </span>
+        {{ end }}
+        {{ if eq .QuoteAsset.Type "Crypto" }}
+        <span class="px-3 py-1 text-xs text-pink-500 rounded-r-lg dark:bg-neutral-900 bg-pink-100/60">
+          {{ .QuoteAsset.Type }}
+        </span>
+        {{ end }}
+        {{ if eq .QuoteAsset.Type "Forex" }}
+        <span class="px-3 py-1 text-xs text-blue-500 rounded-r-lg dark:bg-neutral-900 bg-blue-100/60">
+          {{ .QuoteAsset.Type }}
+        </span>
+        {{ end }}
       </th>
       <td class="px-4 py-4 text-sm whitespace-nowrap text-center">
         <div class="gap-x-6">

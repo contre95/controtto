@@ -9,7 +9,7 @@ type TradingPair struct {
 	ID           TradingPairID
 	BaseAsset    Asset
 	QuoteAsset   Asset
-	Trades []Trade
+	Trades       []Trade
 	Calculations Calculations
 }
 
@@ -44,14 +44,14 @@ func GetValidTradeTypes() []TradeType {
 // Trade represents individual exchange trades between the asset pair.
 // The first listed currency of a currency pair is called the base currency, and the second currency is called the quote currency.
 type Trade struct {
-	ID              string
-	Timestamp       time.Time
-	BaseAmount      float64
-	QuoteAmount     float64
-	FeeInBase       float64
-	FeeInQuote      float64
-	TradeType TradeType
-	Price           float64
+	ID          string
+	Timestamp   time.Time
+	BaseAmount  float64
+	QuoteAmount float64
+	FeeInBase   float64
+	FeeInQuote  float64
+	TradeType   TradeType
+	Price       float64
 }
 
 // TrasingPairs repository interface
@@ -63,14 +63,4 @@ type TradingPairs interface {
 	DeleteTrade(tid string) error
 	RecordTrade(t Trade, tpid TradingPairID) error
 	ListTrades(tpid string) ([]Trade, error)
-}
-
-type MarketNotFound error
-
-// Markets repository interface
-type Markets interface {
-	// GetCurrentPrice returns the given price of assetA expressed in terms of assetB, if the value is market is not found it returns a MarketNotFound error
-	GetCurrentPrice(assetA, assetB string) (float64, error)
-	Color() string
-	Name() string
 }

@@ -1,5 +1,5 @@
 <section
-  class="p-5 bg-white dark:bg-gray-700 w-full divide-y  rounded-md divide-gray-200 border border-gray-200 dark:border-gray-700  dark:divide-gray-700 animate__animated animate__fadeInUp">
+  class="p-5 bg-white dark:bg-neutral-700 w-full divide-y  rounded-md divide-gray-200 border border-neutral-200 dark:border-neutral-700  dark:divide-gray-700 animate__animated animate__fadeInUp">
   <h2 class="text-lg font-semibold text-gray-700 capitalize dark:text-white">New Trade</h2>
   <form id="trans-form">
     <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
@@ -15,7 +15,7 @@
         </label>
         <input name="base" id="base"
           _="on change set global x to my.value * {{ .Pair.Calculations.BaseMarketPrice }} then put x into #quote.value"
-          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="number" placeholder="0.029578 {{ .Pair.BaseAsset.Symbol }}">
       </div>
 
@@ -24,7 +24,7 @@
           <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
         </label>
         <input name="quote" id="quote"
-          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="number" placeholder="365.87 {{ .Pair.QuoteAsset.Symbol }}">
       </div>
 
@@ -34,7 +34,7 @@
           <span class="text-red-500">Sell</span>
         </label>
         <select name="ttype"
-          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           id="ttype">
           <option value="Buy">Buy</option>
           <option value="Sell">Sell</option>
@@ -47,7 +47,7 @@
           <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
         </label>
         <select
-          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           _="on change toggle .hidden on #qfee then toggle .hidden on #bfee" id="fee">
           <option selected><span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span></option>
           <option><span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span></option>
@@ -71,7 +71,7 @@
         </label>
         <input name="tfee" value=0
           style="border: solid 1px {{ .Pair.BaseAsset.Color }}; box-shadow: 0 -1px 5px {{ .Pair.BaseAsset.Color }};"
-          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="number" placeholder="0.0004 {{ .Pair.BaseAsset.Symbol }}">
         <small class="text-xs leading-tight text-white/80">
           <br>
@@ -84,7 +84,7 @@
         </label>
         <input name="wfee" value=0
           style="border: solid 1px {{ .Pair.QuoteAsset.Color }}; box-shadow: 0 -1px 5px {{ .Pair.QuoteAsset.Color }};"
-          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="number" placeholder="0.0002 {{ .Pair.QuoteAsset.Symbol }}">
         <small class="text-xs leading-tight text-white/80">
           <br>
@@ -96,7 +96,7 @@
           Date
         </label>
         <input
-          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="date" id="tdate" name="tdate" value="{{ .Today }}" min="1997-01-01" max="2123-12-31" />
         <small class="text-xs leading-tight text-white/80">
           <br>
@@ -109,18 +109,18 @@
         <form id="import-form" class="">
           <button hx-encoding="multipart/form-data" hx-post="/pairs/{{ .Pair.ID }}/trades/upload" hx-target="#mitoast"
             id="import" hx-include="#import-form"
-            class="flex items-center border-2 border-gray-300 border-solid justify-center  px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-gray-300">
+            class="flex items-center border-2 border-neutral-300 border-solid justify-center  px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-neutral-300">
             <img src="/assets/img/import.svg" alt="import" class="h-6 w-6">
             <span>Import</span>
           </button>
           <input type="file" name="trancsv"
-            class="flex p-2 ml-2 group-hover:scale-100 lg:scale-0 transition-transform duration-200 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-gray-600 dark:bg-gray-900 dark:focus:border-blue-300">
+            class="flex p-2 ml-2 group-hover:scale-100 lg:scale-0 transition-transform duration-200 text-sm text-gray-600 bg-white border border-neutral-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-600 dark:bg-neutral-900 dark:focus:border-blue-300">
         </form>
       </div>
       <div class="flex w-full md:w-auto">
         <button hx-post="/pairs/{{ .Pair.ID }}/trades" hx-include="#trans-form" hx-target="#mitoast"
           hx-swap="innerHTML"
-          class="px-8 py-2.5 justify-end leading-5 text-white transition-colors w-full duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-gray-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+          class="px-8 py-2.5 justify-end leading-5 text-white transition-colors w-full duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-neutral-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
           Record
         </button>
       </div>

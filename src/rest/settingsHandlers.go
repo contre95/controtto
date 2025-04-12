@@ -7,14 +7,23 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func settingsSection(conf *config.Service) func(*fiber.Ctx) error {
+func editSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		cfg := conf.IsSet()
-		return c.Render("settingsSection", fiber.Map{
-			"Today":             time.Now().Format("Mon Jan 02 15:04 2006"),
-			"AlphaVantageToken": cfg.AVantageAPIToken,
-			"TiingoToken":       cfg.TiingoAPIToken,
-			"Uncommon":          cfg.UncommonPairs,
+		return c.Render("editSettingsForm", fiber.Map{
+			"Today":    time.Now().Format("Mon Jan 02 15:04 2006"),
+			"Port":     cfg.Port,
+			"Uncommon": cfg.UncommonPairs,
 		})
+	}
+}
+
+func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		// // If the form checkbox for "Uncommon" is checked, the value might be "on"
+		for key := range cfg.GetPriceProviders() {
+			token := c.FormValue(key)
+			cfg.UpdateProviderToken(key, token)
+		}
+		return c.Redirect("/settings")
 	}
 }
