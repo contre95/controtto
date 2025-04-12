@@ -36,7 +36,7 @@
         </a>
       </button>
 
-      <button hx-get="/ui/pairs/{{ .PairID }}/pairs/form" hx-swap="innerHTML" hx-target="#trade-form"
+      <button hx-get="/ui/pairs/{{ .PairID }}/newTrade/form" hx-swap="innerHTML" hx-target="#trade-form"
         hx-trigger="mouseover once" _="on click toggle .hidden on #trade-form"
         class="flex items-center border-2 border-neutral-300 border-solid justify-center w-full md:w-1/6 h-10 px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-neutral-300">
         <img src="/assets/img/new.svg" alt="export" class="h-6 w-6 mr-2">

@@ -1,6 +1,6 @@
 <section class="mx-auto max-w-screen-2xl">
-
-  <div class = "rounded-md m-4 p-4 flex items-center justify-center flex-wrap gap-x-1  divide-gray-200 dark:divide-gray-900  animate__animated animate__fadeIn">
+  <div
+    class="rounded-md m-4 p-4 flex items-center justify-center flex-wrap gap-x-1 divide-gray-200 dark:divide-gray-900 animate__animated animate__fadeIn">
     <div class="flex flex-wrap items-center">
       <svg class="flex w-7 h-7 mx-2 text-gray-700 dark:text-white" viewBox="0 0 24 24" fill="none"
         xmlns="http://www.w3.org/2000/svg">
@@ -39,17 +39,17 @@
     </div>
   </div>
 
-
-  <div class="rounded-md m-4 p-4 flex flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800  animate__animated animate__fadeIn">
+  <div
+    class="rounded-md m-4 p-4 flex flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800 animate__animated animate__fadeIn">
     <!-- <form> -->
     <form hx-ext="debug">
       <p class="text-sm text-blue-500 uppercase">Market Providers API</p>
       <br />
 
-      {{ range .PriceProviders }}
+      {{ range .PriceProviders }} {{ if .NeedsToken }}
       <div class="flex flex-wrap items-center">
         <div>
-          {{ if .TokenSet }}
+          {{ if .AuthSet }}
           <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
           {{ else }}
           <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
@@ -75,20 +75,16 @@
                   class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500"
                   onclick="togglePasswordVisibility('provider-{{ .ProviderInputName }}')">
                   Reveal
-                  <img src="/assets/img/pass.svg" class="w-6 h-6 mx-1" /> 
+                  <img src="/assets/img/pass.svg" class="w-6 h-6 mx-1" />
                 </button>
               </div>
             </small>
           </label>
         </div>
         <div class="relative flex items-center mt-2">
-          <div class="flex items-center gap-x-3">
-          </div>
+          <div class="flex items-center gap-x-3"></div>
         </div>
       </div>
-      <br />
-      {{ end }}
-
       <script>
         function togglePasswordVisibility(inputId) {
           const inputField = document.getElementById(inputId);
@@ -96,32 +92,43 @@
           inputField.type = type;
         }
       </script>
-
+      {{ end }} {{end}} {{ range .PriceProviders }} {{ if not .NeedsToken }}
       <div class="flex flex-wrap items-center">
         <div>
-          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
+        <label class="inline-flex items-center cursor-pointer my-2">
+            <input class="sr-only peer" type="checkbox" id="uncommon" name="{{ .ProviderInputName }}" value="true" {{ if .AuthSet }}checked{{ end }} />
+        <div
+          class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
         </div>
-        <div>
-          <label for="email" class="block text-md text-gray-500 dark:text-gray-300">
-            Public markets (Binance, BingX, etc.)
-          </label>
-        </div>
-        <div class="relative flex items-center mt-2">
-          <div class="flex items-center gap-x-3">
+          <span class="ms-3 block text-md text-gray-500 dark:text-gray-300">{{ .ProviderName }}</span>
+          <div>
+            {{ if .AuthSet }}
+            <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
+            {{ else }}
+            <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
+            {{ end }}
           </div>
         </div>
+        <div class="relative flex items-center mt-2">
+          <div class="flex items-center gap-x-3"></div>
+        </div>
       </div>
+      {{end}} {{ end }}
+
       <br />
       <p class="text-sm text-blue-500 uppercase">Pairs settings</p>
       <br />
-      
-      <label class="inline-flex items-center cursor-pointer my-2 ">
-        <input class="sr-only peer" type="checkbox" id="uncommon" name="uncommon_pairs" value="true" {{ if .Uncommon }}checked{{ end }}>
-        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+
+      <label class="inline-flex items-center cursor-pointer my-2">
+        <input class="sr-only peer" type="checkbox" id="uncommon" name="uncommon_pairs" value="true" {{ if .Uncommon
+          }}checked{{ end }} />
+        <div
+          class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
+        </div>
         <span class="ms-3 block text-md text-gray-500 dark:text-gray-300">Uncommon pairs</span>
-            <small class="ml-3 text-gray-400 font-normal italic">
-                Restrict pairs such as Base: BTC, Quote: MSFT are not allowed.
-            </small>
+        <small class="ml-3 text-gray-400 font-normal italic">
+          Restrict pairs such as Base: BTC, Quote: MSFT are not allowed.
+        </small>
       </label>
       <br />
       <button type="submit" hx-post="/settings/edit" hx-target="#mitoast"
@@ -130,7 +137,7 @@
       </button>
     </form>
   </div>
-  <div class=" px-6 pb-10 mx-auto animate__animated animate__fadeInLeft">
+  <div class="px-6 pb-10 mx-auto animate__animated animate__fadeInLeft">
     <small class="text-gray-400 font-normal italic">
       For further information on how to deploy or set up the product plese refer
       to

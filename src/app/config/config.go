@@ -43,24 +43,56 @@ func loadProviders() map[string]pnl.PriceProvider {
 	tingoToken := os.Getenv("CONTROTTO_TIINGO_TOKEN")
 	avantageToken := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
 	return map[string]pnl.PriceProvider{
+		"bingx": {
+			AuthSet:           true, // No token needed for Coinbase API
+			Env:               "",
+			ProviderName:      "BingX",
+			ProviderURL:       "https://docs.cdp.coinbase.com/",
+			NeedsToken:        false,
+			Color:             "#2954FE",
+			ProviderInputName: "bingx_toggle",
+			API:               priceProviders.NewCoinbaseAPI(),
+		},
+		"binance": {
+			AuthSet:           false, // No token needed for Coinbase API
+			ProviderName:      "Binance",
+			ProviderURL:       "https://docs.cdp.coinbase.com/",
+			ProviderInputName: "binance_toggle",
+			NeedsToken:        false,
+			Color:             "#EFB72D",
+			API:               priceProviders.NewCoinbaseAPI(),
+		},
+		"coinbase": {
+			AuthSet:           true, // No token needed for Coinbase API
+			Env:               "",
+			ProviderName:      "Coinbase",
+			ProviderURL:       "https://docs.cdp.coinbase.com/",
+			ProviderInputName: "coinbase_toggle",
+			NeedsToken:        false,
+			Token:             "",
+			Color:             "#0052FF",
+			API:               priceProviders.NewCoinbaseAPI(),
+		},
 		"avantage": {
-			TokenSet:          avantageToken != "",
+			AuthSet:           avantageToken != "",
 			Env:               "CONTROTTO_AVANTAGE_TOKEN",
 			ProviderName:      "Alpha Vantage",
+			NeedsToken:        true,
 			ProviderURL:       "https://www.alphavantage.co/support/#api-key",
 			ProviderInputName: "vantage_token",
 			Token:             avantageToken,
-			Color:             "",
+			Color:             "#C2F4E1",
 			API:               priceProviders.NewAVantageAPI(avantageToken),
 		},
 		"tiingo": {
-			TokenSet:          tingoToken != "",
+			AuthSet:           tingoToken != "",
 			Env:               "CONTROTTO_TIINGO_TOKEN",
+			NeedsToken:        true,
 			ProviderName:      "Tiingo",
 			ProviderURL:       "https://www.tiingo.com/account/api/token",
 			ProviderInputName: "tiingo_token",
 			Token:             tingoToken,
-			Color:             "",
+			Color:             "#AA74EF",
 			API:               priceProviders.NewTiingoAPI(tingoToken),
 		},
 	}
@@ -117,7 +149,7 @@ func (c *Config) UpdateProviderToken(key, token string) error {
 
 	// Update the provider's token and related fields
 	provider.Token = token
-	provider.TokenSet = token != ""
+	provider.AuthSet = token != ""
 	switch key {
 	case "avantage":
 		provider.API = priceProviders.NewAVantageAPI(token)
