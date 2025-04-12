@@ -130,12 +130,12 @@ func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (floa
 	marketColor := ""
 	failedMarkets := 0
 	for _, m := range tpq.providers {
-		slog.Info("Querying providers", "market", m.ProviderName)
+		slog.Info("Querying providers", "provider", m.ProviderName)
 		baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
 		marketName = m.ProviderName
 		marketColor = m.Color
 		if err != nil {
-			slog.Error("Error getting base asset price.", "market", m.ProviderName, "error", err)
+			slog.Error("Error getting base asset price.", "provider", m.ProviderName, "error", err)
 			failedMarkets++
 		} else {
 			break

@@ -21,8 +21,8 @@ func editSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		for key, p := range cfg.GetPriceProviders() {
-			token := c.FormValue(p.ProviderInputName)
-			cfg.UpdateProviderToken(key, token)
+			input := c.FormValue(p.ProviderInputName)
+			cfg.UpdateProviderToken(key, input, len(input) > 0)
 		}
 		uncommon := c.FormValue("uncommon_pairs") != ""
 		cfg.SetUncommonPairs(uncommon)
@@ -30,8 +30,7 @@ func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 		c.Append("HX-Trigger", "reloadSettings")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",
-			"Msg":   "Config upated",
+			"Msg":   "Config updated",
 		})
-
 	}
 }
