@@ -1,5 +1,5 @@
 <form id="pair-form"
-  class="p-5 bg-white dark:bg-gray-700 w-full divide-y divide-gray-200 border border-gray-200 rounded-md dark:border-gray-700 dark:divide-gray-700 animate__animated animate__fadeIn">
+  class="p-5 bg-white dark:bg-neutral-700 w-full divide-y divide-gray-200 border border-neutral-200 rounded-md dark:border-neutral-700 dark:divide-gray-700 animate__animated animate__fadeIn">
   <div class="flex flex-wrap -mx-3 mb-6">
     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
       <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-state">
@@ -8,7 +8,7 @@
       <div class="relative">
         <select
           _="on change set x to my.options[my.options.selectedIndex].attributes.atype.value then if x is equal to 'Stock' then remove .hidden from #advice else add .hidden to #advice end"
-          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 dark:text-gray-200 dark:bg-gray-600 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+          class="block appearance-none w-full bg-gray-200 border border-neutral-200 text-gray-700 dark:text-gray-200 dark:bg-neutral-600 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-neutral-500"
           name="base">
           {{ range .Assets }}
           <option style="color: {{ .Color }};" atype="{{ .Type }}" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}
@@ -31,7 +31,7 @@
       </label>
       <div class="relative">
         <select
-          class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 dark:text-gray-200 dark:bg-gray-600 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+          class="block appearance-none w-full bg-gray-200 border border-neutral-200 text-gray-700 dark:text-gray-200 dark:bg-neutral-600 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-neutral-500"
           name="quote">
           {{ range .Assets }}
           <option style="color: {{ .Color }};" value="{{ .Symbol }}">{{ .Symbol }} | {{ .Name }}</option>
@@ -47,7 +47,7 @@
   </div>
   <div class="flex border-none">
     <button type="button" hx-post="/pairs" hx-include="#pair-form" hx-target="#mitoast"
-      class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-gray-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+      class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-neutral-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
       Create
     </button>
 

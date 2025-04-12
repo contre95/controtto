@@ -1,0 +1,32 @@
+<section class="mx-auto max-w-screen-2xl">
+  <!-- <div class="m-4 flex items-center justify-center flex-wrap gap-x-1"> -->
+  <div class="rounded-md m-4  flex items-center justify-center flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800 animate__headShake animate__animated">
+    <div class="flex-none flex py-2 mx-6">
+      <h2 class="text-lg font-medium text-gray-800 dark:text-white">Trading pairs </h2>
+    </div>
+
+    <div class="md:flex-1 flex justify-end items-center py-2 mx-2">
+      <button
+        class="sidebtn flex items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-neutral-800 dark:hover:text-gray-200 hover:text-gray-700"
+        hx-get="/ui/pairs/form" hx-swap="innerHTML" hx-target="#x-form" hx-trigger="click">
+        <img class="mb-1 h-6 w-6" src="/assets/img/newpair.svg" alt="new pair">
+        <span class="mx-4 sidebtn">New pair</span>
+      </button>
+      <button
+        class="sidebtn flex block items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-neutral-800 dark:hover:text-gray-200 hover:text-gray-700"
+        hx-get="/ui/assets/form" hx-swap="innerHTML" hx-target="#x-form" hx-trigger="click">
+        <img class="mb-1 h-6 w-6" src="/assets/img/newasset.svg" alt="new pair">
+        <span class="mx-4 text-dark sidebtn">New asset</span>
+      </button>
+    </div>
+  </div>
+
+<div class="rounded-md m-4  flex items-center justify-center flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800 animate__animated" id="x-form">
+</div>
+  <div class="flex justify-center items-center grow animate__animated animate__fadeIn">
+    <div class="m-4 w-full overflow-x-clip hover:overflow-x-auto">
+      <div id="pairsTable" hx-get="/ui/trades/table" hx-swap="innerHTML" hx-target="this"
+        hx-trigger="revealed,newPair from:body">
+      </div>
+    </div>
+  </div>

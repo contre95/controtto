@@ -1,5 +1,5 @@
 <form id="asset-form"
-  class="p-5 bg-white dark:bg-gray-700 w-full divide-y  rounded-md divide-gray-200 border border-gray-200 dark:border-gray-700  dark:divide-gray-700 animate__animated animate__fadeIn">
+  class="p-5 bg-white dark:bg-neutral-700 w-full divide-y  rounded-md divide-gray-200 border border-neutral-200 dark:border-neutral-700  dark:divide-gray-700 animate__animated animate__fadeIn">
   <div class="grid grid-cols-1 gap-6 my-6 sm:grid-cols-2">
     <div>
       <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-state">
@@ -7,7 +7,7 @@
       </label>
 
       <input id="name" type="text" name="name"
-        class="block w-full px-4 py-2 mt-2 text-gray-700 dark:text-gray-200 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring">
+        class="block w-full px-4 py-2 mt-2 text-gray-700 dark:text-gray-200 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring">
     </div>
 
     <div>
@@ -16,7 +16,7 @@
       </label>
 
       <input id="symbol" type="email" name="symbol"
-        class="block w-full px-4 py-2 mt-2 text-gray-700 dark:text-gray-200 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring">
+        class="block w-full px-4 py-2 mt-2 text-gray-700 dark:text-gray-200 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring">
     </div>
 
     <div>
@@ -25,7 +25,7 @@
       </label>
 
       <select
-        class="block w-full px-4 py-2 mt-2 text-gray-700 dark:text-gray-200 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring"
+        class="block w-full px-4 py-2 mt-2 text-gray-700 dark:text-gray-200 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-slate-400 focus:ring-slate-300 focus:ring-opacity-40 dark:focus:border-slate-300 focus:outline-none focus:ring"
         name="atype">
         {{ range .AssetTypes }}
         <option value="{{ . }}">{{ . }}</option>
@@ -47,7 +47,7 @@
   </div>
   <div class="flex border-none">
     <button type="button" hx-post="/assets" hx-include="#asset-form" hx-target="#mitoast"
-      class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-gray-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+      class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-neutral-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
       Create
     </button>
   </div>

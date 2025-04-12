@@ -1,10 +1,9 @@
 package rest
 
 import (
+	"controtto/src/app/config"
 	"controtto/src/app/querying"
-	"controtto/src/domain/pnl"
 	"log/slog"
-	"slices"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,30 +15,20 @@ func empty() func(*fiber.Ctx) error {
 	}
 }
 
-func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		id := c.Params("id")
-		req := querying.GetTradingPairReq{
-			TPID:             id,
-			WithCalculations: true,
-		}
-		resp, err := tpq.GetTradingPair(req)
-		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
-			})
-		}
-		slices.Reverse(resp.Pair.Trades)
-		return c.Render("pairCards", fiber.Map{
-			"Today": time.Now().Format("Mon Jan 02 15:04 2006"),
-			"Pair":  resp.Pair,
-		})
-	}
+// Home hanlder reders the homescreen
+func Home(c *fiber.Ctx) error {
+	slog.Info("HOME")
+	// render index template
+	return c.Render("main", fiber.Map{})
 }
 
 func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		if c.Get("HX-Request") != "true" {
+			return c.Render("main", fiber.Map{
+				"DashboardTrigger": ",revealed",
+			})
+		}
 		slog.Info("Dashboard requested")
 		req := querying.ListTradingPairsReq{}
 		resp, err := aq.ListTradingPairs(req)
@@ -54,55 +43,38 @@ func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			"Pairs": resp.Pairs,
 		})
 	}
-
 }
 
-// Home hanlder reders the homescreen
-func Home(c *fiber.Ctx) error {
-	slog.Info("HOME")
-	// render index template
-	return c.Render("main", fiber.Map{})
-}
-
-func pairChart(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		id := c.Params("id")
-		req := querying.GetTradingPairReq{
-			TPID:             id,
-			WithCalculations: false,
-		}
-		resp, err := tpq.GetTradingPair(req)
-		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
-			})
-		}
-		slices.Reverse(resp.Pair.Trades)
-		return c.Render("pairChart", fiber.Map{
-			"Pair": resp.Pair,
+func tradesSection(c *fiber.Ctx) error {
+	slog.Info("Trades Section")
+	if c.Get("HX-Request") != "true" {
+		return c.Render("main", fiber.Map{
+			"TradesTrigger": ",revealed",
 		})
 	}
+	return c.Render("tradesSection", fiber.Map{
+		"Amount": 4,
+	})
 }
 
-func pairTape(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func pairSection(c *fiber.Ctx) error {
+	slog.Info("Pair Section")
+	return c.Render("pairSection", fiber.Map{
+		"PairID": c.Params("id"),
+	})
+}
+
+func settingsSection(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		id := c.Params("id")
-		req := querying.GetTradingPairReq{
-			TPID:             id,
-			WithCalculations: false,
-		}
-		resp, err := tpq.GetTradingPair(req)
-		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
+		if c.Get("HX-Request") != "true" {
+			return c.Render("main", fiber.Map{
+				"SettingsTrigger": ",revealed",
 			})
 		}
-		if resp.Pair.BaseAsset.Type == pnl.Stock {
-		}
-		return c.Render("pairTape", fiber.Map{
-			"Pair": resp.Pair,
+		return c.Render("settingsSection", fiber.Map{
+			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
+			"Uncommon":       cfg.GetUncommonPairs(),
+			"PriceProviders": cfg.GetPriceProviders(), // Pass the providers slice to the template
 		})
 	}
 }

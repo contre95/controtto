@@ -1,8 +1,8 @@
-package markets
+package priceProviders
 
 import (
-	"controtto/src/domain/pnl"
 	"encoding/json"
+
 	"errors"
 	"fmt"
 	"net/http"
@@ -66,7 +66,7 @@ func (api *BingxAPI) GetCurrentPrice(assetA, assetB string) (float64, error) {
 		return 0, err
 	}
 	if BingxResponse.Code != 0 {
-		return 0, pnl.MarketNotFound(errors.New("Could not find: " + assetA))
+		return 0, PriceProviderNotFound(errors.New("Could not find: " + assetA))
 	}
 	// Convert the price to a float64.
 	price, err := stringToFloat64(BingxResponse.Data.Price)

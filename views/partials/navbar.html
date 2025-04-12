@@ -1,49 +1,31 @@
 {{define "navbar"}}
 <!-- Mobile Bottom Navigation Bar -->
-<nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-inner">
+<nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 shadow-inner">
   <div class="flex justify-around items-center h-16">
 
     <!-- Dashboard Link -->
     <button hx-get="/dashboard" hx-swap="innerHTML" hx-target="#contenido" hx-indicator="#loading-indicator"
-            _="on htmx:afterRequest from the body
-                 if event.detail.pathInfo.requestPath matches /dashboard
-                    add .mobile-active to me
-                    remove .mobile-active from .mobile-nav-button that are not me
-                 end
-               end"
             class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1">
       <img src="/assets/img/coins.svg" class="h-6 w-6 mb-1" alt="dashboard">
       <span class="text-xs font-medium">Dashboard</span>
     </button>
 
-    <!-- Pairs Link -->
-    <button hx-get="/pairs" hx-swap="innerHTML" hx-target="#contenido" hx-indicator="#loading-indicator"
-             _="on htmx:afterRequest from the body
-                 if event.detail.pathInfo.requestPath matches /pairs
-                    add .mobile-active to me
-                    remove .mobile-active from .mobile-nav-button that are not me
-                 end
-               end"
+    <!-- Trades Link -->
+    <button hx-get="/trades" hx-swap="innerHTML" hx-target="#contenido" hx-indicator="#loading-indicator"
             class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1">
-       <img src="/assets/img/exchange.svg" class="h-6 w-6 mb-1" alt="pairs">
-       <span class="text-xs font-medium">Pairs</span>
+       <img src="/assets/img/exchange.svg" class="h-6 w-6 mb-1" alt="trades">
+       <span class="text-xs font-medium">Trades</span>
     </button>
 
-    <!-- Accounts Link (Disabled Example) -->
-    <button disabled
-            class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 w-full pt-1 cursor-not-allowed opacity-50">
-       <img src="/assets/img/accounts.svg" class="h-6 w-6 mb-1" alt="accounts">
-       <span class="text-xs font-medium">Accounts</span>
-    </button>
+    <!-- <!-- Accounts Link (Disabled Example) --> 
+    <!-- <button disabled -->
+    <!--         class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 w-full pt-1 cursor-not-allowed opacity-50"> -->
+    <!--    <img src="/assets/img/accounts.svg" class="h-6 w-6 mb-1" alt="accounts"> -->
+    <!--    <span class="text-xs font-medium">Accounts</span> -->
+    <!-- </button> -->
 
     <!-- Settings Link -->
     <button hx-get="/settings" hx-swap="innerHTML" hx-target="#contenido" hx-indicator="#loading-indicator"
-             _="on htmx:afterRequest from the body
-                 if event.detail.pathInfo.requestPath matches /settings
-                    add .mobile-active to me
-                    remove .mobile-active from .mobile-nav-button that are not me
-                 end
-               end"
             class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1">
       <img src="/assets/img/settings.svg" class="h-6 w-6 mb-1" alt="settings">
       <span class="text-xs font-medium">Settings</span>
@@ -68,4 +50,3 @@
   </style>
 </nav>
 {{end}}
-

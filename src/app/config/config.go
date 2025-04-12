@@ -1,56 +1,135 @@
 package config
 
 import (
+	"controtto/src/domain/pnl"
+	"controtto/src/gateways/priceProviders"
+	"fmt"
 	"os"
+	"sync"
 )
-
-// TODO: Make Markets into config, so I not only handle the environment variables from
-// here, but I will also handle the available market instances here.
 
 const (
-	TOKEN_TIINGO   string = "CONTROTTO_TIINGO_TOKEN"
-	TOKEN_AVANTAGE string = "CONTROTTO_AVANTAGE_TOKEN"
-	PORT           string = "CONTROTTO_PORT"
-	UNCOMMON_PAIRS string = "CONTROTTO_UNCOMMON_PAIRS"
+	PORT           = "CONTROTTO_PORT"
+	UNCOMMON_PAIRS = "CONTROTTO_UNCOMMON_PAIRS"
 )
 
-type GetResp struct {
-	TiingoAPIToken   string
-	AVantageAPIToken string
-	Port             string
-	UncommonPairs    bool
+type Config struct {
+	mu sync.RWMutex
+
+	Port           string
+	UncommonPairs  bool
+	PriceProviders map[string]pnl.PriceProvider
 }
 
-// type IsSetReq struct{}
-type IsSetResp struct {
-	TiingoAPIToken   bool
-	AVantageAPIToken bool
-	Port             bool
-	UncommonPairs    bool
-}
+// Load initializes the configuration from environment variables.
+// If PORT is not set, it defaults to "8000".
+func Load() *Config {
+	cfg := &Config{
+		Port:          os.Getenv(PORT),
+		UncommonPairs: os.Getenv(UNCOMMON_PAIRS) == "true",
+	}
+	// Load tokens from environment or set defaults
+	cfg.PriceProviders = loadProviders()
 
-type Service struct{}
-
-func NewConfig() *Service {
-	if _, present := os.LookupEnv(PORT); !present {
+	if cfg.Port == "" {
+		cfg.Port = "8000"
 		os.Setenv(PORT, "8000")
 	}
-	return &Service{}
+	return cfg
 }
 
-func (c *Service) Get() *GetResp {
-	return &GetResp{
-		TiingoAPIToken:   os.Getenv(TOKEN_AVANTAGE),
-		AVantageAPIToken: os.Getenv(TOKEN_TIINGO),
-		Port:             os.Getenv(PORT),
-		UncommonPairs:    os.Getenv(UNCOMMON_PAIRS) != "true",
+// loadProviders reads the tokens from the environment variables and returns a map of priceProviders.PriceProviders structs.
+func loadProviders() map[string]pnl.PriceProvider {
+	tingoToken := os.Getenv("CONTROTTO_TIINGO_TOKEN")
+	avantageToken := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
+	return map[string]pnl.PriceProvider{
+		"avantage": {
+			TokenSet:          avantageToken != "",
+			Env:               "CONTROTTO_AVANTAGE_TOKEN",
+			ProviderName:      "Alpha Vantage",
+			ProviderURL:       "https://www.alphavantage.co/support/#api-key",
+			ProviderInputName: "vantage_token",
+			Token:             avantageToken,
+			Color:             "",
+			API:               priceProviders.NewAVantageAPI(avantageToken),
+		},
+		"tiingo": {
+			TokenSet:          tingoToken != "",
+			Env:               "CONTROTTO_TIINGO_TOKEN",
+			ProviderName:      "Tiingo",
+			ProviderURL:       "https://www.tiingo.com/account/api/token",
+			ProviderInputName: "tiingo_token",
+			Token:             tingoToken,
+			Color:             "",
+			API:               priceProviders.NewTiingoAPI(tingoToken),
+		},
 	}
 }
-func (c *Service) IsSet() *IsSetResp {
-	return &IsSetResp{
-		AVantageAPIToken: len(os.Getenv(TOKEN_AVANTAGE)) > 0,
-		TiingoAPIToken:   len(os.Getenv(TOKEN_TIINGO)) > 0,
-		Port:             len(os.Getenv(PORT)) > 0,
-		UncommonPairs:    os.Getenv(UNCOMMON_PAIRS) == "true",
+
+// GetPort returns the configured port.
+func (c *Config) GetPort() string {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.Port
+}
+
+// SetUncommonPairs sets or unsets the uncommon pairs flag and updates the env var.
+func (c *Config) SetUncommonPairs(enabled bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	c.UncommonPairs = enabled
+	if enabled {
+		os.Setenv(UNCOMMON_PAIRS, "true")
+	} else {
+		os.Setenv(UNCOMMON_PAIRS, "false")
 	}
+}
+
+// GetUncommonPairs returns whether uncommon pairs are enabled.
+func (c *Config) GetUncommonPairs() bool {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.UncommonPairs
+}
+
+// GetPriceProviders returns the map of price providers.
+func (c *Config) GetPriceProviders() map[string]pnl.PriceProvider {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	// Return a copy to prevent external modification
+	providers := make(map[string]pnl.PriceProvider, len(c.PriceProviders))
+	for k, v := range c.PriceProviders {
+		providers[k] = v
+	}
+	return providers
+}
+
+// UpdateProviderToken updates the token for the specified price provider and its corresponding environment variable.
+func (c *Config) UpdateProviderToken(key, token string) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	provider, ok := c.PriceProviders[key]
+	if !ok {
+		return fmt.Errorf("price provider %q not found", key)
+	}
+
+	// Update the provider's token and related fields
+	provider.Token = token
+	provider.TokenSet = token != ""
+	switch key {
+	case "avantage":
+		provider.API = priceProviders.NewAVantageAPI(token)
+		os.Setenv("CONTROTTO_AVANTAGE_TOKEN", token)
+	case "tiingo":
+		provider.API = priceProviders.NewTiingoAPI(token)
+		os.Setenv("CONTROTTO_TIINGO_TOKEN", token)
+	default:
+		return fmt.Errorf("unsupported price provider %q", key)
+	}
+
+	// Save the updated provider back to the map
+	c.PriceProviders[key] = provider
+	return nil
 }

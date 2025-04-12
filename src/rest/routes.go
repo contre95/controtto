@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/template/html/v2"
 )
 
-func Run(cfg *config.Service, m *managing.Service, q *querying.Service) {
+func Run(cfg *config.Config, m *managing.Service, q *querying.Service) {
 	engine := html.New("./views", ".html")
 	engine.Debug(true)
 	app := fiber.New(fiber.Config{
@@ -23,12 +23,12 @@ func Run(cfg *config.Service, m *managing.Service, q *querying.Service) {
 
 	// GET
 	app.Get("/", Home)
-	app.Get("/pairs/", pairsSection)
+	app.Get("/trades", tradesSection)
+	app.Get("/ui/trades/table", tradesTable(q.TradingPairQuerier))
 	app.Get("/pairs/:id/", pairSection)
 	app.Get("/ui/assets/form", newAssetForm)
 	app.Get("/ui/pairs/form", newPairForm(q.AssetQuerier))
-	app.Get("/healthcheck/price", checkPrice(q.MarketQuerier))
-	app.Get("/ui/pairs/table", pairsTable(q.TradingPairQuerier))
+	app.Get("/healthcheck/price", checkPrice(q.PriceQuerier))
 	app.Get("/dashboard", dashboardSection(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/cards", pairCards(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/chart", pairChart(q.TradingPairQuerier))
@@ -47,6 +47,8 @@ func Run(cfg *config.Service, m *managing.Service, q *querying.Service) {
 	app.Post("/pairs", newTradingPair(m.TradingPairManager))
 	app.Post("/pairs/:id/trades", newTrade(m.TradingPairManager))
 	app.Post("/pairs/:id/trades/upload", newTradeImport(m.TradingPairManager))
+	app.Get("/settings/edit", editSettingsForm(cfg))
+	app.Post("/settings/edit", saveSettingsForm(cfg))
 
-	log.Fatal(app.Listen("0.0.0.0" + ":" + cfg.Get().Port))
+	log.Fatal(app.Listen("0.0.0.0" + ":" + cfg.Port))
 }
