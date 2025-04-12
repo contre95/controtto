@@ -1,4 +1,5 @@
-<div class="grid w-full grid-cols-2 gap-2 mt-4  justify-center lg:grid-cols-2 2xl:grid-cols-4 animate__animated animate__fadeInDown">
+<div class=" mt-4  justify-center lg:grid-cols-2 2xl:grid-cols-4 animate__animated animate__fadeInDown">
+<div class="grid grid-cols-2 gap-2 rounded-md m-4 p-4 justify-center flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800 animate__animated">
 
   {{ if (ne .Pair.Calculations.BaseMarketPrice 0.0) }}
   <div class="flex flex-col items-center justify-center w-full max-w-sm mx-auto">
@@ -9,7 +10,7 @@
         {{ .Pair.Calculations.MarketName }}
       </span>
     </div>
-    <div class="lg:w-64 w-44 text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-neutral-900"
+    <div class="lg:w-64 w-full text-sm -mt-10 overflow-hidden bg-white rounded-lg shadow-lg dark:bg-neutral-900"
       style="background-color: rgba(255, 255, 255, 0.9)">
       <h3 class="py-2 font-bold tracking-wide text-center text-gray-800 uppercase ">
         Price for 1

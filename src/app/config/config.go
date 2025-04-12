@@ -40,18 +40,18 @@ func Load() *Config {
 
 // loadProviders reads the tokens from the environment variables and returns a map of priceProviders.PriceProviders structs.
 func loadProviders() map[string]pnl.PriceProvider {
-	avantageToken := os.Getenv("CONTROTTO_AVANTAGE_TOKEN")
 	tingoToken := os.Getenv("CONTROTTO_TIINGO_TOKEN")
+	iexToken := os.Getenv("CONTROTTO_TIINGO_TOKEN")
 	return map[string]pnl.PriceProvider{
-		"avantage": {
-			TokenSet:          avantageToken != "",
-			Env:               "CONTROTTO_AVANTAGE_TOKEN",
-			ProviderName:      "Alpha Vantage",
-			ProviderURL:       "https://www.alphavantage.co/support/#api-key",
-			ProviderInputName: "vantage_token",
-			Token:             avantageToken,
+		"iex": {
+			TokenSet:          iexToken != "",
+			Env:               "CONTROTTO_IEX_TOKEN",
+			ProviderName:      "IEX Cloud",
+			ProviderURL:       "https://iexcloud.io/docs/api/",
+			ProviderInputName: "iex_token",
+			Token:             iexToken,
 			Color:             "",
-			API:               priceProviders.NewAVantageAPI(avantageToken),
+			API:               priceProviders.NewAVantageAPI(""),
 		},
 		"tiingo": {
 			TokenSet:          tingoToken != "",
