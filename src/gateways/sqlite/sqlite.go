@@ -89,13 +89,75 @@ var demo string = `
 		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('AAPLUSD', 'AAPL', 'USD');
 		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('TSLAUSD', 'TSLA', 'USD');
 
-		-- Trades
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:00:00', 0.1, 6500.00, 'buy', 'BTCUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:05:00', 1.5, 4800.00, 'sell', 'ETHUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:10:00', 1000, 1080.00, 'buy', 'EURUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:15:00', 500, 87000.00, 'sell', 'GBPJPY');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:20:00', 20, 3600.00, 'buy', 'AAPLUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:25:00', 10, 6700.00, 'sell', 'TSLAUSD');
+		-- Trades with alternating Buy and Sell in the same pair, three times per pair
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:00:00', 0.1, 6500.00, 'Buy', 'BTCUSDT');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:05:00', 0.05, 6700.00, 'Sell', 'BTCUSDT'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:10:00', 0.15, 6800.00, 'Buy', 'BTCUSDT');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:15:00', 0.1, 6900.00, 'Sell', 'BTCUSDT'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:20:00', 0.2, 7000.00, 'Buy', 'BTCUSDT');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:25:00', 0.2, 7200.00, 'Sell', 'BTCUSDT'); -- Positive PnL
+
+		-- ETHUSDT
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:30:00', 1.5, 4800.00, 'Buy', 'ETHUSDT');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:35:00', 1.0, 4900.00, 'Sell', 'ETHUSDT'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:40:00', 1.2, 4950.00, 'Buy', 'ETHUSDT');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:45:00', 1.0, 5100.00, 'Sell', 'ETHUSDT'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:50:00', 1.8, 5200.00, 'Buy', 'ETHUSDT');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T10:55:00', 1.5, 5300.00, 'Sell', 'ETHUSDT'); -- Positive PnL
+
+		-- EURUSD
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:00:00', 1000, 1080.00, 'Buy', 'EURUSD');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:05:00', 1000, 1100.00, 'Sell', 'EURUSD'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:10:00', 1200, 1120.00, 'Buy', 'EURUSD');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:15:00', 1100, 1150.00, 'Sell', 'EURUSD'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:20:00', 1500, 1180.00, 'Buy', 'EURUSD');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:25:00', 1400, 1200.00, 'Sell', 'EURUSD'); -- Positive PnL
+
+		-- GBPJPY
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:30:00', 500, 87000.00, 'Buy', 'GBPJPY');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:35:00', 500, 88000.00, 'Sell', 'GBPJPY'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:40:00', 700, 89000.00, 'Buy', 'GBPJPY');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:45:00', 600, 90000.00, 'Sell', 'GBPJPY'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:50:00', 1000, 91500.00, 'Buy', 'GBPJPY');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T11:55:00', 1000, 92000.00, 'Sell', 'GBPJPY'); -- Positive PnL
+
+		-- AAPLUSD
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T12:00:00', 20, 3600.00, 'Buy', 'AAPLUSD');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T12:05:00', 20, 3800.00, 'Sell', 'AAPLUSD'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T12:10:00', 30, 3850.00, 'Buy', 'AAPLUSD');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T12:15:00', 25, 3900.00, 'Sell', 'AAPLUSD'); -- Positive PnL
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T12:20:00', 50, 4000.00, 'Buy', 'AAPLUSD');
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		VALUES ('2025-04-13T12:25:00', 50, 4200.00, 'Sell', 'AAPLUSD'); -- Positive PnL
 	`
 
 // SQLiteStorage implements the TradingPairs interface using SQLiteStorage.
