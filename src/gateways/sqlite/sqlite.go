@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -77,6 +78,24 @@ const tables string = `
         INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('NFLX', 'Netflix', '#E50914', 'Stock', '-');
         INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('GOOG', 'Alphabet Inc.', '#4285F4', 'Stock', '-');
         INSERT OR IGNORE INTO Asset (Symbol, Name, Color, Type, CountryCode) VALUES ('TSLA', 'Tesla', '#E82127', 'Stock', '-');
+`
+
+var demo string = `
+			-- Trading Pairs
+		INSERT INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('BTCUSDT', 'BTC', 'USDT');
+		INSERT INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('ETHUSDT', 'ETH', 'USDT');
+		INSERT INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('EURUSD', 'EUR', 'USD');
+		INSERT INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('GBPJPY', 'GBP', 'JPY');
+		INSERT INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('AAPLUSD', 'AAPL', 'USD');
+		INSERT INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('TSLAUSD', 'TSLA', 'USD');
+
+		-- Trades
+		INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:00:00', 0.1, 6500.00, 'buy', 'BTCUSDT');
+		INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:05:00', 1.5, 4800.00, 'sell', 'ETHUSDT');
+		INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:10:00', 1000, 1080.00, 'buy', 'EURUSD');
+		INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:15:00', 500, 87000.00, 'sell', 'GBPJPY');
+		INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:20:00', 20, 3600.00, 'buy', 'AAPLUSD');
+		INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES ('2025-04-13T10:25:00', 10, 6700.00, 'sell', 'TSLAUSD');
 	`
 
 // SQLiteStorage implements the TradingPairs interface using SQLiteStorage.
@@ -91,7 +110,11 @@ func NewSQLite(dbPath string) (*SQLiteStorage, error) {
 		return nil, err
 	}
 	// Create the TradingPair and Trade tables if they don't exist.
-	_, err = db.Exec(tables)
+	qString := tables
+	if os.Getenv("LOAD_SAMPLE_DATA") == "true" {
+		qString += demo
+	}
+	_, err = db.Exec(qString)
 	if err != nil {
 		slog.Error("Error creating tables", "error", err)
 		return nil, err
