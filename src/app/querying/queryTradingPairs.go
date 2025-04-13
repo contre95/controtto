@@ -126,27 +126,27 @@ func (tpq *TradingPairsQuerier) getTrades(tpid string) ([]pnl.Trade, error) {
 func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (float64, string, string, error) {
 	var err error
 	var baseAssetPrice float64 = 0
-	marketName := ""
-	marketColor := ""
-	failedMarkets := 0
+	providerName := ""
+	providerColor := ""
+	failedproviders := 0
 	for _, m := range tpq.providers {
 		slog.Info("Querying providers", "provider", m.ProviderName)
 		if m.IsSet {
 			baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
-			marketName = m.ProviderName
-			marketColor = m.Color
+			providerName = m.ProviderName
+			providerColor = m.Color
 			if err != nil {
 				slog.Error("Error getting base asset price.", "provider", m.ProviderName, "error", err)
-				failedMarkets++
+				failedproviders++
 			} else {
 				break
 			}
 
 		}
 	}
-	if failedMarkets == len(tpq.providers) {
+	if failedproviders == len(tpq.providers) {
 		slog.Error("All providers failed to find the price.", "asset1", asset1, "asset2", asset2)
 		return 0, "", "", err
 	}
-	return baseAssetPrice, marketName, marketColor, nil
+	return baseAssetPrice, providerName, providerColor, nil
 }
