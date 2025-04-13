@@ -89,7 +89,7 @@
         </div>
       </td>
 
-      <th scope="col" class="px-2 py-3.5 text-sm font-normal text-gray-500 dark:text-gray-400">
+      <th scope="col" class="px-1 py-3.5 text-sm font-normal text-gray-500 dark:text-gray-400">
         {{ if eq .BaseAsset.Type "Stock" }}
         <span class="px-3 py-1 text-xs text-indigo-500 rounded-l-lg dark:bg-neutral-900 bg-indigo-100/60">
           {{ .BaseAsset.Type }}
@@ -98,7 +98,7 @@
         {{ if eq .BaseAsset.Type "Crypto" }}
         <span class="px-3 py-1 text-xs text-pink-500 rounded-l-lg dark:bg-neutral-900 bg-pink-100/60">
           {{ .BaseAsset.Type }}
-        </span>
+        </span> 
         {{ end }}
         {{ if eq .BaseAsset.Type "Forex" }}
         <span class="px-3 py-1 text-xs text-blue-500 rounded-l-lg dark:bg-neutral-900 bg-blue-100/60">
@@ -122,9 +122,9 @@
         {{ end }}
       </th>
       <td class="px-4 py-4 text-sm whitespace-nowrap text-center">
-        <div class="gap-x-6">
+          <div class="flex text-center items-center">
           <button hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" type="button"
-            class="text-gray-500 mx-2 transition-colors duration-200 dark:hover:text-blue-500 dark:text-gray-300 hover:text-blue-500 focus:outline-none">
+            class="text-gray-500 mx-2 transition-colors flex duration-200 dark:hover:text-blue-500 dark:text-gray-300 hover:text-blue-500 focus:outline-none">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5">
               <g id="SVGRepo_iconCarrier">
                 <path d="M3 22H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -139,10 +139,13 @@
                   d="M17 4C17 3.05719 17 2.58579 17.2929 2.29289C17.5858 2 18.0572 2 19 2C19.9428 2 20.4142 2 20.7071 2.29289C21 2.58579 21 3.05719 21 4V17C21 17.9428 21 18.4142 20.7071 18.7071C20.4142 19 19.9428 19 19 19C18.0572 19 17.5858 19 17.2929 18.7071C17 18.4142 17 17.9428 17 17V4Z"
                   stroke="currentColor" stroke-width="1.5" />
               </g>
-            </svg>
+            </svg> 
+             &nbsp;Trade
           </button>
+          </div>
+          <div class="mt-1 flex text-center items-center">
           <button hx-target="#mitoast" hx-delete="/pairs/{{ .ID }}"
-            class="text-gray-500 mx-2 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-red-500 focus:outline-none"
+            class="text-gray-500 mx-2 float-left flex transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-red-500 focus:outline-none"
             _="on htmx:confirm(issueRequest)
              halt the event
              call Swal.fire({title: 'Confirm', text:'All trades associated will be deleted. Are you sure ?'})
@@ -152,8 +155,9 @@
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
             </svg>
+            &nbsp;Delete
           </button>
-        </div>
+          </div>
       </td>
     </tr>
     {{ end }}

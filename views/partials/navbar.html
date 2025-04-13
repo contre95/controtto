@@ -1,23 +1,36 @@
 {{define "navbar"}}
 <!-- Mobile Bottom Navigation Bar -->
-<nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 shadow-inner">
+<nav
+  class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 shadow-inner"
+>
   <div class="flex justify-around items-center h-16">
-
     <!-- Dashboard Link -->
-    <button hx-get="/dashboard" hx-swap="innerHTML" hx-target="#contenido" hx-indicator="#loading-indicator"
-            class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1">
-      <img src="/assets/img/coins.svg" class="h-6 w-6 mb-1" alt="dashboard">
+    <button
+      hx-get="/dashboard"
+      hx-swap="innerHTML"
+      hx-push-url="true"
+      hx-target="#contenido"
+      hx-indicator="#loading-indicator"
+      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1"
+    >
+      <img src="/assets/img/coins.svg" class="h-6 w-6 mb-1" alt="dashboard" />
       <span class="text-xs font-medium">Dashboard</span>
     </button>
 
     <!-- Trades Link -->
-    <button hx-get="/trades" hx-swap="innerHTML" hx-target="#contenido" hx-indicator="#loading-indicator"
-            class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1">
-       <img src="/assets/img/exchange.svg" class="h-6 w-6 mb-1" alt="trades">
-       <span class="text-xs font-medium">Trades</span>
+    <button
+      hx-get="/trades"
+      hx-push-url="true"
+      hx-swap="innerHTML"
+      hx-target="#contenido"
+      hx-indicator="#loading-indicator"
+      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1"
+    >
+      <img src="/assets/img/exchange.svg" class="h-6 w-6 mb-1" alt="trades" />
+      <span class="text-xs font-medium">Trades</span>
     </button>
 
-    <!-- <!-- Accounts Link (Disabled Example) --> 
+    <!-- <!-- Accounts Link (Disabled Example) -->
     <!-- <button disabled -->
     <!--         class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 w-full pt-1 cursor-not-allowed opacity-50"> -->
     <!--    <img src="/assets/img/accounts.svg" class="h-6 w-6 mb-1" alt="accounts"> -->
@@ -25,27 +38,40 @@
     <!-- </button> -->
 
     <!-- Settings Link -->
-    <button hx-get="/settings" hx-swap="innerHTML" hx-target="#contenido" hx-indicator="#loading-indicator"
-            class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1">
-      <img src="/assets/img/settings.svg" class="h-6 w-6 mb-1" alt="settings">
+
+    <button
+      hx-get="/settings"
+      hx-swap="innerHTML"
+      hx-push-url="true"
+      hx-target="#contenido"
+      hx-indicator="#loading-indicator"
+      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1"
+    >
+      <img src="/assets/img/settings.svg" class="h-6 w-6 mb-1" alt="settings" />
       <span class="text-xs font-medium">Settings</span>
     </button>
-
   </div>
   <!-- Add a simple loading indicator -->
-  <div id="loading-indicator" class="htmx-indicator absolute bottom-0 left-0 w-full h-1 bg-indigo-500 opacity-0 transition-opacity duration-300"></div>
+  <div
+    id="loading-indicator"
+    class="htmx-indicator absolute bottom-0 left-0 w-full h-1 bg-indigo-500 opacity-0 transition-opacity duration-300"
+  ></div>
 
   <!-- Define active styles in CSS or Tailwind config eventually -->
   <style>
     .mobile-active {
-      color: #4f46e5; /* Equivalent to text-indigo-600 */
+      color: #4f46e5;
+      /* Equivalent to text-indigo-600 */
     }
+
     .dark .mobile-active {
-       color: #818cf8; /* Equivalent to dark:text-indigo-400 */
+      color: #818cf8;
+      /* Equivalent to dark:text-indigo-400 */
     }
+
     /* Style for the loading indicator */
     .htmx-request #loading-indicator {
-        opacity: 1;
+      opacity: 1;
     }
   </style>
 </nav>
