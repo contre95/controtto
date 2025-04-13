@@ -46,7 +46,7 @@
     {{ range .Pairs }}
     <tr id="pair{{ .ID }}" class="animate__animated">
       <td class=" px-4 py-2 text-sm font-medium text-gray-700 whitespace-nowrap">
-        <div class="inline-flex items-center gap-x-3" type="button" hx-get="/pairs/{{ .ID }}/" hx-target="#contenido">
+        <div class="inline-flex items-center gap-x-3" type="button" hx-push-url="true" hx-get="/pairs/{{ .ID }}/" hx-target="#contenido">
           <div class="flex items-center gap-x-2">
             <svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" class=" h-8 w-8">
               <g id="Background">
@@ -125,7 +125,7 @@
       </th>
       <td class="px-4 py-4 text-sm whitespace-nowrap text-center">
           <div class="flex text-center items-center">
-          <button hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" type="button"
+          <button hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" type="button" hx-push-url="true" 
             class="text-gray-500 mx-2 transition-colors flex duration-200 dark:hover:text-blue-500 dark:text-gray-300 hover:text-blue-500 focus:outline-none">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5">
               <g id="SVGRepo_iconCarrier">

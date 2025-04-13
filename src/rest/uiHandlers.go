@@ -58,10 +58,31 @@ func tradesSection(c *fiber.Ctx) error {
 
 func pairSection(c *fiber.Ctx) error {
 	slog.Info("Pair Section")
+	if c.Get("HX-Request") != "true" {
+		return c.Render("main", fiber.Map{
+			"PairID":       c.Params("id"),
+			"TradeTrigger": ",revealed",
+		})
+	}
 	return c.Render("pairSection", fiber.Map{
 		"PairID": c.Params("id"),
 	})
 }
+
+// func marketsSection(cfg *config.Config) func(*fiber.Ctx) error {
+// 	return func(c *fiber.Ctx) error {
+// 		// if c.Get("HX-Request") != "true" {
+// 		// 	return c.Render("main", fiber.Map{
+// 		// 		"MarketsTrigger": ",revealed",
+// 		// 	})
+// 		// }
+// 		return c.Render("marketSection", fiber.Map{
+// 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
+// 			"PriceProviders": cfg.GetPriceProviders(), // Pass the providers slice to the template
+// 			"MarketTraders":  cfg.GetMarketTraders(),
+// 		})
+// 	}
+// }
 
 func settingsSection(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
@@ -74,6 +95,7 @@ func settingsSection(cfg *config.Config) func(*fiber.Ctx) error {
 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Uncommon":       cfg.GetUncommonPairs(),
 			"PriceProviders": cfg.GetPriceProviders(), // Pass the providers slice to the template
+			"MarketTraders":  cfg.GetMarketTraders(),
 		})
 	}
 }

@@ -2,16 +2,6 @@ package pnl
 
 // type Symbol string
 
-// const (
-// 	BTC  Symbol = "BTC"
-// 	AMZN Symbol = "AMZN"
-// 	ETH  Symbol = "ETH"
-// 	EUR  Symbol = "EUR"
-// 	AAPL Symbol = "AAPL"
-// 	USD  Symbol = "USD"
-// 	UDST Symbol = "UDST"
-// )
-
 const (
 	Crypto AssetType = "Crypto"
 	Forex  AssetType = "Forex"

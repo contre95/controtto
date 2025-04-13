@@ -38,6 +38,9 @@ func Run(cfg *config.Config, m *managing.Service, q *querying.Service) {
 	app.Get("/ui/pairs/:id/trades/table", tradingTable(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/newTrade/form", newTradingForm(q.TradingPairQuerier))
 	app.Get("/settings", settingsSection(cfg))
+	// app.Get("/markets", marketsSection(cfg))
+	app.Get("/ui/pairs/:id/market", getMarketAssets(cfg, q.TradingPairQuerier))
+	app.Get("/ui/pairs/:id/newMarketTrade/form", newMarketTradingForm(cfg, q.TradingPairQuerier))
 	// DELETE
 	app.Delete("/empty", empty())
 	app.Delete("/pairs/:id", deleteTradingPair(m.TradingPairManager))

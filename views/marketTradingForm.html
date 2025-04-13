@@ -1,0 +1,101 @@
+{{ .MarketData }}
+<section
+  class="p-5 bg-white dark:bg-neutral-700 w-full divide-y rounded-md divide-gray-200 border border-neutral-200 dark:border-neutral-700 dark:divide-gray-700 animate__animated animate__fadeInUp">
+  <h2 class="text-lg font-semibold text-gray-700 capitalize dark:text-white">
+    New Trade
+  </h2>
+  <form id="market-form">
+    <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
+      <div>
+        <label class="text-gray-700 dark:text-gray-200" for="base">
+          <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
+          <small class="text-xs italic">
+            (
+            <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
+            {{ printf "%.7g" .Pair.Calculations.BasePrice }} )
+          </small>
+        </label>
+        <input name="base" id="base"
+          _="on change set global x to my.value * {{ .Pair.Calculations.BasePrice }} then put x into #quote.value"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          type="number" placeholder="0.029578 {{ .Pair.BaseAsset.Symbol }}" />
+      </div>
+
+      <div>
+        <label class="text-gray-700 dark:text-gray-200" for="quote">
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
+        </label>
+        <input name="quote" id="quote"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          type="number" placeholder="365.87 {{ .Pair.QuoteAsset.Symbol }}" />
+      </div>
+
+      <div>
+        <label class="text-gray-700 dark:text-gray-200" for="ttype">
+          <span class="text-emerald-500">Buy</span> /
+          <span class="text-red-500">Sell</span>
+        </label>
+        <select name="ttype"
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          id="ttype">
+          <option value="Buy">Buy</option>
+          <option value="Sell">Sell</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-gray-700 dark:text-gray-200" for="market">
+          Market
+        </label>
+        <select name="market" id="market"  data-placeholder="Select a country" 
+          class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          data-dynamic-select>
+          {{ range $key, $trader := .MarketTraders }}
+          <option value="{{ $trader.MarketKey }}" data-img="{{ $trader.MarketLogo }}">
+            {{ $trader.MarketName }}
+          </option>
+          {{ end }}
+        </select>
+        <script src="/assets/js/DynamicSelect.js"></script>
+        <script>
+          new DynamicSelect("#market", {
+            width: "200px",
+            placeholder: "Select a market",
+            name: "my-custom-select",
+            onChange: function (value, text, option) {
+              console.log(value, text, option);
+            },
+          });
+        </script>
+      </div>
+
+      <div>
+        <label class="text-gray-700 dark:text-gray-200" for="tdate">
+          Date
+        </label>
+        <input
+          class=" w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
+          type="date" id="tdate" name="tdate" value="{{ .Today }}" min="1997-01-01" max="2123-12-31" />
+        <small class="text-xs leading-tight text-white/80">
+        </small>
+      </div>
+
+    <div>
+      <label class="text-gray-700 dark:text-gray-200" for="place">
+        Place Order
+      </label>
+      <div class="py-2">
+          <button hx-post="/pairs/{{ .Pair.ID }}/marketTrade" hx-include="#market-form" hx-target="#mitoast" hx-swap="innerHTML"
+            class="items-center border-2 border-neutral-300 border-solid justify-center px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-neutral-300">
+          Submit
+        </button>
+        <small class="text-xs leading-tight text-white/80">
+            This will open an order in your account.
+        </small>
+      </div>
+    </div>
+
+  </div>
+
+  </form>
+</section>
