@@ -97,7 +97,7 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 	}
 
 	if req.WithCurrentBasePrice {
-		pair.Calculations.BaseMarketPrice, pair.Calculations.MarketName, pair.Calculations.MarketColor, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
+		pair.Calculations.BasePrice, pair.Calculations.ProviderName, pair.Calculations.Color, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
 	}
 
 	if req.WithCalculations {
@@ -131,14 +131,16 @@ func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (floa
 	failedMarkets := 0
 	for _, m := range tpq.providers {
 		slog.Info("Querying providers", "provider", m.ProviderName)
-		baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
-		marketName = m.ProviderName
-		marketColor = m.Color
-		if err != nil {
-			slog.Error("Error getting base asset price.", "provider", m.ProviderName, "error", err)
-			failedMarkets++
-		} else {
-			break
+		if m.IsSet {
+			baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
+			marketName = m.ProviderName
+			marketColor = m.Color
+			if err != nil {
+				slog.Error("Error getting base asset price.", "provider", m.ProviderName, "error", err)
+				failedMarkets++
+			} else {
+				break
+			}
 		}
 	}
 	if failedMarkets == len(tpq.providers) {
