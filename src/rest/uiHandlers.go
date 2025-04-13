@@ -18,8 +18,7 @@ func empty() func(*fiber.Ctx) error {
 // Home hanlder reders the homescreen
 func Home(c *fiber.Ctx) error {
 	slog.Info("HOME")
-	// render index template
-	return c.Render("main", fiber.Map{})
+	return c.Render("main", fiber.Map{"TradesTrigger": ",revealed"})
 }
 
 func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
