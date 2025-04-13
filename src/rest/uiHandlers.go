@@ -69,6 +69,21 @@ func pairSection(c *fiber.Ctx) error {
 	})
 }
 
+// func marketsSection(cfg *config.Config) func(*fiber.Ctx) error {
+// 	return func(c *fiber.Ctx) error {
+// 		// if c.Get("HX-Request") != "true" {
+// 		// 	return c.Render("main", fiber.Map{
+// 		// 		"MarketsTrigger": ",revealed",
+// 		// 	})
+// 		// }
+// 		return c.Render("marketSection", fiber.Map{
+// 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
+// 			"PriceProviders": cfg.GetPriceProviders(), // Pass the providers slice to the template
+// 			"MarketTraders":  cfg.GetMarketTraders(),
+// 		})
+// 	}
+// }
+
 func settingsSection(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		if c.Get("HX-Request") != "true" {

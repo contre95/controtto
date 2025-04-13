@@ -4,6 +4,7 @@ type PriceProvider struct {
 	Public       bool
 	IsSet        bool
 	Color        string
+	ProviderLogo string
 	ProviderName string
 	ProviderKey  string
 	NeedsToken   bool

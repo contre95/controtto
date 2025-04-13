@@ -40,5 +40,5 @@ type MarketAPI interface {
 	Buy(options TradeOptions) (*Trade, error)
 	Sell(options TradeOptions) (*Trade, error)
 	ImportTrades(tradingPairID TradingPairID, since time.Time) ([]Trade, error)
-	FetchAssets() ([]Asset, error)
+	FetchAsset(symbol string) (float64, error)
 }

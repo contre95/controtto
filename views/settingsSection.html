@@ -1,6 +1,6 @@
 <section class="mx-auto max-w-screen-2xl">
   <div
-    class="rounded-md m-4 p-4 flex items-center justify-center  bg-white flex-wrap gap-x-1 divide-gray-200 dark:bg-neutral-800 dark:divide-gray-900 animate__animated animate__fadeIn">
+    class="hidden lg:block rounded-md m-4 p-4 flex items-center justify-center  bg-white flex-wrap gap-x-1 divide-gray-200 dark:bg-neutral-800 dark:divide-gray-900 animate__animated animate__fadeIn">
     <div class="flex flex-wrap items-center">
       <svg class="flex w-7 h-7 mx-2 text-gray-700 dark:text-white" viewBox="0 0 24 24" fill="none"
         xmlns="http://www.w3.org/2000/svg">
@@ -45,8 +45,9 @@
     <form hx-ext="debug">
       <p class="text-sm text-blue-500 uppercase">Market Traders API</p>
       <br />
-            {{ range .MarketTraders }} 
+      {{ range .MarketTraders }} 
       <div class="flex flex-wrap items-center">
+        <img src="{{ .MarketLogo }}" alt="logo" class="w-8 h-8 ">
         <div>
           {{ if .IsSet }}
           <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
@@ -97,6 +98,7 @@
       <br />
             {{ range .PriceProviders }} {{ if .NeedsToken }}
             <div class="flex flex-wrap items-center">
+              <img src="{{ .ProviderLogo }}" alt="logo" class="w-8 h-8 ">
               <div>
                 {{ if .IsSet }}
                 <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
@@ -142,22 +144,24 @@
       </script>
       {{ end }}
       {{end}} 
-      {{ range .PriceProviders }} {{ if not .NeedsToken }}
+      {{ range .PriceProviders }} 
+      {{ if not .NeedsToken }}
       <div class="flex flex-wrap items-center">
         <div>
         <label class="inline-flex items-center cursor-pointer my-2">
-            <input class="sr-only peer" type="checkbox" id="{{ .ProviderKey }}" name="{{ .ProviderKey }}" value="{{ .IsSet }}" {{ if .IsSet }}checked{{ end }} />
-        <div
-          class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
-        </div>
-          <span class="ms-3 block text-md text-gray-500 dark:text-gray-300">{{ .ProviderName }}</span>
+        <img src="{{ .ProviderLogo }}" alt="logo" class="w-8 h-8 ml-2 ">
           <div>
             {{ if .IsSet }}
-            <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
+            <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-3" />
             {{ else }}
-            <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
+            <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-3" />
             {{ end }}
           </div>
+          <span class="ms-3 mr-3 block text-md text-gray-500 dark:text-gray-300">{{ .ProviderName }}</span>
+          <input class="sr-only peer" type="checkbox" id="{{ .ProviderKey }}" name="{{ .ProviderKey }}" value="{{ .IsSet }}" {{ if .IsSet }}checked{{ end }} />
+      <div
+        class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
+      </div>
         </div>
         <div class="relative flex items-center mt-2">
           <div class="flex items-center gap-x-3"></div>

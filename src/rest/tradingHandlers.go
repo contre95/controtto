@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"controtto/src/app/config"
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"encoding/csv"
@@ -171,6 +172,181 @@ func newTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 			"Extra": resp.RecordTime.Format("15h 04m 05s"),
 		})
 
+	}
+}
+
+// func newMarketTrade(mtm managing.MarketTradeManager) func(*fiber.Ctx) error {
+// 	return func(c *fiber.Ctx) error {
+// 		slog.Info("Executing market trade")
+//
+// 		// Parse form data
+// 		payload := struct {
+// 			Base   float64 `form:"base"`
+// 			Quote  float64 `form:"quote"`
+// 			TType  string  `form:"ttype"`  // "Buy" or "Sell"
+// 			Market string  `form:"market"` // MarketKey
+// 			TDate  string  `form:"tdate"`  // Date in YYYY-MM-DD format
+// 		}{}
+// 		fmt.Println(payload)
+// 		if err := c.BodyParser(&payload); err != nil {
+// 			return c.Render("toastErr", fiber.Map{
+// 				"Title": "Error",
+// 				"Msg":   "Invalid form data",
+// 			})
+// 		}
+//
+// 		// Validate required fields
+// 		if payload.Market == "" {
+// 			return c.Render("toastErr", fiber.Map{
+// 				"Title": "Error",
+// 				"Msg":   "Market not selected",
+// 			})
+// 		}
+//
+// 		if payload.Base <= 0 && payload.Quote <= 0 {
+// 			return c.Render("toastErr", fiber.Map{
+// 				"Title": "Error",
+// 				"Msg":   "Amount must be greater than 0",
+// 			})
+// 		}
+//
+// 		// Parse date (default to now if not provided)
+// 		tradeTime := time.Now()
+// 		if payload.TDate != "" {
+// 			parsedTime, err := time.Parse("2006-01-02", payload.TDate)
+// 			if err == nil {
+// 				tradeTime = parsedTime
+// 			}
+// 		}
+//
+// 		// Determine amount to use (prioritize base amount)
+// 		amount := payload.Base
+// 		useBaseAmount := true
+// 		if amount <= 0 && payload.Quote > 0 {
+// 			amount = payload.Quote
+// 			useBaseAmount = false
+// 		}
+//
+// 		// Execute trade based on type
+// 		var tradeID, msg string
+// 		var err error
+//
+// 		switch payload.TType {
+// 		case "Buy":
+// 			req := managing.MarketBuyReq{
+// 				TraderKey:     payload.Market,
+// 				TradingPairID: c.Params("id"),
+// 				Amount:        amount,
+// 				Price:         nil, // Market order
+// 			}
+// 			if resp, tradeErr := mtm.MarketBuy(req); tradeErr != nil {
+// 				err = tradeErr
+// 			} else {
+// 				tradeID = resp.TradeID
+// 				msg = resp.Msg
+// 			}
+// 		case "Sell":
+// 			req := managing.MarketSellReq{
+// 				TraderKey:     payload.Market,
+// 				TradingPairID: c.Params("id"),
+// 				Amount:        amount,
+// 				Price:         nil, // Market order
+// 			}
+// 			if resp, tradeErr := mtm.MarketSell(req); tradeErr != nil {
+// 				err = tradeErr
+// 			} else {
+// 				tradeID = resp.TradeID
+// 				msg = resp.Msg
+// 			}
+// 		default:
+// 			return c.Render("toastErr", fiber.Map{
+// 				"Title": "Error",
+// 				"Msg":   "Invalid trade type",
+// 			})
+// 		}
+//
+// 		if err != nil {
+// 			return c.Render("toastErr", fiber.Map{
+// 				"Title": "Error",
+// 				"Msg":   err.Error(),
+// 			})
+// 		}
+//
+// 		c.Append("HX-Trigger", "newTrade")
+// 		return c.Render("toastOk", fiber.Map{
+// 			"Title": "Order Executed",
+// 			"Msg":   msg,
+// 			"Extra": fmt.Sprintf("Trade ID: %s | %s", tradeID, tradeTime.Format("2006-01-02 15:04")),
+// 		})
+// 	}
+// }
+
+func getMarketAssets(cfg *config.Config, tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		slog.Info("Create Trade UI requested")
+		id := c.Params("id")
+		req := querying.GetTradingPairReq{
+			TPID:                 id,
+			WithCurrentBasePrice: true,
+			WithTrades:           false,
+			WithCalculations:     false,
+		}
+		resp, err := tpq.GetTradingPair(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
+		marketData := map[string][2]float64{}
+		for name, m := range cfg.GetMarketTraders() {
+			baseAmount, err := m.MarketAPI.FetchAsset(resp.Pair.BaseAsset.Symbol)
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{
+					"Title": "Error",
+					"Msg":   err,
+				})
+			}
+			quoteAmount, err := m.MarketAPI.FetchAsset(resp.Pair.QuoteAsset.Symbol)
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{
+					"Title": "Error",
+					"Msg":   err,
+				})
+			}
+			marketData[name] = [2]float64{baseAmount, quoteAmount}
+		}
+		return c.Render("marketAssets", fiber.Map{
+			"Pair":          resp.Pair,
+			"Today":         time.Now().Format("2006-01-02"),
+			"MarketTraders": cfg.GetMarketTraders(),
+			"MarketData":    marketData,
+		})
+	}
+}
+
+func newMarketTradingForm(cfg *config.Config, tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		slog.Info("Create Trade UI requested")
+		id := c.Params("id")
+		req := querying.GetTradingPairReq{
+			TPID:                 id,
+			WithCurrentBasePrice: true,
+			WithTrades:           false,
+			WithCalculations:     false,
+		}
+		resp, err := tpq.GetTradingPair(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
+		return c.Render("marketTradingForm", fiber.Map{
+			"Pair":          resp.Pair,
+			"Today":         time.Now().Format("2006-01-02"),
+			"MarketTraders": cfg.GetMarketTraders(),
+		})
 	}
 }
 

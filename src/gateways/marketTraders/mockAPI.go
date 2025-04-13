@@ -4,6 +4,7 @@ import (
 	"controtto/src/domain/pnl"
 	"errors"
 	"fmt"
+	"math/rand/v2"
 	"time"
 )
 
@@ -104,21 +105,8 @@ func (m *MockMarketAPI) ImportTrades(tradingPairID pnl.TradingPairID, since time
 	}, nil
 }
 
-func (m *MockMarketAPI) FetchAssets() ([]pnl.Asset, error) {
-	return []pnl.Asset{
-		{
-			Symbol: "BTC",
-			Name:   "Bitcoin",
-			Color:  "#F79413",
-			Type:   pnl.Crypto,
-		},
-		{
-			Symbol: "ETH",
-			Name:   "Ethereum",
-			Color:  "#89ACF0",
-			Type:   pnl.Crypto,
-		},
-	}, nil
+func (m *MockMarketAPI) FetchAsset(symbol string) (float64, error) {
+	return rand.Float64() * 100, nil
 }
 
 func NewMockMarketAPI(token string) *MockMarketAPI {

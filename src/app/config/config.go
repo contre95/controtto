@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"maps"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -41,20 +42,43 @@ func Load() *Config {
 	}
 	return cfg
 }
-func loadMarketTraders() pnl.MarketTraders {
+func loadMarketTraders() map[string]pnl.MarketTrader {
 	demoToken := os.Getenv("CONTROTTO_DEMO_TRADER_TOKEN")
-
-	return pnl.MarketTraders{
-		"demo": {
+	return map[string]pnl.MarketTrader{
+		"pancake": {
 			IsSet:       demoToken != "",
-			Env:         "CONTROTTO_DEMO_TRADER_TOKEN",
-			MarketName:  "DemoMarket",
-			MarketKey:   "demo_trader",
+			Env:         "CONTROTTO_PANCAKE_TRADER_TOKEN",
+			MarketName:  "Pancake",
+			MarketKey:   "pancake_trader",
+			Color:       "#6D0000",
+			Type:        pnl.DEX,
+			Token:       demoToken,
+			ProviderURL: "https://controtto.io/docs/pancake",
+			MarketLogo:  "/assets/img/marketPancake.png",
+			MarketAPI:   marketTraders.NewMockMarketAPI(demoToken),
+		},
+		"binance": {
+			IsSet:       demoToken != "",
+			Env:         "CONTROTTO_BINANCE_TRADER_TOKEN",
+			MarketName:  "Binance",
+			MarketKey:   "binance_trader",
 			Color:       "#6D0000",
 			Type:        pnl.Exchange,
 			Token:       demoToken,
 			ProviderURL: "https://controtto.io/docs/demo",
-			MarketLogo:  "demo_logo",
+			MarketLogo:  "/assets/img/marketBinance.png",
+			MarketAPI:   marketTraders.NewMockMarketAPI(demoToken),
+		},
+		"trading212": {
+			IsSet:       demoToken != "",
+			Env:         "CONTROTTO_TRADING212_TRADER_TOKEN",
+			MarketName:  "Trading212",
+			MarketKey:   "trading212_trader",
+			Color:       "#6D0000",
+			Type:        pnl.Broker,
+			Token:       demoToken,
+			ProviderURL: "https://controtto.io/docs/demo",
+			MarketLogo:  "/assets/img/marketTrading212.png",
 			MarketAPI:   marketTraders.NewMockMarketAPI(demoToken),
 		},
 	}
@@ -74,6 +98,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			ProviderName: "BingX",
 			ProviderURL:  "https://docs.cdp.coinbase.com/",
 			NeedsToken:   false,
+			ProviderLogo: "/assets/img/marketBingx.png",
 			Color:        "#2954FE",
 			ProviderKey:  "bingx_toggle",
 			PriceAPI:     priceProviders.NewBingxAPI(),
@@ -86,6 +111,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			ProviderKey:  "binance_toggle",
 			NeedsToken:   false,
 			Color:        "#EFB72D",
+			ProviderLogo: "/assets/img/marketBinance.png",
 			PriceAPI:     priceProviders.NewBinanceAPI(),
 		},
 		"coinbase": {
@@ -95,6 +121,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			ProviderURL:  "https://docs.cdp.coinbase.com/",
 			ProviderKey:  "coinbase_toggle",
 			NeedsToken:   false,
+			ProviderLogo: "/assets/img/marketCoinbase.png",
 			Token:        "",
 			Color:        "#0052FF",
 			PriceAPI:     priceProviders.NewCoinbaseAPI(),
@@ -106,6 +133,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			NeedsToken:   true,
 			ProviderURL:  "https://www.alphavantage.co/support/#api-key",
 			ProviderKey:  "vantage_token",
+			ProviderLogo: "/assets/img/priceVantage.png",
 			Token:        avantageToken,
 			Color:        "#C2F4E1",
 			PriceAPI:     priceProviders.NewAVantageAPI(avantageToken),
@@ -117,6 +145,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			ProviderName: "Tiingo",
 			ProviderURL:  "https://www.tiingo.com/account/api/token",
 			ProviderKey:  "tiingo_token",
+			ProviderLogo: "/assets/img/priceTiingo.png",
 			Token:        tingoToken,
 			Color:        "#AA74EF",
 			PriceAPI:     priceProviders.NewTiingoAPI(tingoToken),
@@ -168,10 +197,10 @@ func (c *Config) UpdateMarketTraderToken(key, token string) error {
 		return fmt.Errorf("market trader %q not found", key)
 	}
 	switch key {
-	case "demo":
+	case "binance", "trading212", "pancake":
 		trader.Token = token
 		trader.MarketAPI = marketTraders.NewMockMarketAPI(token)
-		os.Setenv("CONTROTTO_DEMO_TRADER_TOKEN", token)
+		os.Setenv("CONTROTTO_"+strings.ToUpper(key)+"_TRADER_TOKEN", token)
 		trader.IsSet = token != ""
 	default:
 		return fmt.Errorf("unsupported market trader %q", key)
