@@ -51,9 +51,11 @@
           class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           data-dynamic-select>
           {{ range $key, $trader := .MarketTraders }}
+          {{ if $trader.IsSet }}
           <option value="{{ $trader.MarketKey }}" data-img="{{ $trader.MarketLogo }}">
             {{ $trader.MarketName }}
           </option>
+          {{ end }}
           {{ end }}
         </select>
         <script src="/assets/js/DynamicSelect.js"></script>

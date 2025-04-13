@@ -5,6 +5,7 @@
 
   <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
     {{ range $marketName, $trader := .MarketTraders }}
+    {{  if $trader.IsSet }}
     <div class="p-4 bg-neutral-50 dark:bg-neutral-900  hover:shadow-md transition-shadow">
       <div class="flex items-center gap-3 mb-3">
         <img src="{{ $trader.MarketLogo }}" alt="{{ $marketName }}" class="w-8 h-8 ">
@@ -38,6 +39,7 @@
         </div>
       </div>
     </div>
+    {{ end }}
     {{ end }}
   </div>
 </section>

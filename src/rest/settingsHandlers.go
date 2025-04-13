@@ -2,6 +2,7 @@ package rest
 
 import (
 	"controtto/src/app/config"
+	"fmt"
 	"log/slog"
 	"time"
 
@@ -18,6 +19,21 @@ func editSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 	}
 }
 
+func marketsSet(cfg *config.Config) bool {
+	for _, mkt := range cfg.GetMarketTraders() {
+		if mkt.IsSet {
+			return true
+		}
+	}
+	return false
+}
+
+func marketsSetAPI(cfg *config.Config) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		return c.SendString(fmt.Sprintf("%t", marketsSet(cfg)))
+	}
+}
+
 func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		for key, p := range cfg.GetPriceProviders() {
@@ -31,6 +47,7 @@ func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 		uncommon := c.FormValue("uncommon_pairs") != ""
 		cfg.SetUncommonPairs(uncommon)
 		slog.Info("Config updated")
+		c.Append("HX-Trigger", "reloadSettings")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",
 			"Msg":   "Config updated",
