@@ -26,7 +26,6 @@ func main() {
 	// Load configuration
 	cfg := config.Load()
 
-	// Markets
 	ac := managing.NewAssetCreator(sqliteDB)
 	tpc := managing.NewTradingPairManager(cfg, sqliteDB, sqliteDB)
 	manager := managing.NewService(*ac, *tpc)
