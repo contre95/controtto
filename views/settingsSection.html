@@ -43,21 +43,20 @@
     class="rounded-md m-4 p-4 flex flex-wrap gap-x-1 bg-white divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800 animate__animated animate__fadeIn">
     <!-- <form> -->
     <form hx-ext="debug">
-      <p class="text-sm text-blue-500 uppercase">Price Providers API</p>
+      <p class="text-sm text-blue-500 uppercase">Market Traders API</p>
       <br />
-
-      {{ range .PriceProviders }} {{ if .NeedsToken }}
+            {{ range .MarketTraders }} 
       <div class="flex flex-wrap items-center">
         <div>
           {{ if .IsSet }}
-          <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
+          <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
           {{ else }}
           <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
           {{ end }}
         </div>
         <div>
           <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
-            {{ .ProviderName }}
+            {{ .MarketName }}
             <small>
               (Get it
               <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>
@@ -67,13 +66,13 @@
                 .Env }}</code>
               )
               <div class="relative">
-                <input type="password" name="{{ .ProviderInputName }}" value="{{ .Token }}"
-                  id="provider-{{ .ProviderInputName }}"
+                <input type="password" name="{{ .MarketKey }}" value="{{ .Token }}"
+                  id="market-{{ .MarketKey }}"
                   class="w-full p-1 pl-2 my-3 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700"
                   autocomplete="off" />
                 <button type="button"
                   class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500"
-                  onclick="togglePasswordVisibility('provider-{{ .ProviderInputName }}')">
+                  onclick="togglePasswordVisibility('market-{{ .MarketKey }}')">
                   Reveal
                   <img src="/assets/img/pass.svg" class="w-6 h-6 mx-1" />
                 </button>
@@ -92,18 +91,69 @@
           inputField.type = type;
         }
       </script>
-      {{ end }} {{end}} {{ range .PriceProviders }} {{ if not .NeedsToken }}
+      {{end}}
+
+      <p class="text-sm text-blue-500 uppercase">Price Providers API</p>
+      <br />
+            {{ range .PriceProviders }} {{ if .NeedsToken }}
+            <div class="flex flex-wrap items-center">
+              <div>
+                {{ if .IsSet }}
+                <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
+                {{ else }}
+                <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
+                {{ end }}
+              </div>
+              <div>
+                <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
+                  {{ .ProviderName }}
+                  <small>
+                    (Get it
+                    <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>
+                    and set
+                    <code
+                      class="p-0.5 text-center bg-red-100 text-red-700 dark:bg-gray-700 dark:text-gray-400 px-1 rounded">{{ .Env }}</code>
+                    )
+                    <div class="relative">
+                      <input type="password" name="{{ .ProviderKey }}" value="{{ .Token }}"
+                        id="provider-{{ .ProviderKey }}"
+                        class="w-full p-1 pl-2 my-3 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700"
+                        autocomplete="off" />
+                      <button type="button"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500"
+                        onclick="togglePasswordVisibility('provider-{{ .ProviderKey }}')">
+                        Reveal
+                        <img src="/assets/img/pass.svg" class="w-6 h-6 mx-1" />
+                      </button>
+                    </div>
+                  </small>
+                </label>
+              </div>
+              <div class="relative flex items-center mt-2">
+                <div class="flex items-center gap-x-3"></div>
+              </div>
+            </div>
+            <script>
+              function togglePasswordVisibility(inputId) {
+                const inputField = document.getElementById(inputId);
+                const type = inputField.type === "password" ? "text" : "password";
+          inputField.type = type;
+        }
+      </script>
+      {{ end }}
+      {{end}} 
+      {{ range .PriceProviders }} {{ if not .NeedsToken }}
       <div class="flex flex-wrap items-center">
         <div>
         <label class="inline-flex items-center cursor-pointer my-2">
-            <input class="sr-only peer" type="checkbox" id="{{ .ProviderInputName }}" name="{{ .ProviderInputName }}" value="{{ .IsSet }}" {{ if .IsSet }}checked{{ end }} />
+            <input class="sr-only peer" type="checkbox" id="{{ .ProviderKey }}" name="{{ .ProviderKey }}" value="{{ .IsSet }}" {{ if .IsSet }}checked{{ end }} />
         <div
           class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
         </div>
           <span class="ms-3 block text-md text-gray-500 dark:text-gray-300">{{ .ProviderName }}</span>
           <div>
             {{ if .IsSet }}
-            <img src="/assets/img/checkook.svg" class="w-6 h-6 mx-4" />
+            <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
             {{ else }}
             <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
             {{ end }}

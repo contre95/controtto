@@ -74,6 +74,7 @@ func settingsSection(cfg *config.Config) func(*fiber.Ctx) error {
 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Uncommon":       cfg.GetUncommonPairs(),
 			"PriceProviders": cfg.GetPriceProviders(), // Pass the providers slice to the template
+			"MarketTraders":  cfg.GetMarketTraders(),
 		})
 	}
 }
