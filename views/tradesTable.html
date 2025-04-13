@@ -1,14 +1,14 @@
 <table
-  class="w-full divide-y divide-gray-200 lg:border border-neutral-200 dark:border-neutral-700 dark:divide-gray-700 transition-all"
+  class="w-full divide-y divide-gray-200 dark:divide-gray-700 transition-all"
   id="table">
-  <thead class="bg-gray-50 lg:dark:bg-neutral-900 dark:bg-neutral-900">
+  <thead class="bg-gray-50 lg:dark:bg-neutral-700 dark:bg-neutral-900">
     <tr>
-      <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <div class="flex items-center gap-x-3">
-          <span>Pair</span>
+      <th scope="col" 
+        class="py-3.5 px-4 text-blue lg:text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <div class="flex items-center ml-3 lg:text-sm text-lg gap-x-3">
+          <span>Trading Pair</span>
         </div>
       </th>
-
       <th scope="col"
         class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <button class="gap-x-2">
@@ -26,7 +26,9 @@
 
       <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400">
         <button class="gap-x-2">
-          <span>Asset types</span>
+          <div class="flex items-center ml-3 lg:text-sm text-lg gap-x-3">
+          <span>Type</span>
+          </div>
         </button>
       </th>
 
@@ -40,7 +42,7 @@
     </tr>
   </thead>
   <tbody id="tbody"
-    class="bg-white divide-y rounded-md divide-gray-200 dark:divide-gray-900 dark:bg-neutral-900 animate__headShake animate__animated">
+    class="bg-white rounded-md divide-gray-200 dark:divide-gray-800 lg:dark:bg-neutral-800 dark:bg-neutral-900 animate__headShake animate__animated">
     {{ range .Pairs }}
     <tr id="pair{{ .ID }}" class="animate__animated">
       <td class=" px-4 py-2 text-sm font-medium text-gray-700 whitespace-nowrap">
@@ -68,7 +70,7 @@
       </td>
       <td
         class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
-        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-neutral-900">
+        <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-neutral-800">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <h2 class="text-sm font-normal text-gray-500"> <span class="font-bold leading-normal text-sm text-emerald-500"
               style="color:{{ .BaseAsset.Color }}">
