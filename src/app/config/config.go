@@ -47,8 +47,8 @@ func loadProviders() map[string]pnl.PriceProvider {
 	binanceEnable := os.Getenv("CONTROTTO_BINANCE_ENABLE")
 	bingxEnable := os.Getenv("CONTROTTO_BINGX_ENABLE")
 	return map[string]pnl.PriceProvider{
-		"bingx": {
-			IsSet:             bingxEnable != "",
+    "bingx": {
+			IsSet:             bingxEnable == "",
 			Env:               "CONTROTTO_BINGX_ENABLE",
 			ProviderName:      "BingX",
 			ProviderURL:       "https://docs.cdp.coinbase.com/",
@@ -58,7 +58,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			API:               priceProviders.NewCoinbaseAPI(),
 		},
 		"binance": {
-			IsSet:             binanceEnable != "", // No token needed for Binance
+			IsSet:             binanceEnable == "", // No token needed for Binance
 			Env:               "CONTROTTO_BINANCE_ENABLE",
 			ProviderName:      "Binance",
 			ProviderURL:       "https://docs.cdp.coinbase.com/",
@@ -68,7 +68,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			API:               priceProviders.NewCoinbaseAPI(),
 		},
 		"coinbase": {
-			IsSet:             coinbaseEnable != "", // No token needed for coinbase
+      IsSet:             coinbaseEnable == "", 
 			Env:               "CONTROTTO_COINBASE_ENABLE",
 			ProviderName:      "Coinbase",
 			ProviderURL:       "https://docs.cdp.coinbase.com/",
@@ -79,7 +79,7 @@ func loadProviders() map[string]pnl.PriceProvider {
 			API:               priceProviders.NewCoinbaseAPI(),
 		},
 		"avantage": {
-			IsSet:             avantageToken != "",
+      IsSet:             coinbaseEnable == "",
 			Env:               "CONTROTTO_AVANTAGE_TOKEN",
 			ProviderName:      "Alpha Vantage",
 			NeedsToken:        true,
