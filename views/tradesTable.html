@@ -1,7 +1,7 @@
 <table
-  class="w-full divide-y divide-gray-200 border border-neutral-200 dark:border-neutral-700 dark:divide-gray-700 transition-all"
+  class="w-full divide-y divide-gray-200 lg:border border-neutral-200 dark:border-neutral-700 dark:divide-gray-700 transition-all"
   id="table">
-  <thead class="bg-gray-50 dark:bg-neutral-900">
+  <thead class="bg-gray-50 lg:dark:bg-neutral-900 dark:bg-neutral-900">
     <tr>
       <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <div class="flex items-center gap-x-3">
@@ -40,7 +40,7 @@
     </tr>
   </thead>
   <tbody id="tbody"
-    class="bg-white divide-y rounded-md divide-gray-200 dark:divide-gray-900 dark:bg-neutral-800 animate__headShake animate__animated">
+    class="bg-white divide-y rounded-md divide-gray-200 dark:divide-gray-900 dark:bg-neutral-900 animate__headShake animate__animated">
     {{ range .Pairs }}
     <tr id="pair{{ .ID }}" class="animate__animated">
       <td class=" px-4 py-2 text-sm font-medium text-gray-700 whitespace-nowrap">
