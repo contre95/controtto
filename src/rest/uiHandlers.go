@@ -58,6 +58,12 @@ func tradesSection(c *fiber.Ctx) error {
 
 func pairSection(c *fiber.Ctx) error {
 	slog.Info("Pair Section")
+	if c.Get("HX-Request") != "true" {
+		return c.Render("main", fiber.Map{
+			"PairID":       c.Params("id"),
+			"TradeTrigger": ",revealed",
+		})
+	}
 	return c.Render("pairSection", fiber.Map{
 		"PairID": c.Params("id"),
 	})

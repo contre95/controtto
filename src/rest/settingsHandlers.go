@@ -31,7 +31,6 @@ func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 		uncommon := c.FormValue("uncommon_pairs") != ""
 		cfg.SetUncommonPairs(uncommon)
 		slog.Info("Config updated")
-		c.Append("HX-Trigger", "reloadSettings")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",
 			"Msg":   "Config updated",

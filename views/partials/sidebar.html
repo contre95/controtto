@@ -64,6 +64,14 @@
       </button>
       <button type="button" class="w-full">
         <a
+            hx-get="/pairs/{{.PairID}}"
+            hx-trigger="click,reload{{.PairID}} from:body{{ .TradeTrigger }}"
+            hx-push-url="true"
+            hx-swap="innerHTML"
+            hx-target="#contenido"
+            class="hidden"
+          ></a>
+        <a
           hx-get="/trades"
           hx-trigger="click,reloadTrades from:body{{ .TradesTrigger }}"
           hx-push-url="true"

@@ -1,0 +1,11 @@
+{{define "global"}}
+<!-- main script file  -->
+<!-- <script src="/assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script> -->
+<button 
+  hx-get="/pairs/{{ .ID }}/" 
+  hx-trigger="pair{{.ID}} from:body"
+  hx-target="#contenido"
+  type="button" 
+>
+</button>
+{{end}}
