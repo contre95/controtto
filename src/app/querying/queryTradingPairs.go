@@ -141,6 +141,7 @@ func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (floa
 			} else {
 				break
 			}
+
 		}
 	}
 	if failedMarkets == len(tpq.providers) {
