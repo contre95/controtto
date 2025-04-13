@@ -1,8 +1,4 @@
 <section class="p-6 bg-white dark:bg-neutral-800 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm animate__animated animate__fadeInUp">
-  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-    Market Trading – {{ .Pair.BaseAsset.Symbol }}/{{ .Pair.QuoteAsset.Symbol }}
-  </h2>
-
   <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
     {{ range $marketName, $trader := .MarketTraders }}
     {{  if $trader.IsSet }}

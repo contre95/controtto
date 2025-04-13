@@ -106,6 +106,9 @@ func (m *MockMarketAPI) ImportTrades(tradingPairID pnl.TradingPairID, since time
 }
 
 func (m *MockMarketAPI) FetchAsset(symbol string) (float64, error) {
+	if symbol == "ETH" {
+		return 0, nil
+	}
 	return rand.Float64() * 100, nil
 }
 
