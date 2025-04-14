@@ -59,11 +59,7 @@
           <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
             {{ .MarketName }}
             <small>
-              (Get it <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>.
-              Var:
-              <code class="p-0.5 text-center {{ if .IsSet }}text-green-700 bg-green-100{{else}}bg-red-100 text-red-700{{end}} dark:bg-gray-700 dark:text-gray-400 px-1 rounded" >
-                {{ .Env }}</code>
-              )
+              Get it <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>. Var: <code class="p-0.5 text-center {{ if .IsSet }}text-green-700 bg-green-100{{else}}bg-red-100 text-red-700{{end}} dark:bg-gray-700 dark:text-gray-400 px-1 rounded" > {{ .Env }}</code>
               <br>
               {{ if .IsSet }}
               {{ .Details }}
@@ -112,7 +108,7 @@
           <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
             {{ .ProviderName }}
             <small>
-              (Get it
+              Get it
               <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>
               and set
               <code
@@ -120,7 +116,6 @@
                 >
                 {{ .Env }}
               </code>
-              )
               <div class="relative">
                 <input type="password" name="{{ .ProviderKey }}" value="{{ .Token }}" id="{{ .ProviderKey }}"
                   class="w-full p-1 pl-2 my-3 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700"
