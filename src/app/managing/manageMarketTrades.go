@@ -1,6 +1,7 @@
 package managing
 
 import (
+	"controtto/src/app/config"
 	"controtto/src/domain/pnl"
 	"fmt"
 	"log/slog"
@@ -48,19 +49,19 @@ type FetchAssetsReq struct {
 }
 
 type MarketTradeManager struct {
-	traders map[string]pnl.MarketTrader
-	pairs   pnl.TradingPairs
+	cfg   *config.Config
+	pairs pnl.TradingPairs
 }
 
-func NewMarketTradeManager(traders map[string]pnl.MarketTrader, tp pnl.TradingPairs) *MarketTradeManager {
+func NewMarketTradeManager(cfg *config.Config, tp pnl.TradingPairs) *MarketTradeManager {
 	return &MarketTradeManager{
-		traders: traders,
-		pairs:   tp,
+		cfg:   cfg,
+		pairs: tp,
 	}
 }
 
 func (mtm *MarketTradeManager) MarketBuy(req MarketBuyReq) (*MarketBuyResp, error) {
-	trader, exists := mtm.traders[req.TraderKey]
+	trader, exists := mtm.cfg.GetMarketTraders(false)[req.TraderKey]
 	if !exists {
 		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
 	}
@@ -89,7 +90,7 @@ func (mtm *MarketTradeManager) MarketBuy(req MarketBuyReq) (*MarketBuyResp, erro
 }
 
 func (mtm *MarketTradeManager) MarketSell(req MarketSellReq) (*MarketSellResp, error) {
-	trader, exists := mtm.traders[req.TraderKey]
+	trader, exists := mtm.cfg.GetMarketTraders(false)[req.TraderKey]
 	if !exists {
 		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
 	}
@@ -119,7 +120,7 @@ func (mtm *MarketTradeManager) MarketSell(req MarketSellReq) (*MarketSellResp, e
 }
 
 func (mtm *MarketTradeManager) ImportTrades(req ImportTradesReq) (*ImportTradesResp, error) {
-	trader, exists := mtm.traders[req.TraderKey]
+	trader, exists := mtm.cfg.GetMarketTraders(false)[req.TraderKey]
 	if !exists {
 		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
 	}

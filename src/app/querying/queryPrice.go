@@ -1,7 +1,7 @@
 package querying
 
 import (
-	"controtto/src/domain/pnl"
+	"controtto/src/app/config"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -18,18 +18,18 @@ type QueryPriceResp struct {
 }
 
 type PriceQuerier struct {
-	providers pnl.PriceProviders
+	config *config.Config
 }
 
-func NewPriceQuerier(p pnl.PriceProviders) *PriceQuerier {
-	return &PriceQuerier{p}
+func NewPriceQuerier(cfg *config.Config) *PriceQuerier {
+	return &PriceQuerier{cfg}
 }
 
 // GetPrice returns the current base asset value expressed in terms of the quote value
 // If is fails to retrieve the value it will set it to 0 (zero)
 func (aq *PriceQuerier) GetPrice(req QueryPriceReq) (*QueryPriceResp, error) {
 	resp := QueryPriceResp{Price: 0}
-	for _, m := range aq.providers {
+	for _, m := range aq.config.GetPriceProviders() {
 		// price, err := m.GetCurrentPrice(req.AssetSymbolA, req.AssetSymbolB)
 		price, err := m.GetCurrentPrice(req.AssetSymbolA, req.AssetSymbolB)
 		if err != nil {

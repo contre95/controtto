@@ -16,11 +16,12 @@ type MarketTrader struct {
 	MarketName  string
 	MarketKey   string
 	Type        MarketType
+	Details     string
 	MarketLogo  string
 	Token       string
 	ProviderURL string
 	Env         string
-	MarketAPI
+	MarketAPI   MarketAPI
 }
 
 type MarketTraders map[string]MarketTrader
@@ -37,11 +38,11 @@ type TradeOptions struct {
 }
 
 type MarketAPI interface {
+	// Fetches how much of this asset you have in the Market
+	FetchAssetAmount(symbol string) (float64, error)
 	AccountDetails() (string, error)
+	HealthCheck() bool
+	ImportTrades(tradingPair TradingPair, since time.Time) ([]Trade, error)
 	Buy(options TradeOptions) (*Trade, error)
 	Sell(options TradeOptions) (*Trade, error)
-	// Fetches last transaction between Base and Quote on the Exchange and returns that in a Trade format
-	ImportTrades(tradingPair TradingPair, since time.Time) ([]Trade, error)
-	// Fetches amount of assets there are Spot (Exchanges)
-	FetchAsset(symbol string) (float64, error)
 }

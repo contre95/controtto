@@ -28,15 +28,15 @@ func getMarketAssets(cfg *config.Config, tpq querying.TradingPairsQuerier) func(
 		}
 		marketData := map[string][3]float64{}
 		for name, m := range cfg.GetMarketTraders(false) {
-			baseAmount, err := m.MarketAPI.FetchAsset(resp.Pair.BaseAsset.Symbol)
+			baseAmount, err := m.MarketAPI.FetchAssetAmount(resp.Pair.BaseAsset.Symbol)
 			if err != nil {
 				return c.Render("toastErr", fiber.Map{
 					"Title": "Error",
 					"Msg":   err,
 				})
 			}
-			usdtAmount, err := m.MarketAPI.FetchAsset("USDT")
-			usdcAmount, err := m.MarketAPI.FetchAsset("USDC")
+			usdtAmount, err := m.MarketAPI.FetchAssetAmount("USDT")
+			usdcAmount, err := m.MarketAPI.FetchAssetAmount("USDC")
 			if err != nil {
 				return c.Render("toastErr", fiber.Map{
 					"Title": "Error",

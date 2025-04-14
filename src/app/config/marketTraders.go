@@ -11,26 +11,41 @@ import (
 func (c *Config) UpdateMarketTraderToken(key, token string) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+
 	trader, ok := c.MarketTraders[key]
 	if !ok {
 		return fmt.Errorf("market trader %q not found", key)
 	}
 	trader.Token = token
 	trader.IsSet = token != ""
-
-	os.Setenv(PREFIX+strings.ToUpper(key)+PRIVATE_PRICE_SUFIX, token)
-	c.MarketTraders[key] = trader
+	os.Setenv(PREFIX+strings.ToUpper(key)+TRADER_SUFIX, token)
+	var api pnl.MarketAPI
 	switch key {
 	case "t212":
-		trader.MarketAPI = marketTraders.NewMockMarketAPI(token)
-	case "pancake":
-		trader.MarketAPI = marketTraders.NewMockMarketAPI(token)
+		api = marketTraders.NewTrading212API(token)
 	case "bingx":
-		trader.MarketAPI = marketTraders.NewBingXAPI(token)
+		api = marketTraders.NewBingXAPI(token)
+	case "pancake":
+		api = marketTraders.NewMockMarketAPI(token)
 	case "binance":
-		trader.MarketAPI = marketTraders.NewMockMarketAPI(token)
+		api = marketTraders.NewMockMarketAPI(token)
 	default:
 		return fmt.Errorf("market trader %q not found", key)
+	}
+
+	trader.MarketAPI = api
+	if trader.IsSet {
+		if !api.HealthCheck() {
+			return fmt.Errorf("Couldn't connect to %s", key)
+		}
+		details, err := api.AccountDetails()
+		fmt.Println("details", details)
+		fmt.Println("details", details)
+		if err != nil {
+			fmt.Println("details", key, err)
+			trader.Details = "no details"
+		}
+		trader.Details = details
 	}
 	c.MarketTraders[key] = trader
 	return nil
@@ -62,6 +77,7 @@ func loadMarketTraders() map[string]pnl.MarketTrader {
 			MarketKey:   bingx + "_trader",
 			Color:       "#0F5FFF",
 			Type:        pnl.Exchange,
+			Details:     "",
 			Token:       os.Getenv(PREFIX + strings.ToUpper(bingx) + TRADER_SUFIX),
 			ProviderURL: "https://bingx-api.github.io/docs/#/en-us/swapV2/introduce",
 			MarketLogo:  "/assets/img/" + bingx + ".png",
@@ -73,6 +89,7 @@ func loadMarketTraders() map[string]pnl.MarketTrader {
 			MarketName:  "Pancake",
 			MarketKey:   pancake + "_trader",
 			Color:       "#23CAD5",
+			Details:     "",
 			Type:        pnl.DEX,
 			Token:       os.Getenv(PREFIX + strings.ToUpper(pancake) + TRADER_SUFIX),
 			ProviderURL: "https://docs.pancakeswap.finance/developers/api",
@@ -84,6 +101,7 @@ func loadMarketTraders() map[string]pnl.MarketTrader {
 			Env:         PREFIX + strings.ToUpper(binance) + TRADER_SUFIX,
 			MarketName:  "Binance",
 			MarketKey:   binance + "_trader",
+			Details:     "",
 			Color:       "#F0B90D",
 			Type:        pnl.Exchange,
 			Token:       os.Getenv(PREFIX + strings.ToUpper(binance) + TRADER_SUFIX),
@@ -96,12 +114,13 @@ func loadMarketTraders() map[string]pnl.MarketTrader {
 			Env:         PREFIX + strings.ToUpper(trading212) + TRADER_SUFIX,
 			MarketName:  "Trading212",
 			MarketKey:   trading212 + "_trader",
+			Details:     "",
 			Color:       "#00AAE4",
 			Type:        pnl.Broker,
 			Token:       os.Getenv(PREFIX + strings.ToUpper(trading212) + TRADER_SUFIX),
 			ProviderURL: "https://helpcentre.trading212.com/hc/en-us/articles/14584770928157-How-can-I-generate-an-API-key",
 			MarketLogo:  "/assets/img/" + trading212 + ".png",
-			MarketAPI:   marketTraders.NewMockMarketAPI(os.Getenv(PREFIX + strings.ToUpper(trading212) + TRADER_SUFIX)),
+			MarketAPI:   marketTraders.NewTrading212API(os.Getenv(PREFIX + strings.ToUpper(trading212) + TRADER_SUFIX)),
 		},
 	}
 }

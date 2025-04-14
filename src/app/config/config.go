@@ -31,7 +31,6 @@ func Load() *Config {
 		Port:          os.Getenv(PORT),
 		UncommonPairs: os.Getenv(UNCOMMON_PAIRS) == "true",
 	}
-	// Load tokens from environment or set defaults
 	cfg.PriceProviders = loadProviders()
 	cfg.MarketTraders = loadMarketTraders()
 

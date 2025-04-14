@@ -1,19 +1,21 @@
 package querying
 
 import (
+	"controtto/src/app/config"
 	"controtto/src/domain/pnl"
 	"errors"
+	"fmt"
 	"log/slog"
 )
 
 type TradingPairsQuerier struct {
 	tradingPairs pnl.TradingPairs
-	providers    pnl.PriceProviders
+	cfg          *config.Config
 }
 
 // NewTradingPairQuerier returns a new intereactor with all the Trading Pair related use cases.
-func NewTradingPairQuerier(a pnl.TradingPairs, m pnl.PriceProviders) *TradingPairsQuerier {
-	return &TradingPairsQuerier{a, m}
+func NewTradingPairQuerier(a pnl.TradingPairs, cfg *config.Config) *TradingPairsQuerier {
+	return &TradingPairsQuerier{a, cfg}
 }
 
 // List all trading pairs without any level of detail
@@ -129,22 +131,24 @@ func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (floa
 	providerName := ""
 	providerColor := ""
 	failedproviders := 0
-	for _, m := range tpq.providers {
+	providers := tpq.cfg.GetPriceProviders()
+	for _, m := range providers {
 		slog.Info("Querying providers", "provider", m.ProviderName)
 		if m.IsSet {
-			baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
 			providerName = m.ProviderName
 			providerColor = m.Color
+			baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
 			if err != nil {
 				slog.Error("Error getting base asset price.", "provider", m.ProviderName, "error", err)
 				failedproviders++
 			} else {
 				break
 			}
-
+		} else {
+			fmt.Println("not set")
 		}
 	}
-	if failedproviders == len(tpq.providers) {
+	if failedproviders == len(providers) {
 		slog.Error("All providers failed to find the price.", "asset1", asset1, "asset2", asset2)
 		return 0, "", "", err
 	}

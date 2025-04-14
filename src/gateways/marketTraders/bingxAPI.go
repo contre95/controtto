@@ -21,6 +21,8 @@ type BingxMarketAPI struct {
 	ApiSecret string
 }
 
+const HOST = "https://open-api.bingx.com"
+
 func NewBingXAPI(token string) *BingxMarketAPI {
 	if len(strings.Split(token, ":")) >= 2 {
 		return &BingxMarketAPI{
@@ -31,7 +33,11 @@ func NewBingXAPI(token string) *BingxMarketAPI {
 	return &BingxMarketAPI{}
 }
 
-func (b *BingxMarketAPI) getParameters(uri, method string, payload map[string]string, urlEncode bool, timestamp int64) string {
+func (b *BingxMarketAPI) HeatlhCheck() bool {
+	return true
+}
+
+func (b *BingxMarketAPI) getParameters(payload map[string]string, urlEncode bool, timestamp int64) string {
 	params := ""
 	for k, v := range payload {
 		encoded := v
@@ -52,19 +58,18 @@ func computeHmac256(strMessage string, strSecret string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-func (b *BingxMarketAPI) FetchAsset(symbol string) (float64, error) {
-	const HOST = "https://open-api.bingx.com"
+func (b *BingxMarketAPI) FetchAssetAmount(symbol string) (float64, error) {
 	uri := "/openApi/spot/v1/account/balance"
 	method := "GET"
-	timestamp := time.Now().UnixMilli()
+	timestamp := time.Now().UnixNano() / 1e6
 
 	payload := map[string]string{
 		"recvWindow": "60000",
 	}
 
-	paramStr := b.getParameters(uri, method, payload, false, timestamp)
+	paramStr := b.getParameters(payload, false, timestamp)
 	sign := computeHmac256(paramStr, b.ApiSecret)
-	urlParams := b.getParameters(uri, method, payload, true, timestamp) + "&signature=" + sign
+	urlParams := b.getParameters(payload, true, timestamp) + "&signature=" + sign
 	fullURL := fmt.Sprintf("%s%s?%s", HOST, uri, urlParams)
 
 	req, err := http.NewRequest(method, fullURL, nil)
@@ -129,6 +134,58 @@ func (b *BingxMarketAPI) ImportTrades(pair pnl.TradingPair, since time.Time) ([]
 	panic("ImportTrades not implemented")
 }
 
+func (b *BingxMarketAPI) HealthCheck() bool {
+	details, err := b.AccountDetails()
+	if err != nil {
+		return false
+	}
+	fmt.Println("Account details:", details)
+	return true
+}
+
 func (b *BingxMarketAPI) AccountDetails() (string, error) {
-	panic("AccountDetails not implemented")
+	uri := "/openApi/v1/account/apiPermissions"
+	method := "GET"
+	timestamp := time.Now().UnixNano() / 1e6
+
+	payload := map[string]string{}
+
+	paramStr := b.getParameters(payload, false, timestamp)
+	sign := computeHmac256(paramStr, b.ApiSecret)
+	urlParams := b.getParameters(payload, true, timestamp) + "&signature=" + sign
+	fullURL := fmt.Sprintf("%s%s?%s", HOST, uri, urlParams)
+
+	req, err := http.NewRequest(method, fullURL, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("X-BX-APIKEY", b.ApiKey)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	var res struct {
+		Permissions []int    `json:"permissions"`
+		IPAddresses []string `json:"ipAddresses"`
+		Note        string   `json:"note"`
+		APIKey      string   `json:"apiKey"`
+	}
+	fmt.Print(string(body))
+	if err := json.Unmarshal(body, &res); err != nil {
+		return "", err
+	}
+
+	if len(res.Note) == 0 {
+		return "", errors.New("no IP addresses found")
+	}
+	allowedIPs := strings.Join(res.IPAddresses, ", ")
+	// fmt.Printf("%q Allowed IPs: %q", res.Data.Note, allowedIPs)
+	return fmt.Sprintf("%q Allowed IPs: %q", res.Note, allowedIPs), nil
 }

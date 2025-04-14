@@ -23,10 +23,10 @@ func (c *Config) UpdatePriceProvider(key, token string, toggle bool) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	provider, ok := c.PriceProviders[key]
-	provider.IsSet = toggle
 	if !ok {
 		return fmt.Errorf("price provider %q not found", key)
 	}
+	provider.IsSet = toggle
 	if provider.NeedsToken {
 		provider.Token = token
 		os.Setenv(PREFIX+strings.ToUpper(key)+PRIVATE_PRICE_SUFIX, token)
@@ -38,8 +38,12 @@ func (c *Config) UpdatePriceProvider(key, token string, toggle bool) error {
 		provider.PriceAPI = priceProviders.NewTiingoAPI(token)
 	case "avantage":
 		provider.PriceAPI = priceProviders.NewAVantageAPI(token)
-	default:
-		return fmt.Errorf("price provider %q not found", key)
+	case "coinbase":
+		provider.PriceAPI = priceProviders.NewCoinbaseAPI()
+	case "binance":
+		provider.PriceAPI = priceProviders.NewBinanceAPI()
+	case "bingx":
+		provider.PriceAPI = priceProviders.NewBinanceAPI()
 	}
 	c.PriceProviders[key] = provider
 	return nil

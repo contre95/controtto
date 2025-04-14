@@ -59,16 +59,17 @@
           <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
             {{ .MarketName }}
             <small>
-              (Get it
-              <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>
-              and set
-              <code
-                class="p-0.5 text-center bg-red-100 text-red-700 dark:bg-gray-700 dark:text-gray-400 px-1 rounded">{{
-                .Env }}</code>
+              (Get it <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>.
+              Var:
+              <code class="p-0.5 text-center {{ if .IsSet }}text-green-700 bg-green-100{{else}}bg-red-100 text-red-700{{end}} dark:bg-gray-700 dark:text-gray-400 px-1 rounded" >
+                {{ .Env }}</code>
               )
+              <br>
+              {{ if .IsSet }}
+              {{ .Details }}
+              {{ end }}
               <div class="relative">
-                <input type="password" name="{{ .MarketKey }}" value="{{ .Token }}"
-                  id="market-{{ .MarketKey }}"
+                <input type="password" name="{{ .MarketKey }}" value="{{ .Token }}" id="market-{{ .MarketKey }}"
                   class="w-full p-1 pl-2 my-3 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700"
                   autocomplete="off" />
                 <button type="button"
@@ -96,82 +97,91 @@
 
       <p class="text-sm text-blue-500 uppercase">Price Providers API</p>
       <br />
-            {{ range .PriceProviders }} {{ if .NeedsToken }}
-            <div class="flex flex-wrap items-center">
-              <img src="{{ .ProviderLogo }}" alt="logo" class="w-8 h-8 ">
-              <div>
-                {{ if .IsSet }}
-                <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
-                {{ else }}
-                <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
-                {{ end }}
-              </div>
-              <div>
-                <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
-                  {{ .ProviderName }}
-                  <small>
-                    (Get it
-                    <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>
-                    and set
-                    <code
-                      class="p-0.5 text-center bg-red-100 text-red-700 dark:bg-gray-700 dark:text-gray-400 px-1 rounded">{{ .Env }}</code>
-                    )
-                    <div class="relative">
-                      <input type="password" name="{{ .ProviderKey }}" value="{{ .Token }}"
-                        id="{{ .ProviderKey }}"
-                        class="w-full p-1 pl-2 my-3 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700"
-                        autocomplete="off" />
-                      <button type="button"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500"
-                        onclick="togglePasswordVisibility('{{ .ProviderKey }}')">
-                        Reveal
-                        <img src="/assets/img/pass.svg" class="w-6 h-6 mx-1" />
-                      </button>
-                    </div>
-                  </small>
-                </label>
-              </div>
-              <div class="relative flex items-center mt-2">
-                <div class="flex items-center gap-x-3"></div>
-              </div>
-            </div>
-            <script>
-              function togglePasswordVisibility(inputId) {
-                const inputField = document.getElementById(inputId);
-                const type = inputField.type === "password" ? "text" : "password";
-          inputField.type = type;
-        }
-      </script>
-      {{ end }}
-      {{end}} 
-      {{ range .PriceProviders }} 
-      {{ if not .NeedsToken }}
+      <p class="text-xs text-gray-400 uppercase">Private</p>
+      {{ range .PriceProviders }} {{ if .NeedsToken }}
       <div class="flex flex-wrap items-center">
+        <img src="{{ .ProviderLogo }}" alt="logo" class="w-8 h-8 ">
         <div>
-        <label class="inline-flex items-center cursor-pointer my-2">
-        <img src="{{ .ProviderLogo }}" alt="logo" class="w-8 h-8 ml-2 ">
-          <div>
-            {{ if .IsSet }}
-            <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-3" />
-            {{ else }}
-            <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-3" />
-            {{ end }}
-          </div>
-          <span class="ms-3 mr-3 block text-md text-gray-500 dark:text-gray-300">{{ .ProviderName }}</span>
-          <input class="sr-only peer" type="checkbox" id="{{ .ProviderKey }}" name="{{ .ProviderKey }}" value="{{ .IsSet }}" {{ if .IsSet }}checked{{ end }} />
-      <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
-      </div>
-            <small class="ml-2 text-gray-500 dark:text-gray-300 font-normal italic">
-              Or set
-              <code class="p-0.5 ml-2  text-center bg-red-100 text-red-700 dark:bg-gray-700 dark:text-gray-400 px-1 rounded">{{ .Env }}</code>
+          {{ if .IsSet }}
+          <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-4" />
+          {{ else }}
+          <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-4" />
+          {{ end }}
+        </div>
+        <div>
+          <label for="email" class="block text-md text-gray-500 dark:text-gray-300 mb-1">
+            {{ .ProviderName }}
+            <small>
+              (Get it
+              <a class="text-blue-500" href="{{ .ProviderURL }}" target="_blank">here</a>
+              and set
+              <code
+                class="p-0.5 text-center {{ if .IsSet }}text-green-700 bg-green-100{{else}}bg-red-100 text-red-700{{end}} dark:bg-gray-700 dark:text-gray-400 px-1 rounded"
+                >
+                {{ .Env }}
+              </code>
+              )
+              <div class="relative">
+                <input type="password" name="{{ .ProviderKey }}" value="{{ .Token }}" id="{{ .ProviderKey }}"
+                  class="w-full p-1 pl-2 my-3 bg-white border rounded-md dark:bg-neutral-900 dark:border-neutral-700"
+                  autocomplete="off" />
+                <button type="button"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 dark:text-gray-500"
+                  onclick="togglePasswordVisibility('{{ .ProviderKey }}')">
+                  Reveal
+                  <img src="/assets/img/pass.svg" class="w-6 h-6 mx-1" />
+                </button>
+              </div>
             </small>
-
+          </label>
         </div>
         <div class="relative flex items-center mt-2">
           <div class="flex items-center gap-x-3"></div>
         </div>
       </div>
-      {{end}} 
+      <script>
+        function togglePasswordVisibility(inputId) {
+          const inputField = document.getElementById(inputId);
+          const type = inputField.type === "password" ? "text" : "password";
+          inputField.type = type;
+        }
+      </script>
+      {{ end }}
+      {{end}}
+      <p class="text-xs text-gray-400 uppercase">Public</p>
+      {{ range .PriceProviders }}
+      {{ if not .NeedsToken }}
+      <div class="flex flex-wrap items-center">
+        <div>
+          <label class="inline-flex items-center cursor-pointer my-2">
+            <img src="{{ .ProviderLogo }}" alt="logo" class="w-8 h-8 ml-2 ">
+            <div>
+              {{ if .IsSet }}
+              <img src="/assets/img/checkok.svg" class="w-6 h-6 mx-3" />
+              {{ else }}
+              <img src="/assets/img/checkno.svg" class="w-6 h-6 mx-3" />
+              {{ end }}
+            </div>
+            <span class="ms-3 mr-3 block text-md text-gray-500 dark:text-gray-300">{{ .ProviderName }}</span>
+            <input class="sr-only peer" type="checkbox" id="{{ .ProviderKey }}" name="{{ .ProviderKey }}"
+              value="{{ .IsSet }}" {{ if .IsSet }}checked{{ end }} />
+            <div
+              class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
+            </div>
+        </div>
+        <small class="ml-2 text-gray-500 dark:text-gray-300 font-normal italic">
+          Or set
+          <code
+            class="p-0.5 text-center {{ if .IsSet }}text-green-700 bg-green-100{{else}}bg-red-100 text-red-700{{end}} dark:bg-gray-700 dark:text-gray-400 px-1 rounded"
+          >
+            {{ .Env }}
+          </code>
+        </small>
+        <div class="relative flex items-center mt-2">
+          <div class="flex items-center gap-x-3"></div>
+        </div>
+      </div>
+      {{end}}
       {{ end }}
 
       <br />
@@ -186,8 +196,9 @@
         </div>
         <span class="ms-2 block text-md text-gray-500 dark:text-gray-300">Uncommon pairs</span>
         <small class="ml-2 text-blue-400 font-normal italic">
-          <a href="https://github.com/contre95/controtto/blob/ec75328c2ba8cfff0bc90f85430099dccd7bd5b8/DOCS.md#uncommon-pairs" target="_blank">
-          + info
+          <a href="https://github.com/contre95/controtto/blob/ec75328c2ba8cfff0bc90f85430099dccd7bd5b8/DOCS.md#uncommon-pairs"
+            target="_blank">
+            + info
           </a>
         </small>
       </label>
@@ -205,10 +216,9 @@
       <a href="https://github.com/contre95/controtto" target="_blank"
         class="text-blue-300">github.com/contre95/controtto</a>
     </small>
-      <button
+    <button
       class="lg:hidden sidebtn flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-200 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:hover:text-gray-200 hover:text-gray-700"
-      onclick="toggleDarkMode()"
-    >
+      onclick="toggleDarkMode()">
       <div>
         <i class="fa fa-light mr-3 fa-moon text-2xl dark:text-gray-200"></i>
         Dark/Light

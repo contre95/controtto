@@ -20,6 +20,10 @@ type MockMarketAPI struct {
 	Token string
 }
 
+func (b *MockMarketAPI) HealthCheck() bool {
+	return b.Token == "enable"
+}
+
 func (m *MockMarketAPI) Buy(options pnl.TradeOptions) (*pnl.Trade, error) {
 	if options.Amount <= 0 {
 		return nil, errors.New("amount must be greater than zero")
@@ -109,7 +113,7 @@ func (m *MockMarketAPI) AccountDetails() (string, error) {
 	return "someeamil@domain.com", nil
 }
 
-func (m *MockMarketAPI) FetchAsset(symbol string) (float64, error) {
+func (m *MockMarketAPI) FetchAssetAmount(symbol string) (float64, error) {
 	if symbol == "ETH" {
 		return 0, nil
 	}

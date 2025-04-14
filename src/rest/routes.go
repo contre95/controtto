@@ -52,7 +52,6 @@ func Run(cfg *config.Config, m *managing.Service, q *querying.Service) {
 	app.Post("/pairs", newTradingPair(m.TradingPairManager))
 	app.Post("/pairs/:id/trades", newTrade(m.TradingPairManager))
 	app.Post("/pairs/:id/trades/upload", newTradeImport(m.TradingPairManager))
-	app.Get("/settings/edit", editSettingsForm(cfg))
 	app.Post("/settings/edit", saveSettingsForm(cfg))
 
 	log.Fatal(app.Listen("0.0.0.0" + ":" + cfg.Port))
