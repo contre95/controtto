@@ -84,7 +84,6 @@ func (b *BingxMarketAPI) FetchAsset(symbol string) (float64, error) {
 		fmt.Println(err)
 		return 0, err
 	}
-	fmt.Println(string(body))
 	var res struct {
 		Code     int    `json:"code"`
 		Msg      string `json:"msg"`
