@@ -49,11 +49,13 @@ type FetchAssetsReq struct {
 
 type MarketTradeManager struct {
 	traders map[string]pnl.MarketTrader
+	pairs   pnl.TradingPairs
 }
 
-func NewMarketTradeManager(traders map[string]pnl.MarketTrader) *MarketTradeManager {
+func NewMarketTradeManager(traders map[string]pnl.MarketTrader, tp pnl.TradingPairs) *MarketTradeManager {
 	return &MarketTradeManager{
 		traders: traders,
+		pairs:   tp,
 	}
 }
 
@@ -62,9 +64,13 @@ func (mtm *MarketTradeManager) MarketBuy(req MarketBuyReq) (*MarketBuyResp, erro
 	if !exists {
 		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
 	}
-
+	tp, err := mtm.pairs.GetTradingPair(req.TradingPairID)
+	if err != nil {
+		slog.Error("Error getting TradingPair", "error", err)
+		return nil, fmt.Errorf("failed to execute buy: %w", err)
+	}
 	options := pnl.TradeOptions{
-		TradingPairID: pnl.TradingPairID(req.TradingPairID),
+		TradingPair:   *tp,
 		Amount:        req.Amount,
 		Price:         req.Price,
 		IsMarketOrder: req.Price == nil,
@@ -87,9 +93,14 @@ func (mtm *MarketTradeManager) MarketSell(req MarketSellReq) (*MarketSellResp, e
 	if !exists {
 		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
 	}
-
+	tp, err := mtm.pairs.GetTradingPair(req.TradingPairID)
+	if err != nil {
+		slog.
+			Error("Error getting TradingPair", "error", err)
+		return nil, fmt.Errorf("failed to execute buy: %w", err)
+	}
 	options := pnl.TradeOptions{
-		TradingPairID: pnl.TradingPairID(req.TradingPairID),
+		TradingPair:   *tp,
 		Amount:        req.Amount,
 		Price:         req.Price,
 		IsMarketOrder: req.Price == nil,
@@ -112,9 +123,13 @@ func (mtm *MarketTradeManager) ImportTrades(req ImportTradesReq) (*ImportTradesR
 	if !exists {
 		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
 	}
-
+	tp, err := mtm.pairs.GetTradingPair(req.TradingPairID)
+	if err != nil {
+		slog.Error("Error getting TradingPair", "error", err)
+		return nil, fmt.Errorf("failed to execute buy: %w", err)
+	}
 	trades, err := trader.MarketAPI.ImportTrades(
-		pnl.TradingPairID(req.TradingPairID),
+		*tp,
 		req.Since,
 	)
 	if err != nil {

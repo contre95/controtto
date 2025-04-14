@@ -44,6 +44,7 @@ func Load() *Config {
 }
 func loadMarketTraders() map[string]pnl.MarketTrader {
 	trading212 := os.Getenv("CONTROTTO_TRADING212_TRADER_TOKEN")
+	bingx := os.Getenv("CONTROTTO_BINGX_TRADER_TOKEN")
 	pancake := os.Getenv("CONTROTTO_PANCAKE_TRADER_TOKEN")
 	binance := os.Getenv("CONTROTTO_BINANCE_TRADER_TOKEN")
 	return map[string]pnl.MarketTrader{
@@ -82,6 +83,18 @@ func loadMarketTraders() map[string]pnl.MarketTrader {
 			ProviderURL: "https://controtto.io/docs/demo",
 			MarketLogo:  "/assets/img/marketTrading212.png",
 			MarketAPI:   marketTraders.NewMockMarketAPI(trading212),
+		},
+		"bingx": {
+			IsSet:       bingx != "",
+			Env:         "CONTROTTO_BINGX_TRADER_TOKEN",
+			MarketName:  "BingX",
+			MarketKey:   "bingx_trader",
+			Color:       "#6D0000", // You might want to use BingX's brand color
+			Type:        pnl.Exchange,
+			Token:       bingx,
+			ProviderURL: "https://controtto.io/docs/bingx",
+			MarketLogo:  "/assets/img/marketBingx.png",
+			MarketAPI:   marketTraders.NewBingXAPI(bingx),
 		},
 	}
 }

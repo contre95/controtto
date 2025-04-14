@@ -23,14 +23,21 @@
       <div class="space-y-2 text-sm">
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
           <span>{{ $.Pair.BaseAsset.Symbol }} Balance</span>
-          <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">
-            {{ index $.MarketData $marketName 0 | printf "%.4f" }}
+          <div class="ml-auto text-right">
+          (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">$ <span hx-swap="outterHTML" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ index $.MarketData $marketName 0 | printf "%.4f" }}" hx-trigger="load"> {{ index $.MarketData $marketName 0 | printf "%.4f" }}</span></span>)
+            <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">{{ index $.MarketData $marketName 0 | printf "%.4f" }}</span>
+        </div>
+        </div>
+        <div class="flex justify-between text-gray-600 dark:text-gray-400">
+          <span>USDT Balance</span>
+          <span class="font-medium" style="color:#009292">
+            {{ index $.MarketData $marketName 1 | printf "%.4f" }}
           </span>
         </div>
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>{{ $.Pair.QuoteAsset.Symbol }} Balance</span>
-          <span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">
-            {{ index $.MarketData $marketName 1 | printf "%.4f" }}
+          <span>USDC Balance</span>
+          <span class="font-medium" style="color:#576B83">
+            {{ index $.MarketData $marketName 2 | printf "%.4f" }}
           </span>
         </div>
       </div>

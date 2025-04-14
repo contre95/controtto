@@ -29,6 +29,7 @@ func Run(cfg *config.Config, m *managing.Service, q *querying.Service) {
 	app.Get("/ui/assets/form", newAssetForm)
 	app.Get("/ui/pairs/form", newPairForm(q.AssetQuerier))
 	app.Get("/healthcheck/price", checkPrice(q.PriceQuerier))
+	app.Get("/calc/price", calculatePrice(q.PriceQuerier))
 	app.Get("/dashboard", dashboardSection(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/cards", pairCards(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/chart", pairChart(q.TradingPairQuerier))
