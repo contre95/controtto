@@ -20,7 +20,7 @@ func editSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 }
 
 func marketsSet(cfg *config.Config) bool {
-	for _, mkt := range cfg.GetMarketTraders() {
+	for _, mkt := range cfg.GetMarketTraders(true) {
 		if mkt.IsSet {
 			return true
 		}
@@ -37,15 +37,16 @@ func marketsSetAPI(cfg *config.Config) func(*fiber.Ctx) error {
 func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		for key, p := range cfg.GetPriceProviders() {
-			input := c.FormValue(p.ProviderKey)
-			cfg.UpdateProviderToken(key, input, len(input) > 0)
+			token := c.FormValue(p.ProviderKey)
+			cfg.UpdatePriceProvider(key, token, len(token) > 0)
 		}
-		for key, t := range cfg.GetMarketTraders() {
-			input := c.FormValue(t.MarketKey)
-			cfg.UpdateMarketTraderToken(key, input)
+		for key, t := range cfg.GetMarketTraders(true) {
+			token := c.FormValue(t.MarketKey)
+			cfg.UpdateMarketTraderToken(key, token)
 		}
 		uncommon := c.FormValue("uncommon_pairs") != ""
 		cfg.SetUncommonPairs(uncommon)
+		c.Append("HX-Trigger", "reloadSettings")
 		slog.Info("Config updated")
 		return c.Render("toastOk", fiber.Map{
 			"Title": "Created",

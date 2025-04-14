@@ -37,7 +37,7 @@ func Run(cfg *config.Config, m *managing.Service, q *querying.Service) {
 	app.Get("/pairs/AvgBuyPrice/:id", avgBuyPrice(q.TradingPairQuerier))
 	app.Get("/pairs/:id/trades/export", tradingExport(q.TradingPairQuerier))
 	app.Get("/ui/pairs/:id/trades/table", tradingTable(q.TradingPairQuerier))
-	app.Get("/ui/pairs/:id/newTrade/form", newTradingForm(q.TradingPairQuerier))
+	app.Get("/ui/pairs/:id/newTrade/form", newTradeForm(q.TradingPairQuerier))
 	app.Get("/settings", settingsSection(cfg))
 	app.Get("/settings/anyMarket", marketsSetAPI(cfg))
 	// app.Get("/markets", marketsSection(cfg))
