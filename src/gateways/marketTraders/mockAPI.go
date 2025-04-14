@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type TradingPairID string
+type TradingPair string
 
 type Asset struct {
 	Symbol string
@@ -29,7 +29,7 @@ func (m *MockMarketAPI) Buy(options pnl.TradeOptions) (*pnl.Trade, error) {
 		price = *options.Price
 	}
 	return &pnl.Trade{
-		ID:          fmt.Sprintf("mock-trade-buy-%s", options.TradingPairID),
+		ID:          fmt.Sprintf("mock-trade-buy-%s", options.TradingPair),
 		Timestamp:   time.Time{},
 		BaseAmount:  options.Amount,
 		QuoteAmount: options.Amount * price,
@@ -49,7 +49,7 @@ func (m *MockMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 		price = *options.Price
 	}
 	return &pnl.Trade{
-		ID:          fmt.Sprintf("mock-trade-buy-%s", options.TradingPairID),
+		ID:          fmt.Sprintf("mock-trade-buy-%s", options.TradingPair),
 		Timestamp:   time.Time{},
 		BaseAmount:  options.Amount,
 		QuoteAmount: options.Amount * price,
@@ -60,7 +60,7 @@ func (m *MockMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 	}, nil
 }
 
-func (m *MockMarketAPI) ImportTrades(tradingPairID pnl.TradingPairID, since time.Time) ([]pnl.Trade, error) {
+func (m *MockMarketAPI) ImportTrades(tradingPair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
 	return []pnl.Trade{
 		{
 			ID:          "trade-001",
@@ -105,7 +105,14 @@ func (m *MockMarketAPI) ImportTrades(tradingPairID pnl.TradingPairID, since time
 	}, nil
 }
 
+func (m *MockMarketAPI) AccountDetails() (string, error) {
+	return "someeamil@domain.com", nil
+}
+
 func (m *MockMarketAPI) FetchAsset(symbol string) (float64, error) {
+	if symbol == "ETH" {
+		return 0, nil
+	}
 	return rand.Float64() * 100, nil
 }
 

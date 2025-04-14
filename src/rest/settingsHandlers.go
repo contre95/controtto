@@ -2,6 +2,7 @@ package rest
 
 import (
 	"controtto/src/app/config"
+	"fmt"
 	"log/slog"
 	"time"
 
@@ -15,6 +16,21 @@ func editSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
 			"Port":     cfg.Port,
 			"Uncommon": cfg.UncommonPairs,
 		})
+	}
+}
+
+func marketsSet(cfg *config.Config) bool {
+	for _, mkt := range cfg.GetMarketTraders() {
+		if mkt.IsSet {
+			return true
+		}
+	}
+	return false
+}
+
+func marketsSetAPI(cfg *config.Config) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		return c.SendString(fmt.Sprintf("%t", marketsSet(cfg)))
 	}
 }
 

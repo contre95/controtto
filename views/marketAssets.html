@@ -1,10 +1,7 @@
 <section class="p-6 bg-white dark:bg-neutral-800 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm animate__animated animate__fadeInUp">
-  <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-    Market Trading – {{ .Pair.BaseAsset.Symbol }}/{{ .Pair.QuoteAsset.Symbol }}
-  </h2>
-
   <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
     {{ range $marketName, $trader := .MarketTraders }}
+    {{  if $trader.IsSet }}
     <div class="p-4 bg-neutral-50 dark:bg-neutral-900  hover:shadow-md transition-shadow">
       <div class="flex items-center gap-3 mb-3">
         <img src="{{ $trader.MarketLogo }}" alt="{{ $marketName }}" class="w-8 h-8 ">
@@ -26,18 +23,26 @@
       <div class="space-y-2 text-sm">
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
           <span>{{ $.Pair.BaseAsset.Symbol }} Balance</span>
-          <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">
-            {{ index $.MarketData $marketName 0 | printf "%.4f" }}
+          <div class="ml-auto text-right">
+          (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">$ <span hx-swap="outterHTML" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ index $.MarketData $marketName 0 | printf "%.4f" }}" hx-trigger="load"> {{ index $.MarketData $marketName 0 | printf "%.4f" }}</span></span>)
+            <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">{{ index $.MarketData $marketName 0 | printf "%.4f" }}</span>
+        </div>
+        </div>
+        <div class="flex justify-between text-gray-600 dark:text-gray-400">
+          <span>USDT Balance</span>
+          <span class="font-medium" style="color:#009292">
+            {{ index $.MarketData $marketName 1 | printf "%.4f" }}
           </span>
         </div>
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>{{ $.Pair.QuoteAsset.Symbol }} Balance</span>
-          <span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">
-            {{ index $.MarketData $marketName 1 | printf "%.4f" }}
+          <span>USDC Balance</span>
+          <span class="font-medium" style="color:#576B83">
+            {{ index $.MarketData $marketName 2 | printf "%.4f" }}
           </span>
         </div>
       </div>
     </div>
+    {{ end }}
     {{ end }}
   </div>
 </section>

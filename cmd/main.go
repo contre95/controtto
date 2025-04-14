@@ -28,7 +28,7 @@ func main() {
 
 	ac := managing.NewAssetCreator(sqliteDB)
 	tpc := managing.NewTradingPairManager(cfg, sqliteDB, sqliteDB)
-	mtm := managing.NewMarketTradeManager(cfg.GetMarketTraders())
+	mtm := managing.NewMarketTradeManager(cfg.GetMarketTraders(), sqliteDB)
 	manager := managing.NewService(*ac, *tpc, *mtm)
 	aq := querying.NewAssetQuerier(sqliteDB)
 	mkq := querying.NewPriceQuerier(cfg.GetPriceProviders())
