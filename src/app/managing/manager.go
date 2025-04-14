@@ -4,10 +4,10 @@ package managing
 type Service struct {
 	AssetCreator       AssetsCreator
 	TradingPairManager TradingPairsManager
-	MarketTradeManager MarketTradeManager
+	MarketManager      MarketManager
 }
 
 // NewService is the interctor for all Managing Use cases
-func NewService(ac AssetsCreator, tpc TradingPairsManager, mtm MarketTradeManager) Service {
+func NewService(ac AssetsCreator, tpc TradingPairsManager, mtm MarketManager) Service {
 	return Service{ac, tpc, mtm}
 }

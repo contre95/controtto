@@ -53,12 +53,12 @@ type CreateTradingPairReq struct {
 }
 
 type TradingPairsManager struct {
-	config       *config.Config
+	config       *config.ConfigManager
 	assets       pnl.Assets
 	tradingPairs pnl.TradingPairs
 }
 
-func NewTradingPairManager(cfg *config.Config, a pnl.Assets, tp pnl.TradingPairs) *TradingPairsManager {
+func NewTradingPairManager(cfg *config.ConfigManager, a pnl.Assets, tp pnl.TradingPairs) *TradingPairsManager {
 	return &TradingPairsManager{cfg, a, tp}
 }
 

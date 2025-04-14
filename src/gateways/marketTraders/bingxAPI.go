@@ -117,8 +117,7 @@ func (b *BingxMarketAPI) FetchAssetAmount(symbol string) (float64, error) {
 			return amt, nil
 		}
 	}
-	fmt.Println("Not found")
-	return 30, nil
+	return 0, errors.New("asset not found")
 }
 
 // Unimplemented methods for now

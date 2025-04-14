@@ -1,145 +1,116 @@
+// application/market_manager.go
 package managing
 
 import (
 	"controtto/src/app/config"
 	"controtto/src/domain/pnl"
-	"fmt"
-	"log/slog"
+	"errors"
 	"time"
 )
 
-// Market Trading Requests and Responses
-type MarketBuyReq struct {
-	TraderKey     string // Key to identify the MarketTrader
-	TradingPairID string
-	Amount        float64
-	Price         *float64 // nil for market orders
+var (
+	ErrTraderNotFound      = errors.New("market trader not found")
+	ErrTraderNotConfigured = errors.New("market trader not configured")
+	ErrInvalidTrade        = errors.New("invalid trade parameters")
+	ErrMarketNotHealthy    = errors.New("market API not healthy")
+)
+
+// MarketManager handles all market operations
+type MarketManager struct {
+	cfg *config.ConfigManager // Source of truth for trader configurations
 }
 
-type MarketBuyResp struct {
-	TradeID string
-	Msg     string
+func NewMarketManager(cfg *config.ConfigManager) *MarketManager {
+	return &MarketManager{cfg: cfg}
 }
 
-type MarketSellReq struct {
-	TraderKey     string // Key to identify the MarketTrader
-	TradingPairID string
-	Amount        float64
-	Price         *float64 // nil for market orders
-}
-
-type MarketSellResp struct {
-	TradeID string
-	Msg     string
-}
-
-type ImportTradesReq struct {
-	TraderKey     string // Key to identify the MarketTrader
-	TradingPairID string
-	Since         time.Time
-}
-
-type ImportTradesResp struct {
-	Count int
-	Msg   string
-}
-
-type FetchAssetsReq struct {
-	TraderKey string // Key to identify the MarketTrader
-}
-
-type MarketTradeManager struct {
-	cfg   *config.Config
-	pairs pnl.TradingPairs
-}
-
-func NewMarketTradeManager(cfg *config.Config, tp pnl.TradingPairs) *MarketTradeManager {
-	return &MarketTradeManager{
-		cfg:   cfg,
-		pairs: tp,
+// getTrader gets a fresh trader instance directly from config
+func (m *MarketManager) getTrader(key string) (*pnl.MarketTrader, error) {
+	traders := m.cfg.GetMarketTraders(true) // true = only return configured traders
+	for k, trader := range traders {
+		if k == key {
+			if !trader.IsSet {
+				return nil, ErrTraderNotConfigured
+			}
+			return &trader, nil
+		}
 	}
+	return nil, ErrTraderNotFound
 }
 
-func (mtm *MarketTradeManager) MarketBuy(req MarketBuyReq) (*MarketBuyResp, error) {
-	trader, exists := mtm.cfg.GetMarketTraders(false)[req.TraderKey]
-	if !exists {
-		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
+// ListTraders returns all configured traders
+func (m *MarketManager) ListTraders(all bool) pnl.MarketTraders {
+	return m.cfg.GetMarketTraders(all) // true = only return configured traders
+}
+
+// ExecuteBuy executes a buy order
+func (m *MarketManager) ExecuteBuy(marketKey string, options pnl.TradeOptions) (*pnl.Trade, error) {
+	if options.Amount <= 0 {
+		return nil, ErrInvalidTrade
 	}
-	tp, err := mtm.pairs.GetTradingPair(req.TradingPairID)
+
+	trader, err := m.getTrader(marketKey)
 	if err != nil {
-		slog.Error("Error getting TradingPair", "error", err)
-		return nil, fmt.Errorf("failed to execute buy: %w", err)
-	}
-	options := pnl.TradeOptions{
-		TradingPair:   *tp,
-		Amount:        req.Amount,
-		Price:         req.Price,
-		IsMarketOrder: req.Price == nil,
+		return nil, err
 	}
 
-	trade, err := trader.MarketAPI.Buy(options)
-	if err != nil {
-		slog.Error("Error executing market buy", "error", err)
-		return nil, fmt.Errorf("failed to execute buy: %w", err)
+	if !trader.MarketAPI.HealthCheck() {
+		return nil, ErrMarketNotHealthy
 	}
 
-	return &MarketBuyResp{
-		TradeID: trade.ID,
-		Msg:     "Market buy executed successfully",
-	}, nil
+	return trader.MarketAPI.Buy(options)
 }
 
-func (mtm *MarketTradeManager) MarketSell(req MarketSellReq) (*MarketSellResp, error) {
-	trader, exists := mtm.cfg.GetMarketTraders(false)[req.TraderKey]
-	if !exists {
-		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
-	}
-	tp, err := mtm.pairs.GetTradingPair(req.TradingPairID)
-	if err != nil {
-		slog.
-			Error("Error getting TradingPair", "error", err)
-		return nil, fmt.Errorf("failed to execute buy: %w", err)
-	}
-	options := pnl.TradeOptions{
-		TradingPair:   *tp,
-		Amount:        req.Amount,
-		Price:         req.Price,
-		IsMarketOrder: req.Price == nil,
+// ExecuteSell executes a sell order
+func (m *MarketManager) ExecuteSell(marketKey string, options pnl.TradeOptions) (*pnl.Trade, error) {
+	if options.Amount <= 0 {
+		return nil, ErrInvalidTrade
 	}
 
-	trade, err := trader.MarketAPI.Sell(options)
+	trader, err := m.getTrader(marketKey)
 	if err != nil {
-		slog.Error("Error executing market sell", "error", err)
-		return nil, fmt.Errorf("failed to execute sell: %w", err)
+		return nil, err
 	}
 
-	return &MarketSellResp{
-		TradeID: trade.ID,
-		Msg:     "Market sell executed successfully",
-	}, nil
+	if !trader.MarketAPI.HealthCheck() {
+		return nil, ErrMarketNotHealthy
+	}
+
+	return trader.MarketAPI.Sell(options)
 }
 
-func (mtm *MarketTradeManager) ImportTrades(req ImportTradesReq) (*ImportTradesResp, error) {
-	trader, exists := mtm.cfg.GetMarketTraders(false)[req.TraderKey]
-	if !exists {
-		return nil, fmt.Errorf("trader with key %s not found", req.TraderKey)
-	}
-	tp, err := mtm.pairs.GetTradingPair(req.TradingPairID)
+// FetchBalance gets asset balance from a market
+func (m *MarketManager) FetchBalance(marketKey, symbol string) (float64, error) {
+	trader, err := m.getTrader(marketKey)
 	if err != nil {
-		slog.Error("Error getting TradingPair", "error", err)
-		return nil, fmt.Errorf("failed to execute buy: %w", err)
+		return 0, err
 	}
-	trades, err := trader.MarketAPI.ImportTrades(
-		*tp,
-		req.Since,
-	)
-	if err != nil {
-		slog.Error("Error importing trades", "error", err)
-		return nil, fmt.Errorf("failed to import trades: %w", err)
-	}
+	return trader.MarketAPI.FetchAssetAmount(symbol)
+}
 
-	return &ImportTradesResp{
-		Count: len(trades),
-		Msg:   fmt.Sprintf("Successfully imported %d trades", len(trades)),
-	}, nil
+// ImportTrades imports historical trades
+func (m *MarketManager) ImportTrades(marketKey string, pair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
+	trader, err := m.getTrader(marketKey)
+	if err != nil {
+		return nil, err
+	}
+	return trader.MarketAPI.ImportTrades(pair, since)
+}
+
+// CheckHealth verifies market connection
+func (m *MarketManager) CheckHealth(marketKey string) (bool, error) {
+	trader, err := m.getTrader(marketKey)
+	if err != nil {
+		return false, err
+	}
+	return trader.MarketAPI.HealthCheck(), nil
+}
+
+// GetAccountDetails fetches account information
+func (m *MarketManager) GetAccountDetails(marketKey string) (string, error) {
+	trader, err := m.getTrader(marketKey)
+	if err != nil {
+		return "", err
+	}
+	return trader.MarketAPI.AccountDetails()
 }

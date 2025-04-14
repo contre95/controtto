@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func marketsSet(cfg *config.Config) bool {
+func marketsSet(cfg *config.ConfigManager) bool {
 	for _, mkt := range cfg.GetMarketTraders(true) {
 		if mkt.IsSet {
 			return true
@@ -17,13 +17,13 @@ func marketsSet(cfg *config.Config) bool {
 	return false
 }
 
-func marketsSetAPI(cfg *config.Config) func(*fiber.Ctx) error {
+func marketsSetAPI(cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		return c.SendString(fmt.Sprintf("%t", marketsSet(cfg)))
 	}
 }
 
-func saveSettingsForm(cfg *config.Config) func(*fiber.Ctx) error {
+func saveSettingsForm(cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		for key, p := range cfg.GetPriceProviders() {
 			token := c.FormValue(p.ProviderKey)

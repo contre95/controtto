@@ -25,17 +25,17 @@ func main() {
 
 	// Load configuration
 	cfg := config.Load()
-
 	ac := managing.NewAssetCreator(sqliteDB)
 	tpc := managing.NewTradingPairManager(cfg, sqliteDB, sqliteDB)
-	mtm := managing.NewMarketTradeManager(cfg, sqliteDB)
+	mtm := managing.NewMarketManager(cfg)
+	mkq := querying.NewPriceQuerier(cfg)
+	tpq := querying.NewTradingPairQuerier(cfg, sqliteDB)
 	manager := managing.NewService(*ac, *tpc, *mtm)
 	aq := querying.NewAssetQuerier(sqliteDB)
-	mkq := querying.NewPriceQuerier(cfg)
-	tpq := querying.NewTradingPairQuerier(sqliteDB, cfg)
+	config := config.NewService(cfg)
 	querier := querying.NewService(*aq, *mkq, *tpq)
 
 	port := cfg.Port
 	slog.Info("Initiating server", "port", port)
-	rest.Run(cfg, &manager, &querier)
+	rest.Run(&config, &manager, &querier, port)
 }

@@ -10,11 +10,11 @@ import (
 
 type TradingPairsQuerier struct {
 	tradingPairs pnl.TradingPairs
-	cfg          *config.Config
+	cfg          *config.ConfigManager
 }
 
 // NewTradingPairQuerier returns a new intereactor with all the Trading Pair related use cases.
-func NewTradingPairQuerier(a pnl.TradingPairs, cfg *config.Config) *TradingPairsQuerier {
+func NewTradingPairQuerier(cfg *config.ConfigManager, a pnl.TradingPairs) *TradingPairsQuerier {
 	return &TradingPairsQuerier{a, cfg}
 }
 

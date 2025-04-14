@@ -18,10 +18,10 @@ type QueryPriceResp struct {
 }
 
 type PriceQuerier struct {
-	config *config.Config
+	config *config.ConfigManager
 }
 
-func NewPriceQuerier(cfg *config.Config) *PriceQuerier {
+func NewPriceQuerier(cfg *config.ConfigManager) *PriceQuerier {
 	return &PriceQuerier{cfg}
 }
 

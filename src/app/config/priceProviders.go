@@ -10,19 +10,19 @@ import (
 	"strings"
 )
 
-func (c *Config) GetPriceProviders() map[string]pnl.PriceProvider {
+func (c *ConfigManager) GetPriceProviders() map[string]pnl.PriceProvider {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	// Return a copy to prevent external modification
-	providers := make(map[string]pnl.PriceProvider, len(c.PriceProviders))
-	maps.Copy(providers, c.PriceProviders)
+	providers := make(map[string]pnl.PriceProvider, len(c.priceProviders))
+	maps.Copy(providers, c.priceProviders)
 	return providers
 }
 
-func (c *Config) UpdatePriceProvider(key, token string, toggle bool) error {
+func (c *ConfigManager) UpdatePriceProvider(key, token string, toggle bool) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	provider, ok := c.PriceProviders[key]
+	provider, ok := c.priceProviders[key]
 	if !ok {
 		return fmt.Errorf("price provider %q not found", key)
 	}
@@ -45,7 +45,7 @@ func (c *Config) UpdatePriceProvider(key, token string, toggle bool) error {
 	case "bingx":
 		provider.PriceAPI = priceProviders.NewBinanceAPI()
 	}
-	c.PriceProviders[key] = provider
+	c.priceProviders[key] = provider
 	return nil
 }
 

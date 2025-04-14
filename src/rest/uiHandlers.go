@@ -56,7 +56,7 @@ func tradesSection(c *fiber.Ctx) error {
 	})
 }
 
-func pairSection(cfg *config.Config) func(*fiber.Ctx) error {
+func pairSection(cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Pair Section")
 		if c.Get("HX-Request") != "true" {
@@ -87,7 +87,7 @@ func pairSection(cfg *config.Config) func(*fiber.Ctx) error {
 // 	}
 // }
 
-func settingsSection(cfg *config.Config) func(*fiber.Ctx) error {
+func settingsSection(cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		if c.Get("HX-Request") != "true" {
 			return c.Render("main", fiber.Map{

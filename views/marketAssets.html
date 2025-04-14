@@ -1,10 +1,18 @@
 <section class="p-6 bg-white dark:bg-neutral-800 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm animate__animated animate__fadeInUp">
   <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
     {{ range $marketName, $trader := .MarketTraders }}
-    {{  if $trader.IsSet }}
-    <div class="p-4 bg-neutral-50 dark:bg-neutral-900  hover:shadow-md transition-shadow">
+    {{ if $trader.IsSet }}
+    <div class="p-4 bg-neutral-50 dark:bg-neutral-900 hover:shadow-md transition-shadow relative">
+      {{ with index $.MarketData $marketName }}
+        {{ if .HasError }}
+          <div class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" title="{{ .ErrorMessage }}">
+          Error
+        </div>
+        {{ end }}
+      {{ end }}
+
       <div class="flex items-center gap-3 mb-3">
-        <img src="{{ $trader.MarketLogo }}" alt="{{ $marketName }}" class="w-8 h-8 ">
+        <img src="{{ $trader.MarketLogo }}" alt="{{ $marketName }}" class="w-8 h-8">
         <span class="text-base font-semibold text-gray-700 dark:text-gray-100">{{ $trader.MarketName }}</span>
         <span class="px-2 py-1 text-xs rounded-md 
             {{ if eq $trader.Type "Exchange" }}
@@ -16,28 +24,35 @@
             {{ else }}
               text-gray-600 dark:text-gray-400 bg-gray-100/60 dark:bg-gray-900/30
             {{ end }}">
-            {{ $trader.Type }}
-          </span>
+          {{ $trader.Type }}
+        </span>
       </div>
 
       <div class="space-y-2 text-sm">
+        {{ $info := index $.MarketData $marketName }}
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
           <span>{{ $.Pair.BaseAsset.Symbol }} Balance</span>
           <div class="ml-auto text-right">
-          (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">$ <span hx-swap="outterHTML" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ index $.MarketData $marketName 0 | printf "%.4f" }}" hx-trigger="load"> {{ index $.MarketData $marketName 0 | printf "%.4f" }}</span></span>)
-            <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">{{ index $.MarketData $marketName 0 | printf "%.4f" }}</span>
-        </div>
+            (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">
+              $ <span hx-swap="outerHTML" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ printf "%.4f" $info.Amounts 0 }}" hx-trigger="load">
+                {{ printf "%.4f" (index $info.Amounts 0) }}
+              </span>
+            </span>)
+            <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">
+              {{ printf "%.4f" (index $info.Amounts 0) }}
+            </span>
+          </div>
         </div>
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
           <span>USDT Balance</span>
           <span class="font-medium" style="color:#009292">
-            {{ index $.MarketData $marketName 1 | printf "%.4f" }}
+            {{ printf "%.4f" (index $info.Amounts 1) }}
           </span>
         </div>
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
           <span>USDC Balance</span>
           <span class="font-medium" style="color:#576B83">
-            {{ index $.MarketData $marketName 2 | printf "%.4f" }}
+            {{ printf "%.4f" (index $info.Amounts 2) }}
           </span>
         </div>
       </div>
@@ -48,9 +63,8 @@
 </section>
 
 <script>
-  // Initialize custom select if needed
   document.addEventListener('DOMContentLoaded', function() {
-    // You can initialize your DynamicSelect here if needed
-    // new DynamicSelect("#market", { ... });
+    // Initialize any JS here
   });
 </script>
+
