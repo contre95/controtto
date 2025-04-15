@@ -2,7 +2,10 @@
     {{ if not .MarketTraders }}
     <div class="text-center text-gray-500 dark:text-gray-400 py-12">
       <p class="text-lg font-medium">No providers configured</p>
-      <p class="text-sm mt-2">Please set up at least one market provider to view your balances.</p>
+      <p class="text-sm mt-2">
+      Please set up at least one market provider to view your balances. 
+      <a class="text-blue-400" href="/settings">/settings</a>
+    </p>
     </div>
   {{ else }}
   <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
