@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
@@ -23,7 +22,7 @@ type BingxMarketAPI struct {
 
 const HOST = "https://open-api.bingx.com"
 
-func NewBingXAPI(token string) *BingxMarketAPI {
+func NewBingXAPI(token string) pnl.MarketAPI {
 	if len(strings.Split(token, ":")) >= 2 {
 		return &BingxMarketAPI{
 			ApiKey:    strings.Split(token, ":")[0],
@@ -59,65 +58,66 @@ func computeHmac256(strMessage string, strSecret string) string {
 }
 
 func (b *BingxMarketAPI) FetchAssetAmount(symbol string) (float64, error) {
-	uri := "/openApi/spot/v1/account/balance"
-	method := "GET"
-	timestamp := time.Now().UnixNano() / 1e6
-
-	payload := map[string]string{
-		"recvWindow": "60000",
-	}
-
-	paramStr := b.getParameters(payload, false, timestamp)
-	sign := computeHmac256(paramStr, b.ApiSecret)
-	urlParams := b.getParameters(payload, true, timestamp) + "&signature=" + sign
-	fullURL := fmt.Sprintf("%s%s?%s", HOST, uri, urlParams)
-
-	req, err := http.NewRequest(method, fullURL, nil)
-	if err != nil {
-		return 0, err
-	}
-	req.Header.Set("X-BX-APIKEY", b.ApiKey)
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return 0, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-		return 0, err
-	}
-	var res struct {
-		Code     int    `json:"code"`
-		Msg      string `json:"msg"`
-		DebugMsg string `json:"debugMsg"`
-		Data     struct {
-			Balances []struct {
-				Asset  string `json:"asset"`
-				Free   string `json:"free"`
-				Locked string `json:"locked"`
-			} `json:"balances"`
-		} `json:"data"`
-	}
-	if err := json.Unmarshal(body, &res); err != nil {
-		slog.Error("BingxAPI: Error unmarshalling response", "error", err)
-		return 0, err
-	}
-	if res.Code != 0 {
-		slog.Error("BingxAPI: Error in response", "code", res.Code, "msg", res.Msg, "debugMsg", res.DebugMsg)
-		return 0, errors.New("bingx error: " + res.Msg)
-	}
-
-	for _, asset := range res.Data.Balances {
-		if strings.EqualFold(asset.Asset, symbol) {
-			var amt float64
-			fmt.Sscanf(asset.Free, "%f", &amt)
-			return amt, nil
-		}
-	}
-	return 0, errors.New("asset not found")
+	// uri := "/openApi/spot/v1/account/balance"
+	// method := "GET"
+	// timestamp := time.Now().UnixNano() / 1e6
+	//
+	// payload := map[string]string{
+	// 	"recvWindow": "60000",
+	// }
+	//
+	// paramStr := b.getParameters(payload, false, timestamp)
+	// sign := computeHmac256(paramStr, b.ApiSecret)
+	// urlParams := b.getParameters(payload, true, timestamp) + "&signature=" + sign
+	// fullURL := fmt.Sprintf("%s%s?%s", HOST, uri, urlParams)
+	//
+	// req, err := http.NewRequest(method, fullURL, nil)
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// req.Header.Set("X-BX-APIKEY", b.ApiKey)
+	//
+	// resp, err := http.DefaultClient.Do(req)
+	// if err != nil {
+	// 	return 0, err
+	// }
+	// defer resp.Body.Close()
+	//
+	// body, err := io.ReadAll(resp.Body)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return 0, err
+	// }
+	// var res struct {
+	// 	Code     int    `json:"code"`
+	// 	Msg      string `json:"msg"`
+	// 	DebugMsg string `json:"debugMsg"`
+	// 	Data     struct {
+	// 		Balances []struct {
+	// 			Asset  string `json:"asset"`
+	// 			Free   string `json:"free"`
+	// 			Locked string `json:"locked"`
+	// 		} `json:"balances"`
+	// 	} `json:"data"`
+	// }
+	// if err := json.Unmarshal(body, &res); err != nil {
+	// 	slog.Error("BingxAPI: Error unmarshalling response", "error", err)
+	// 	return 0, err
+	// }
+	// if res.Code != 0 {
+	// 	slog.Error("BingxAPI: Error in response", "code", res.Code, "msg", res.Msg, "debugMsg", res.DebugMsg)
+	// 	return 0, errors.New("bingx error: " + res.Msg)
+	// }
+	//
+	// for _, asset := range res.Data.Balances {
+	// 	if strings.EqualFold(asset.Asset, symbol) {
+	// 		var amt float64
+	// 		fmt.Sscanf(asset.Free, "%f", &amt)
+	// 		return amt, nil
+	// 	}
+	// }
+	// return 0, errors.New("asset not found")
+	return 0, nil
 }
 
 // Unimplemented methods for now

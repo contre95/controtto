@@ -1,6 +1,7 @@
 package priceProviders
 
 import (
+	"controtto/src/domain/pnl"
 	"encoding/json"
 	"fmt"
 	"log/slog"
@@ -30,7 +31,7 @@ type AVantageAPI struct {
 }
 
 // NewAVantageAPI creates a new instance of AVantageAPI
-func NewAVantageAPI(token string) *AVantageAPI {
+func NewAVantageAPI(token string) pnl.PriceAPI {
 	return &AVantageAPI{
 		BaseURL: "https://www.alphavantage.co/query",
 		token:   token,

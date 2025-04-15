@@ -10,6 +10,15 @@ import (
 	"os"
 )
 
+const (
+	PREFIX              = "CONTROTTO_"
+	TRADER_PREFIX       = "CONTROTTO_TRADER_"
+	PRICER_PREFIX       = "CONTROTTO_PRICER_"
+	TRADER_SUFIX        = "_TOKEN"
+	PRIVATE_PRICE_SUFIX = "_TOKEN"
+	PUBLIC_PRICE_SUFIX  = "_ENABLED"
+)
+
 func main() {
 	// Database
 	dbPath := "pnl.db"
@@ -24,16 +33,16 @@ func main() {
 	}
 
 	// Load configuration
-	cfg := config.Load()
+	cfg := config.NewConfig(PREFIX)
 	ac := managing.NewAssetCreator(sqliteDB)
 	tpc := managing.NewTradingPairManager(cfg, sqliteDB, sqliteDB)
-	mtm := managing.NewMarketManager(cfg)
-	mkq := querying.NewPriceQuerier(cfg)
-	tpq := querying.NewTradingPairQuerier(cfg, sqliteDB)
-	manager := managing.NewService(*ac, *tpc, *mtm)
+	tpq := querying.NewTradingPairQuerier(sqliteDB)
+	mtm := managing.NewMarketManager(traders)
+	ppm := querying.NewPriceProviderManager(pricers)
+	manager := managing.NewService(*ac, *tpc, mtm)
 	aq := querying.NewAssetQuerier(sqliteDB)
 	config := config.NewService(cfg)
-	querier := querying.NewService(*aq, *mkq, *tpq)
+	querier := querying.NewService(*aq, *tpq, ppm)
 
 	port := cfg.Port
 	slog.Info("Initiating server", "port", port)

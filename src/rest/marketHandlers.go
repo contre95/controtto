@@ -1,111 +1,101 @@
 package rest
 
 import (
-	"controtto/src/app/config"
+	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"fmt"
 	"log/slog"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func getMarketAssets(cfg *config.ConfigManager, tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func getMarketAssets(tpq querying.TradingPairsQuerier, marketManager *managing.MarketManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		traders := cfg.GetMarketTraders(false)
-		slog.Info("Create Trade UI requested")
+		slog.Info("Market assets request received")
+
+		// Get trading pair details
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:                 id,
-			WithCurrentBasePrice: true,
-			WithTrades:           false,
-			WithCalculations:     false,
+			TPID:             id,
+			WithTrades:       false,
+			WithCalculations: false,
 		}
+
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
+			slog.Error("Failed to get trading pair",
+				"error", err,
+				"pairID", id,
+			)
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
-				"Msg":   err,
+				"Msg":   fmt.Sprintf("Failed to load trading pair: %v", err),
 			})
 		}
 
-		// Changed to a struct that includes both amounts and error status
-		type MarketInfo struct {
-			Amounts      [3]float64
+		// Get configured market traders
+		marketTraders := marketManager.ListTraders(false) // false = only configured traders
+
+		// Prepare market data (mock data - replace with actual implementation)
+		marketData := make(map[string]struct {
 			HasError     bool
 			ErrorMessage string
-		}
+			Amounts      [3]float64 // [base, USDT, USDC]
+		})
 
-		marketData := make(map[string]MarketInfo)
-		baseSymbol := resp.Pair.BaseAsset.Symbol
-
-		for name, m := range traders {
-			var amounts [3]float64
-			var hasError bool
-			var errMsg string
-
-			baseAmount, err := m.MarketAPI.FetchAssetAmount(baseSymbol)
-			if err != nil {
-				hasError = true
-				errMsg += err.Error() + " "
-				slog.Warn("failed to fetch base asset", "market", name, "error", err)
-			} else {
-				amounts[0] = baseAmount
-			}
-
-			usdtAmount, err := m.MarketAPI.FetchAssetAmount("USDT")
-			if err != nil {
-				hasError = true
-				errMsg += err.Error() + " "
-				slog.Warn("failed to fetch USDT", "market", name, "error", err)
-			} else {
-				amounts[1] = usdtAmount
-			}
-
-			usdcAmount, err := m.MarketAPI.FetchAssetAmount("USDC")
-			if err != nil {
-				hasError = true
-				errMsg += err.Error() + " "
-				slog.Warn("failed to fetch USDC", "market", name, "error", err)
-			} else {
-				amounts[2] = usdcAmount
-			}
-
-			marketData[name] = MarketInfo{
-				Amounts:      amounts,
-				HasError:     hasError,
-				ErrorMessage: errMsg,
+		for marketName := range marketTraders {
+			// TODO: Replace with actual market data fetching logic
+			marketData[marketName] = struct {
+				HasError     bool
+				ErrorMessage string
+				Amounts      [3]float64
+			}{
+				HasError:     false,
+				ErrorMessage: "",
+				Amounts:      [3]float64{1.2345, 100.00, 50.00}, // Example values
 			}
 		}
 
 		return c.Render("marketAssets", fiber.Map{
 			"Pair":          resp.Pair,
-			"Today":         time.Now().Format("2006-01-02"),
-			"MarketTraders": traders,
+			"MarketTraders": marketTraders,
 			"MarketData":    marketData,
 		})
 	}
 }
-func newMarketTradingForm(cfg *config.ConfigManager, tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+
+func newMarketTradingForm(tpq querying.TradingPairsQuerier, marketManager *managing.MarketManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		slog.Info("Create Trade UI requested")
+		slog.Info("Create Market Trading UI requested")
+
+		// Get trading pair details
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:                 id,
-			WithCurrentBasePrice: true,
-			WithTrades:           false,
-			WithCalculations:     false,
+			TPID:             id,
+			WithTrades:       false,
+			WithCalculations: false,
 		}
+
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
+			slog.Error("Failed to get trading pair",
+				"error", err,
+				"pairID", id,
+			)
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
-				"Msg":   err,
+				"Msg":   fmt.Sprintf("Failed to load trading pair: %v", err),
 			})
 		}
+
+		// Get all market traders (including unconfigured ones)
+		marketTraders := marketManager.ListTraders(true) // true = show all traders
+
 		return c.Render("marketTradingForm", fiber.Map{
 			"Pair":          resp.Pair,
 			"Today":         time.Now().Format("2006-01-02"),
-			"MarketTraders": cfg.GetMarketTraders(true),
+			"MarketTraders": marketTraders,
 		})
 	}
 }

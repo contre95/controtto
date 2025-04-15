@@ -21,7 +21,8 @@ type MarketTrader struct {
 	Token       string
 	ProviderURL string
 	Env         string
-	MarketAPI   MarketAPI
+	Init        func(string) MarketAPI
+	API         MarketAPI
 }
 
 type MarketTraders map[string]MarketTrader

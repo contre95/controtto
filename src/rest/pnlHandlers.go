@@ -3,6 +3,7 @@ package rest
 import (
 	"controtto/src/app/querying"
 	"fmt"
+	"log/slog"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,69 +11,130 @@ import (
 
 func avgBuyPrice(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		// Implementation would go here
 		return nil
 	}
 }
 
-func checkPrice(mq querying.PriceQuerier) func(*fiber.Ctx) error {
+func checkPrice(priceProviderManager *querying.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		base := c.Query("base")
 		quote := c.Query("quote")
-		req := querying.QueryPriceReq{
-			AssetSymbolA: base,
-			AssetSymbolB: quote,
+		fmt.Println(quote)
+		fmt.Println(base)
+
+		if base == "" || quote == "" {
+			return c.Status(fiber.StatusBadRequest).SendString("Both base and quote parameters are required")
 		}
-		resp, err := mq.GetPrice(req)
-		if err != nil {
-			return c.SendString(err.Error())
+
+		// Try all configured providers until we get a price
+		var price float64
+		var lastError error
+		providers := priceProviderManager.ListProviders(false) // false = only configured providers
+
+		for providerKey := range providers {
+			req := querying.QueryPriceReq{
+				AssetSymbolA: base,
+				AssetSymbolB: quote,
+			}
+			resp, err := priceProviderManager.QueryPrice(req)
+			if err == nil {
+				price = resp.Price
+				break
+			}
+			lastError = err
+			slog.Warn("Failed to get price from provider",
+				"provider", providerKey,
+				"error", err,
+				"pair", fmt.Sprintf("%s/%s", base, quote),
+			)
 		}
-		return c.SendString(fmt.Sprintf("%f", resp.Price))
+
+		if price == 0 && lastError != nil {
+			return c.Status(fiber.StatusServiceUnavailable).SendString(lastError.Error())
+		}
+
+		return c.SendString(fmt.Sprintf("%f", price))
 	}
 }
-func calculatePrice(mq querying.PriceQuerier) func(*fiber.Ctx) error {
+
+func calculatePrice(priceProviderManager *querying.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		base := c.Query("base")
 		quote := c.Query("quote")
 		amountStr := c.Query("amount")
 
+		if base == "" || quote == "" {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"code":     1,
+				"msg":      "Both base and quote parameters are required",
+				"debugMsg": "",
+				"data":     nil,
+			})
+		}
+
 		amount, err := strconv.ParseFloat(amountStr, 64)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":     1,
+				"code":     2,
 				"msg":      "Invalid amount",
 				"debugMsg": err.Error(),
 				"data":     nil,
 			})
 		}
 
-		req := querying.QueryPriceReq{
-			AssetSymbolA: base,
-			AssetSymbolB: quote,
+		// Try all configured providers until we get a price
+		var price float64
+		var lastError error
+		providers := priceProviderManager.ListProviders(false) // false = only configured providers
+
+		for providerKey := range providers {
+			req := querying.QueryPriceReq{
+				AssetSymbolA: base,
+				AssetSymbolB: quote,
+			}
+			resp, err := priceProviderManager.QueryPrice(req)
+			if err == nil {
+				price = resp.Price
+				break
+			}
+			lastError = err
+			slog.Warn("Failed to get price from provider",
+				"provider", providerKey,
+				"error", err,
+				"pair", fmt.Sprintf("%s/%s", base, quote),
+			)
 		}
-		resp, err := mq.GetPrice(req)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"code":     2,
-				"msg":      "Failed to fetch price",
-				"debugMsg": err.Error(),
+
+		if price == 0 {
+			if lastError != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"code":     3,
+					"msg":      "Failed to fetch price from any provider",
+					"debugMsg": lastError.Error(),
+					"data":     nil,
+				})
+			}
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"code":     4,
+				"msg":      "No price providers available",
+				"debugMsg": "",
 				"data":     nil,
 			})
 		}
 
-		totalPrice := resp.Price * amount
-		return c.SendString(fmt.Sprintf("%.2f", totalPrice))
-
-		// return c.JSON(fiber.Map{
-		// 	"code":     0,
-		// 	"msg":      "Success",
-		// 	"debugMsg": "",
-		// 	"data": fiber.Map{
-		// 		"base":       base,
-		// 		"quote":      quote,
-		// 		"amount":     amount,
-		// 		"price":      resp.Price,
-		// 		"totalPrice": totalPrice,
-		// 	},
-		// })
+		totalPrice := price * amount
+		return c.JSON(fiber.Map{
+			"code":     0,
+			"msg":      "Success",
+			"debugMsg": "",
+			"data": fiber.Map{
+				"base":       base,
+				"quote":      quote,
+				"amount":     amount,
+				"price":      price,
+				"totalPrice": totalPrice,
+			},
+		})
 	}
 }

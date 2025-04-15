@@ -1,42 +1,35 @@
 package config
 
 import (
-	"controtto/src/domain/pnl"
 	"os"
+	"strings"
 	"sync"
 )
 
 const (
-	PORT                = "CONTROTTO_PORT"
-	UNCOMMON_PAIRS      = "CONTROTTO_UNCOMMON_PAIRS"
-	PREFIX              = "CONTROTTO_"
-	TRADER_SUFIX        = "_TRADER_TOKEN"
-	PRIVATE_PRICE_SUFIX = "_PRICER_TOKEN"
-	PUBLIC_PRICE_SUFIX  = "_PRICER_ENABLED"
+	PORT           = "PORT"
+	DEFAULT_PORT   = "8000"
+	UNCOMMON_PAIRS = "UNCOMMON_PAIRS"
 )
 
 type ConfigManager struct {
-	mu sync.RWMutex
-
-	Port           string
-	uncommonPairs  bool
-	priceProviders map[string]pnl.PriceProvider
-	marketTraders  map[string]pnl.MarketTrader
+	prefix        string
+	mu            sync.RWMutex
+	Port          string
+	uncommonPairs bool
 }
 
-// Load initializes the configuration from environment variables.
+// NewConfig initializes the configuration from environment variables.
 // If PORT is not set, it defaults to "8000".
-func Load() *ConfigManager {
+func NewConfig(prefix string) *ConfigManager {
 	cfg := &ConfigManager{
-		Port:          os.Getenv(PORT),
-		uncommonPairs: os.Getenv(UNCOMMON_PAIRS) == "true",
+		Port:          os.Getenv(strings.ToUpper(prefix) + PORT),
+		uncommonPairs: os.Getenv(strings.ToUpper(prefix)+UNCOMMON_PAIRS) == "true",
 	}
-	cfg.priceProviders = loadProviders()
-	cfg.marketTraders = loadMarketTraders()
-
+	cfg.prefix = strings.ToUpper(prefix)
 	if cfg.Port == "" {
-		cfg.Port = "8000"
-		os.Setenv(PORT, "8000")
+		cfg.Port = DEFAULT_PORT
+		os.Setenv(PORT, DEFAULT_PORT)
 	}
 	return cfg
 }
@@ -48,16 +41,15 @@ func (c *ConfigManager) GetPort() string {
 	return c.Port
 }
 
-// SetUncommonPairs sets or unsets the uncommon pairs flag and updates the env var.
 func (c *ConfigManager) SetUncommonPairs(enabled bool) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	c.uncommonPairs = enabled
 	if enabled {
-		os.Setenv(UNCOMMON_PAIRS, "true")
+		os.Setenv(c.prefix+UNCOMMON_PAIRS, "true")
 	} else {
-		os.Setenv(UNCOMMON_PAIRS, "false")
+		os.Setenv(c.prefix+UNCOMMON_PAIRS, "false")
 	}
 }
 

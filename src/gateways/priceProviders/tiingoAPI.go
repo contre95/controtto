@@ -21,7 +21,7 @@ type TiingoResponse []struct {
 }
 
 // NewTiingoAPI creates a new instance of AVantageAPI
-func NewTiingoAPI(token string) *TiingoAPI {
+func NewTiingoAPI(token string) pnl.PriceAPI {
 	return &TiingoAPI{
 		BaseURL: "https://api.tiingo.com",
 		token:   token,

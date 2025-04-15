@@ -1,6 +1,7 @@
 package priceProviders
 
 import (
+	"controtto/src/domain/pnl"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -16,7 +17,8 @@ type BinanceAPI struct {
 }
 
 // NewBinanceAPI creates a new instance of BinanceAPI.
-func NewBinanceAPI() *BinanceAPI {
+// Receives a token to be compliant with PriceProviderManager
+func NewBinanceAPI(token string) pnl.PriceAPI {
 	return &BinanceAPI{
 		BaseURL: "https://api.binance.com/api/v3/ticker/price",
 	}

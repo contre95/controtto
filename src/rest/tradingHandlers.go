@@ -42,7 +42,7 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 		slog.Info("Importing trades")
 		file, err := c.FormFile("trancsv")
 		if err != nil {
-			slog.Error("error", err)
+			slog.Error("Couldnot import trades", "error", err.Error())
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
 				"Msg":   fmt.Sprintln("Error reading CSV req:", err),
@@ -51,7 +51,7 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 		}
 		uploadedFile, err := file.Open()
 		if err != nil {
-			slog.Error("error", err)
+			slog.Error("Couldnot import trades", "error", err.Error())
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
 				"Msg":   fmt.Sprintln("Error reading CSV req:", err),
@@ -126,15 +126,14 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func newTradeForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func newTradeForm(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Create Trade UI requested")
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:                 id,
-			WithCurrentBasePrice: true,
-			WithTrades:           false,
-			WithCalculations:     false,
+			TPID:             id,
+			WithTrades:       false,
+			WithCalculations: false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -143,8 +142,13 @@ func newTradeForm(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
+		qRes, err := pq.QueryPrice(querying.QueryPriceReq{
+			AssetSymbolA: resp.Pair.BaseAsset.Symbol,
+			AssetSymbolB: resp.Pair.QuoteAsset.Symbol,
+		})
 		return c.Render("tradingForm", fiber.Map{
 			"Pair":  resp.Pair,
+			"Price": qRes.Price,
 			"Today": time.Now().Format("2006-01-02"),
 		})
 	}
@@ -202,10 +206,9 @@ func tradingTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:                 id,
-			WithCurrentBasePrice: false,
-			WithTrades:           true,
-			WithCalculations:     false,
+			TPID:             id,
+			WithTrades:       true,
+			WithCalculations: false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
@@ -214,6 +217,7 @@ func tradingTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
+
 		// TODO: Should this happen here? or in the app layer ?
 		slices.Reverse(resp.Pair.Trades)
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
@@ -230,10 +234,9 @@ func tradingExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
 		req := querying.GetTradingPairReq{
-			TPID:                 id,
-			WithCurrentBasePrice: false,
-			WithTrades:           true,
-			WithCalculations:     false,
+			TPID:             id,
+			WithTrades:       true,
+			WithCalculations: false,
 		}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {

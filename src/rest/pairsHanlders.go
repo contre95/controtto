@@ -3,21 +3,50 @@ package rest
 import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"fmt"
 	"log/slog"
 	"slices"
+	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func pairCards(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
+		priceStr := c.Query("price")
+		var price float64
+		name := "ERROR"
+		color := "#E0663D"
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
-			TPID:             id,
-			WithCalculations: true,
-		}
+		req := querying.GetTradingPairReq{TPID: id}
 		resp, err := tpq.GetTradingPair(req)
+		if err != nil {
+			return c.Render("toastErr", fiber.Map{
+				"Title": "Error",
+				"Msg":   err,
+			})
+		}
+		if priceStr != "" {
+			if price, err = strconv.ParseFloat(priceStr, 64); err == nil {
+				name = "Custom"
+				color = "#67697C"
+			} else {
+				name = "BadPrice"
+				color = "#E0668D"
+			}
+		} else if priceResp, err := pq.QueryPrice(querying.QueryPriceReq{
+			AssetSymbolA: resp.Pair.BaseAsset.Symbol,
+			AssetSymbolB: resp.Pair.QuoteAsset.Symbol,
+		}); err == nil {
+			price = priceResp.Price
+			name = priceResp.ProviderName
+			color = priceResp.ProviderColor
+		}
+		fmt.Println("Price", price)
+		req.BasePrice = price
+		req.WithCalculations = true
+		resp, err = tpq.GetTradingPair(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
@@ -26,8 +55,11 @@ func pairCards(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 		}
 		slices.Reverse(resp.Pair.Trades)
 		return c.Render("pairCards", fiber.Map{
-			"Today": time.Now().Format("Mon Jan 02 15:04 2006"),
-			"Pair":  resp.Pair,
+			"Today":              time.Now().Format("Mon Jan 02 15:04 2006"),
+			"Pair":               resp.Pair,
+			"Price":              price,
+			"PriceProviderName":  name,
+			"PriceProviderColor": color,
 		})
 	}
 }

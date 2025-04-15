@@ -25,7 +25,7 @@ type BingxAPI struct {
 }
 
 // NewBingxAPI creates a new instance of BingxAPI
-func NewBingxAPI() *BingxAPI {
+func NewBingxAPI(token string) pnl.PriceAPI {
 	return &BingxAPI{
 		BaseURL: "https://open-api.bingx.com/openApi/swap/v2/quote/price",
 	}

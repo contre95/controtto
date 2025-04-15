@@ -1,6 +1,7 @@
 package priceProviders
 
 import (
+	"controtto/src/domain/pnl"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,7 +23,7 @@ type CoinbaseResponse struct {
 }
 
 // NewCoinbaseAPI creates a new instance of CoinbaseAPI
-func NewCoinbaseAPI() *CoinbaseAPI {
+func NewCoinbaseAPI(token string) pnl.PriceAPI {
 	return &CoinbaseAPI{
 		BaseURL: "https://api.coinbase.com/v2",
 	}

@@ -18,7 +18,7 @@
     <h1 class="font-semibold dark:text-neutral-200 text-gray-700 text-xl mx-4 hidden md:block">Trades</h1>
     <hr class="my-6 border-neutral-300 dark:border-neutral-600" />
     <div class="flex items-center flex-col-2 md:float-left md:flex-row justify-end gap-3 w-screen m-3">
-      {{ if .Markets }}
+
       <button hx-get="/ui/pairs/{{ .PairID }}/market" hx-swap="innerHTML" hx-target="#market-data"
         hx-trigger="mouseover once" _="on click toggle .hidden on #market-data"
         class="flex items-center justify-center lg:w-full w-1/2 md:w-1/6 h-10 px-5 py-2 text-sm tracking-wide border border-neutral-300 rounded-lg bg-white text-gray-800 hover:bg-gray-100 hover:text-black dark:bg-neutral-800 dark:text-gray-200 dark:border-neutral-600 dark:hover:bg-slate-600 dark:hover:text-white transition-colors duration-200">
@@ -40,7 +40,6 @@
       <!--   <span>Trade</span> -->
       <!-- </button> -->
 
-      {{end}}
 
       <button _="on click toggle .hidden on #tvChart{{ .PairID }} then changeTradingViewTheme() then go to the top of the body end
         on click toggle .hidden on #cards"

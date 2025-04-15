@@ -11,6 +11,7 @@ type PriceProvider struct {
 	Token        string
 	ProviderURL  string
 	Env          string
+	Init         func(string) PriceAPI
 	PriceAPI
 }
 

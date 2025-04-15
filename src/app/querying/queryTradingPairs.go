@@ -1,21 +1,18 @@
 package querying
 
 import (
-	"controtto/src/app/config"
 	"controtto/src/domain/pnl"
 	"errors"
-	"fmt"
 	"log/slog"
 )
 
 type TradingPairsQuerier struct {
 	tradingPairs pnl.TradingPairs
-	cfg          *config.ConfigManager
 }
 
 // NewTradingPairQuerier returns a new intereactor with all the Trading Pair related use cases.
-func NewTradingPairQuerier(cfg *config.ConfigManager, a pnl.TradingPairs) *TradingPairsQuerier {
-	return &TradingPairsQuerier{a, cfg}
+func NewTradingPairQuerier(a pnl.TradingPairs) *TradingPairsQuerier {
+	return &TradingPairsQuerier{a}
 }
 
 // List all trading pairs without any level of detail
@@ -65,10 +62,10 @@ func (tpq *TradingPairsQuerier) ListTrades(req TradesReq) (*TradesResp, error) {
 
 // GetTradingPairReq indicate the level of datail you want to retrieve the Trading pair
 type GetTradingPairReq struct {
-	TPID                 string
-	WithCurrentBasePrice bool
-	WithTrades           bool
-	WithCalculations     bool
+	TPID             string
+	WithTrades       bool
+	WithCalculations bool
+	BasePrice        float64
 }
 
 type GetTradingPairResp struct {
@@ -84,7 +81,6 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 
 	if req.WithCalculations {
 		req.WithTrades = true
-		req.WithCurrentBasePrice = true
 	}
 
 	if req.WithTrades {
@@ -98,9 +94,7 @@ func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradi
 		}
 	}
 
-	if req.WithCurrentBasePrice {
-		pair.Calculations.BasePrice, pair.Calculations.ProviderName, pair.Calculations.Color, _ = tpq.getCurrentBasePrice(pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol)
-	}
+	pair.Calculations.BasePrice = req.BasePrice
 
 	if req.WithCalculations {
 		err := pair.Calculate()
@@ -123,34 +117,4 @@ func (tpq *TradingPairsQuerier) getTrades(tpid string) ([]pnl.Trade, error) {
 		return nil, err
 	}
 	return trades, nil
-}
-
-func (tpq *TradingPairsQuerier) getCurrentBasePrice(asset1, asset2 string) (float64, string, string, error) {
-	var err error
-	var baseAssetPrice float64 = 0
-	providerName := ""
-	providerColor := ""
-	failedproviders := 0
-	providers := tpq.cfg.GetPriceProviders()
-	for _, m := range providers {
-		slog.Info("Querying providers", "provider", m.ProviderName)
-		if m.IsSet {
-			providerName = m.ProviderName
-			providerColor = m.Color
-			baseAssetPrice, err = m.GetCurrentPrice(asset1, asset2)
-			if err != nil {
-				slog.Error("Error getting base asset price.", "provider", m.ProviderName, "error", err)
-				failedproviders++
-			} else {
-				break
-			}
-		} else {
-			fmt.Println("not set")
-		}
-	}
-	if failedproviders == len(providers) {
-		slog.Error("All providers failed to find the price.", "asset1", asset1, "asset2", asset2)
-		return 0, "", "", err
-	}
-	return baseAssetPrice, providerName, providerColor, nil
 }

@@ -121,7 +121,7 @@ func (m *MockMarketAPI) FetchAssetAmount(symbol string) (float64, error) {
 	return rand.Float64() * 100, nil
 }
 
-func NewMockMarketAPI(token string) *MockMarketAPI {
+func NewMockMarketAPI(token string) pnl.MarketAPI {
 	return &MockMarketAPI{
 		Token: token,
 	}

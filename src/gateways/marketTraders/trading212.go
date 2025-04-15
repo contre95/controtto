@@ -17,7 +17,7 @@ type Trading212API struct {
 }
 
 // NewTrading212API creates a new Trading212API client
-func NewTrading212API(apiKey string) *Trading212API {
+func NewTrading212API(apiKey string) pnl.MarketAPI {
 	baseURL := "https://live.trading212.com"
 	// if isDemo {
 	// 	baseURL = "https://demo.trading212.com"

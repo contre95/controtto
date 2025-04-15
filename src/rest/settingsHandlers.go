@@ -2,56 +2,70 @@ package rest
 
 import (
 	"controtto/src/app/config"
+	"controtto/src/app/managing"
+	"controtto/src/app/querying"
 	"fmt"
 	"log/slog"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func marketsSet(cfg *config.ConfigManager) bool {
-	for _, mkt := range cfg.GetMarketTraders(true) {
-		if mkt.IsSet {
-			return true
-		}
-	}
-	return false
-}
-
-func marketsSetAPI(cfg *config.ConfigManager) func(*fiber.Ctx) error {
+//	func marketsSet(marketManager *managing.MarketManager) bool {
+//		traders := marketManager.GetMarketTraders(false) // false = only configured traders
+//		return len(traders) > 0
+//	}
+//
+//	func marketsSetAPI(marketManager *managing.MarketManager) func(*fiber.Ctx) error {
+//		return func(c *fiber.Ctx) error {
+//			return c.SendString(fmt.Sprintf("%t", marketsSet(marketManager)))
+//		}
+//	}
+func saveSettingsForm(priceProviderManager *querying.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		return c.SendString(fmt.Sprintf("%t", marketsSet(cfg)))
-	}
-}
-
-func saveSettingsForm(cfg *config.ConfigManager) func(*fiber.Ctx) error {
-	return func(c *fiber.Ctx) error {
-		for key, p := range cfg.GetPriceProviders() {
-			token := c.FormValue(p.ProviderKey)
-			err := cfg.UpdatePriceProvider(key, token, len(token) != 0)
+		// Update price providers
+		providers := priceProviderManager.ListProviders(true) // true = get all providers
+		var enable bool
+		var token string
+		for key, p := range providers {
+			if !p.NeedsToken {
+				token := c.FormValue(p.ProviderKey)
+				enable = token != ""
+			} else {
+				enable = c.FormValue(p.ProviderKey) != ""
+			}
+			err := priceProviderManager.UpdateProvider(key, token, enable)
 			if err != nil {
+				slog.Error("Error updating price provider", "provider", key, "error", err)
 				return c.Render("toastErr", fiber.Map{
 					"Title": "Error",
-					"Msg":   err,
+					"Msg":   fmt.Sprintf("Failed to update %s: %v", p.ProviderName, err),
 				})
 			}
 		}
-		for key, t := range cfg.GetMarketTraders(true) {
+
+		// Update market traders
+		traders := marketManager.GetMarketTraders(true) // true = get all traders
+		for key, t := range traders {
 			token := c.FormValue(t.MarketKey)
-			err := cfg.UpdateMarketTraderToken(key, token)
+			err := marketManager.UpdateTrader(key, token)
 			if err != nil {
+				slog.Error("Error updating market trader", "trader", key, "error", err)
 				return c.Render("toastErr", fiber.Map{
 					"Title": "Error",
-					"Msg":   err,
+					"Msg":   fmt.Sprintf("Failed to update %s: %v", t.MarketName, err),
 				})
 			}
 		}
+
+		// Update uncommon pairs setting
 		uncommon := c.FormValue("uncommon_pairs") != ""
 		cfg.SetUncommonPairs(uncommon)
+
 		c.Append("HX-Trigger", "reloadSettings")
-		slog.Info("Config updated")
+		slog.Info("Config updated successfully")
 		return c.Render("toastOk", fiber.Map{
-			"Title": "Created",
-			"Msg":   "Config updated",
+			"Title": "Success",
+			"Msg":   "Configuration updated successfully",
 		})
 	}
 }

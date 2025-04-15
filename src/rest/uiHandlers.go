@@ -2,6 +2,7 @@ package rest
 
 import (
 	"controtto/src/app/config"
+	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"log/slog"
 	"time"
@@ -56,7 +57,7 @@ func tradesSection(c *fiber.Ctx) error {
 	})
 }
 
-func pairSection(cfg *config.ConfigManager) func(*fiber.Ctx) error {
+func pairSection() func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Pair Section")
 		if c.Get("HX-Request") != "true" {
@@ -66,39 +67,28 @@ func pairSection(cfg *config.ConfigManager) func(*fiber.Ctx) error {
 			})
 		}
 		return c.Render("pairSection", fiber.Map{
-			"PairID":  c.Params("id"),
-			"Markets": marketsSet(cfg),
+			"PairID": c.Params("id"),
 		})
 	}
 }
 
-// func marketsSection(cfg *config.Config) func(*fiber.Ctx) error {
-// 	return func(c *fiber.Ctx) error {
-// 		// if c.Get("HX-Request") != "true" {
-// 		// 	return c.Render("main", fiber.Map{
-// 		// 		"MarketsTrigger": ",revealed",
-// 		// 	})
-// 		// }
-// 		return c.Render("marketSection", fiber.Map{
-// 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
-// 			"PriceProviders": cfg.GetPriceProviders(), // Pass the providers slice to the template
-// 			"MarketTraders":  cfg.GetMarketTraders(),
-// 		})
-// 	}
-// }
-
-func settingsSection(cfg *config.ConfigManager) func(*fiber.Ctx) error {
+func settingsSection(priceProviderManager *querying.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		if c.Get("HX-Request") != "true" {
 			return c.Render("main", fiber.Map{
 				"SettingsTrigger": ",revealed",
 			})
 		}
+
+		// Get configured price providers and market traders
+		providers := priceProviderManager.ListProviders(true) // true = show all providers
+		traders := marketManager.ListTraders(true)            // true = show all traders
+
 		return c.Render("settingsSection", fiber.Map{
 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Uncommon":       cfg.GetUncommonPairs(),
-			"PriceProviders": cfg.GetPriceProviders(),
-			"MarketTraders":  cfg.GetMarketTraders(true),
+			"PriceProviders": providers,
+			"MarketTraders":  traders,
 		})
 	}
 }

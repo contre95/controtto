@@ -127,20 +127,20 @@ func (tpm *TradingPairsManager) Create(req CreateTradingPairReq) (*CreateTrading
 		return nil, err
 	}
 
-	// Uncommon pairs validation
-	if !config.Load().GetUncommonPairs() {
-		bt := base.Type // Assuming these are strings like "Crypto", "Forex", etc.
-		qt := quote.Type
-		valid := (bt == "Crypto" && qt == "Crypto") ||
-			(bt == "Crypto" && qt == "Forex") ||
-			(bt == "Stock" && qt == "Forex") ||
-			(bt == "Forex" && qt == "Forex")
-		if !valid {
-			err = fmt.Errorf("pair %s/%s not allowed with uncommonPairs enabled", bt, qt)
-			slog.Error("Invalid trading pair type", "BaseType", bt, "QuoteType", qt, "error", err)
-			return nil, err
-		}
-	}
+	// // Uncommon pairs validation
+	// if !config.Load().GetUncommonPairs() {
+	// 	bt := base.Type // Assuming these are strings like "Crypto", "Forex", etc.
+	// 	qt := quote.Type
+	// 	valid := (bt == "Crypto" && qt == "Crypto") ||
+	// 		(bt == "Crypto" && qt == "Forex") ||
+	// 		(bt == "Stock" && qt == "Forex") ||
+	// 		(bt == "Forex" && qt == "Forex")
+	// 	if !valid {
+	// 		err = fmt.Errorf("pair %s/%s not allowed with uncommonPairs enabled", bt, qt)
+	// 		slog.Error("Invalid trading pair type", "BaseType", bt, "QuoteType", qt, "error", err)
+	// 		return nil, err
+	// 	}
+	// }
 
 	tradingPair, err := pnl.NewTradingPair(*base, *quote)
 	if err != nil {

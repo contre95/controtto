@@ -17,8 +17,6 @@ type TradingPair struct {
 type Calculations struct {
 	AvgBuyPrice              float64
 	BasePrice                float64
-	ProviderName             string
-	Color                    string
 	CurrentBaseAmountInQuote float64
 	TotalBase                float64
 	TotalBaseInQuote         float64

@@ -94,7 +94,8 @@
       <p class="text-sm text-blue-500 uppercase">Price Providers API</p>
       <br />
       <p class="text-xs text-gray-400 uppercase">Private</p>
-      {{ range .PriceProviders }} {{ if .NeedsToken }}
+      {{ range .PriceProviders }}
+      {{ if .NeedsToken }}
       <div class="flex flex-wrap items-center">
         <img src="{{ .ProviderLogo }}" alt="logo" class="w-8 h-8 ">
         <div>
