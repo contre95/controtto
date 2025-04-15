@@ -91,17 +91,7 @@ var demo string = `
 
 		-- Trades with alternating Buy and Sell in the same pair, three times per pair
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
-		VALUES ('2025-04-13T10:00:00', 0.1, 6500.00, 'Buy', 'BTCUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
-		VALUES ('2025-04-13T10:05:00', 0.05, 6700.00, 'Sell', 'BTCUSDT'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
-		VALUES ('2025-04-13T10:10:00', 0.15, 6800.00, 'Buy', 'BTCUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
-		VALUES ('2025-04-13T10:15:00', 0.1, 6900.00, 'Sell', 'BTCUSDT'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
-		VALUES ('2025-04-13T10:20:00', 0.2, 7000.00, 'Buy', 'BTCUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
-		VALUES ('2025-04-13T10:25:00', 0.2, 7200.00, 'Sell', 'BTCUSDT'); -- Positive PnL
+		VALUES ('2025-04-13T10:00:00', 1, 86500.00, 'Buy', 'BTCUSDT');
 
 		-- ETHUSDT
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 

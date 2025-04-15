@@ -1,6 +1,4 @@
-<body id="cards" class="dark:bg-neutral-900">
-  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 p-3 md:p-5 animate__animated animate__fadeIn">
-
+<div id="cards" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 p-3 md:p-5 animate__animated animate__fadeIn">
 <div
   class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
   <div class="flex items-center justify-between mb-2 md:mb-3">
@@ -17,37 +15,43 @@
       {{ .PriceProviderName }}
     </span>
   </div>
-<form
-  hx-get="/ui/pairs/{{ .Pair.BaseAsset.Symbol }}{{ .Pair.QuoteAsset.Symbol }}/cards"
-  hx-target="#cards"
-  hx-swap="outerHTML"
-  hx-vals='js:{ price: document.querySelector("#price-input").value }'
->
-  <div class="flex items-baseline gap-2 text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-    <input
-      id="price-input"
-      type="number"
-      name="price"
-      step="any"
-      value="{{ printf "%.7g" .Pair.Calculations.BasePrice }}"
-      class="w-full bg-transparent border-none p-0 m-0 font-bold text-2xl md:text-3xl text-gray-800 dark:text-white focus:outline-none focus:ring-0"
-    />
-    <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
-      {{ .Pair.QuoteAsset.Symbol }}
-    </span>
+  <form
+    hx-get="/ui/pairs/{{ .Pair.BaseAsset.Symbol }}{{ .Pair.QuoteAsset.Symbol }}/cards"
+    hx-target="#cards"
+    hx-swap="outerHTML"
+    hx-vals='js:{ price: document.querySelector("#price-input").value }'
+  >
+    <div class="flex items-baseline gap-2 text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
+      <input
+        id="price-input"
+        type="number"
+        name="price"
+        step="any"
+        value="{{ printf "%.7g" .Pair.Calculations.BasePrice }}"
+        class="w-full bg-transparent border-none p-0 m-0 font-bold text-2xl md:text-3xl text-gray-800 dark:text-white focus:outline-none focus:ring-0"
+      />
+      <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
+        {{ .Pair.QuoteAsset.Symbol }}
+      </span>
+    </div>
+    <div class="flex justify-start mt-4">
+      <button
+        type="submit"
+        class="text-sm px-2 py-1 bg-slate-600 hover:bg-slate-700 text-white rounded-md"
+      >
+        <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+        stroke-width="1.5" stroke="currentColor"
+        class="w-4 h-4 md:w-5 md:h-5 {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}text-red-500{{else}}text-green-500{{end}}" >
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+      </svg>
+      <span class="text-white">New PNL</span>
+      </div>
+    </button>   
+    </div>
+  </form>
   </div>
-  <div class="flex justify-end mt-4">
-    <button
-      type="submit"
-      class="text-sm px-2 py-1 bg-slate-600 hover:bg-slate-700 text-white rounded-md"
-    >
-      Calculate
-    </button>
-  </div>
-</form>
-</div>
-
-
     <div
       class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
       <div
@@ -101,46 +105,47 @@
       </div>
     </div>
 
-    <div
-      class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
-      <div
-        class="flex items-center space-x-2 mb-2 md:mb-3 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-4 h-4 md:w-5 md:h-5"
-          :class="{'text-green-500': {{ .Pair.Calculations.PNLAmount }} > 0, 'text-red-500': {{ .Pair.Calculations.PNLAmount }} < 0, 'text-gray-500': {{ .Pair.Calculations.PNLAmount }} == 0}">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-        </svg>
-        <span>P/L</span>
-      </div>
-      {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
-      <span class="font-bold text-2xl md:text-3xl font-bold text-emerald-500">
-        +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
-        <span style="color:{{ .Pair.QuoteAsset.Color }}">
-          {{ .Pair.QuoteAsset.Symbol }}
-        </span>
-      </span>
-      <button
-        class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-neutral-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
-        <span class="font-bold text-emerald-400 dark:text-emerald-200">
-          +{{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
-        </span>
-      </button>
-      {{ else }}
-      <span class="font-bold text-2xl md:text-3xl font-bold text-red-500">
-        {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
-        <span style="color:{{ .Pair.QuoteAsset.Color }}">
-          {{ .Pair.QuoteAsset.Symbol }}
-        </span>
-      </span>
-      <button
-        class="px-2 py-1 text-xs font-semibold text-white uppercase transition-colors duration-300 transform bg-gray-800 rounded hover:bg-gray-700 dark:hover:bg-neutral-600 focus:bg-gray-700 dark:focus:bg-gray-600 focus:outline-none">
-        <span class="text-base md:text-lg font-medium mt-1">
-          {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
-        </span>
-      </button>
-      {{ end }}
+<div
+  class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
+  
+  <div class="flex items-center justify-between mb-2 md:mb-3">
+    <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+        stroke-width="1.5" stroke="currentColor"
+        class="w-4 h-4 md:w-5 md:h-5 {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}text-green-500{{else}}text-red-500{{end}}" >
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+      </svg>
+      <span>P/L</span>
     </div>
+
+    <span
+      class="p-2 py-0.5 text-[10px] md:text-xs rounded-full {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}text-green-500{{else}}text-red-400{{end}} font-medium"
+      style="background-color: #1f2937;">
+      {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}
+        {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
+      {{ else }}
+        {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
+      {{ end }}
+    </span>
+  </div>
+
+  {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
+    <span class="font-bold text-2xl md:text-3xl text-emerald-500">
+      +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+      <span style="color:{{ .Pair.QuoteAsset.Color }}">
+        {{ .Pair.QuoteAsset.Symbol }}
+      </span>
+    </span>
+  {{ else }}
+    <span class="font-bold text-2xl md:text-3xl text-red-500">
+      {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+      <span style="color:{{ .Pair.QuoteAsset.Color }}">
+        {{ .Pair.QuoteAsset.Symbol }}
+      </span>
+    </span>
+  {{ end }}
+</div>
 
     <div
       class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
@@ -194,4 +199,3 @@
       </div>
     </div>
   </div>
-</body>
