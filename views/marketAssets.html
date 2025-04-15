@@ -1,4 +1,10 @@
 <section class="p-6 bg-white dark:bg-neutral-800 w-full rounded-xl border border-neutral-200 dark:border-neutral-700 shadow-sm animate__animated animate__fadeInUp">
+    {{ if not .MarketTraders }}
+    <div class="text-center text-gray-500 dark:text-gray-400 py-12">
+      <p class="text-lg font-medium">No providers configured</p>
+      <p class="text-sm mt-2">Please set up at least one market provider to view your balances.</p>
+    </div>
+  {{ else }}
   <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
     {{ range $marketName, $trader := .MarketTraders }}
     {{ if $trader.IsSet }}
@@ -60,6 +66,7 @@
     {{ end }}
     {{ end }}
   </div>
+    {{ end }}
 </section>
 
 <script>

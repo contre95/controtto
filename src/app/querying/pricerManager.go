@@ -86,23 +86,6 @@ func (ppm *PriceProviderManager) UpdateProvider(key string, token string, enable
 	return nil
 }
 
-// getProvider gets a provider instance
-func (ppm *PriceProviderManager) getProvider(key string) (*pnl.PriceProvider, error) {
-	ppm.mu.RLock()
-	defer ppm.mu.RUnlock()
-
-	provider, ok := ppm.providers[key]
-	if !ok {
-		return nil, ErrProviderNotFound
-	}
-	return provider, nil
-}
-
-// // ListProviders returns all configured providers
-// func (ppm *PriceProviderManager) ListProviders(all bool) map[string]*pnl.PriceProvider {
-// 	return ppm.GetPriceProviders(all)
-// }
-
 // QueryPrice gets the current price for an asset pair
 func (ppm *PriceProviderManager) QueryPrice(req QueryPriceReq) (*QueryPriceResp, error) {
 	slog.Info("Querying prices")
