@@ -4,39 +4,38 @@
   <thead class="bg-gray-50 lg:dark:bg-neutral-700 dark:bg-neutral-900">
     <tr>
       <th scope="col" 
-        class="py-3.5 px-4 text-blue lg:text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        class="py-2 px-4 text-blue lg:text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <div class="flex items-center ml-3 lg:text-sm text-lg gap-x-3">
-          <span>Trading Pair</span>
+          <span>          <i class="fa-solid fa-chart-simple"></i> Pair</span>
         </div>
       </th>
       <th scope="col"
-        class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+        class="px-12 py-2 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <button class="gap-x-2">
-          <span>Base</span>
+          <span><i class="fa-regular fa-money-bill-1"></i> Base</span>
         </button>
       </th>
 
       <th scope="col"
-        class="px-4 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+        class="px-4 py-2 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell">
         <button class="gap-x-2">
-          <span>Quote</span>
+          <span><i class="fa-solid fa-dollar-sign"></i> Quote</span>
         </button>
       </th>
 
 
-      <th scope="col" class="px-12 py-3.5 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400">
+      <th scope="col" class="px-12 py-2 text-sm font-normal rtl:text-right text-gray-500 dark:text-gray-400">
         <button class="gap-x-2">
           <div class="flex items-center ml-3 lg:text-sm text-lg gap-x-3">
-          <span>Type</span>
+          <i class="fa-solid fa-coins "></i><span> Type</span>
           </div>
         </button>
       </th>
 
 
-      <th scope="col" class="relative py-3.5 px-4">
-        <button class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          hx-get="/ui/pairs/table" hx-target="#pairsTable" hx-trigger="click" hx-swap="innerHTML" type="button">
-          <i class="fa-solid fa-arrows-rotate px-6"></i>
+      <th scope="col" class="relative py-2 px-4">
+        <button class="px-4 py-2 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400" type="button">
+          <i class="fa-solid fa-trash"></i>
         </button>
       </th>
     </tr>
@@ -70,7 +69,7 @@
         </div>
       </td>
       <td
-        class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell"
+        class="px-12 py-2 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell"
       type="button" hx-push-url="true" hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" hx-trigger="click">
         <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-neutral-800">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
@@ -82,7 +81,7 @@
         </div>
       </td>
       <td
-        class="px-12 py-3.5 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell"
+        class="px-12 py-2 text-sm font-normal text-center rtl:text-right text-gray-500 dark:text-gray-400 hidden lg:table-cell"
       type="button" hx-push-url="true" hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" hx-trigger="click">
         <div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-gray-100/60 dark:bg-neutral-900">
           <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
@@ -93,7 +92,7 @@
           </h2>
         </div>
       </td>
-      <th scope="col" class="py-3.5 lg:text-sm text-sm font-normal text-gray-500 dark:text-gray-400"
+      <th scope="col" class="py-2 lg:text-sm text-sm font-normal text-gray-500 dark:text-gray-400"
         type="button" hx-push-url="true" hx-get="/pairs/{{ .ID }}/" hx-target="#contenido" hx-trigger="click">
         {{ if eq .BaseAsset.Type "Stock" }}
         <span class="px-3 py-1 text-indigo-500 rounded-l-lg dark:bg-neutral-900 bg-indigo-100/60">
@@ -126,20 +125,22 @@
         </span>
         {{ end }}
       </th>
-      <td class="px-4 py-4 text-sm whitespace-nowrap text-center">
-          <div class="mt-1 flex lg:text-sm text-lg text-center items-center">
+      <td class="px-4 py-4 text-sm whitespace-nowrap text-right">
+  <div class="mt-1 flex lg:text-sm text-lg text-right items-center justify-center">
           <button hx-target="#mitoast" hx-delete="/pairs/{{ .ID }}"
             class="text-gray-500 mx-2 float-left flex transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-red-500 focus:outline-none"
             _="on htmx:confirm(issueRequest)
              halt the event
              call Swal.fire({title: 'Confirm', text:'All trades associated will be deleted. Are you sure ?'})
-             if result.isConfirmed toggle .animate__backOutRight on #pair{{ .ID }} then wait 1s then  issueRequest()">
+             if result.isConfirmed toggle .animate__backOutRight on #pair{{ .ID }} then wait 1s then issueRequest()">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-5 h-5">
+              stroke="currentColor" class="w-5 h-5 md:text-gray-300 text-red-300 text-right flex–end md:scale-100 scale-120 md:border-none  rounded-lg">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
             </svg>
+            <span class="md:block hidden ">
             &nbsp;Delete
+            </span>
           </button>
           </div>
       </td>
