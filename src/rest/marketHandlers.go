@@ -49,7 +49,7 @@ func getMarketAssets(tpq querying.TradingPairsQuerier, marketManager *managing.M
 			if err1 != nil {
 				errMsg += "Base: " + err1.Error() + ". "
 			}
-			if trader.Type != pnl.Wallet || baseAmt <= 0 {
+			if trader.Type != pnl.Wallet {
 				usdtAmt, err2 = marketManager.FetchBalance(marketName, "USDT")
 				if err2 != nil {
 					errMsg += "USDT: " + err2.Error() + ". "
@@ -59,7 +59,7 @@ func getMarketAssets(tpq querying.TradingPairsQuerier, marketManager *managing.M
 					errMsg += "USDC: " + err3.Error() + ". "
 				}
 			}
-			hasErr := (err1 != nil && pnl.Wallet == trader.Type) || err2 != nil || err3 != nil
+			hasErr := err1 != nil || err2 != nil || err3 != nil
 			if hasErr {
 				fmt.Println("Error fetching market data:", errMsg)
 			}
