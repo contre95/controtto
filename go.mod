@@ -7,7 +7,6 @@ require (
 	github.com/gofiber/template/html/v2 v2.0.5
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.17
-	github.com/mr-tron/base58 v1.2.0
 )
 
 require (

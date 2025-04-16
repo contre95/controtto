@@ -44,10 +44,10 @@ func saveSettingsForm(priceProviderManager *querying.PriceProviderManager, marke
 		}
 
 		// Update market traders
-		traders := marketManager.GetMarketTraders(true) // true = get all traders
+		traders := marketManager.GetMarkets(true) // true = get all traders
 		for key, t := range traders {
 			token := c.FormValue(t.MarketKey)
-			err := marketManager.UpdateTrader(key, token)
+			err := marketManager.UpdateMarket(key, token)
 			if err != nil {
 				slog.Error("Error updating market trader", "trader", key, "error", err)
 				return c.Render("toastErr", fiber.Map{

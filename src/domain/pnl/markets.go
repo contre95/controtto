@@ -11,22 +11,21 @@ const (
 	DEX      MarketType = "DEX"
 )
 
-type MarketTrader struct {
-	IsSet       bool
-	Color       string
-	MarketName  string
-	MarketKey   string
-	Type        MarketType
-	Details     string
-	MarketLogo  string
-	Token       string
-	ProviderURL string
-	Env         string
-	Init        func(string) MarketAPI
-	API         MarketAPI
+type Market struct {
+	IsSet                bool
+	Color                string
+	MarketName           string
+	MarketKey            string
+	MarketTradingSymbols []string
+	Type                 MarketType
+	Details              string
+	MarketLogo           string
+	Token                string
+	ProviderURL          string
+	Env                  string
+	Init                 func(string) MarketAPI
+	API                  MarketAPI
 }
-
-type MarketTraders map[string]MarketTrader
 
 type MarketTraderNotFound error
 

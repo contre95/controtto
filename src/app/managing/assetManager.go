@@ -19,15 +19,15 @@ type CreateAssetReq struct {
 }
 
 // Assets creator
-type AssetsCreator struct {
+type AssetsManager struct {
 	assets pnl.Assets
 }
 
-func NewAssetCreator(a pnl.Assets) *AssetsCreator {
-	return &AssetsCreator{a}
+func NewAssetCreator(a pnl.Assets) *AssetsManager {
+	return &AssetsManager{a}
 }
 
-func (ac *AssetsCreator) Create(req CreateAssetReq) (*CreateAssetResp, error) {
+func (ac *AssetsManager) Create(req CreateAssetReq) (*CreateAssetResp, error) {
 	var err error
 	asset, err := pnl.NewAsset(req.Symbol, req.Color, req.Name, req.CountryCode, req.Type)
 	if err != nil {

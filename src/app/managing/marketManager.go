@@ -3,13 +3,12 @@ package managing
 import (
 	"controtto/src/domain/pnl"
 	"errors"
-	"fmt"
 	"sync"
 	"time"
 )
 
 var (
-	ErrTraderNotFound   = errors.New("market traders not found")
+	ErrMarketNotFound   = errors.New("market traders not found")
 	ErrEmptyToken       = errors.New("market traders not configured")
 	ErrInvalidTrade     = errors.New("invalid trade parameters")
 	ErrMarketNotHealthy = errors.New("market API not healthy")
@@ -17,47 +16,33 @@ var (
 
 // MarketManager handles all market operations
 type MarketManager struct {
-	traders map[string]*pnl.MarketTrader
-	mu      sync.RWMutex // protects the traders map
+	markets map[string]*pnl.Market
+	mu      sync.RWMutex // protects the markets map
 }
 
-func NewMarketManager(in map[string]pnl.MarketTrader) *MarketManager {
-	traders := make(map[string]*pnl.MarketTrader, len(in))
+func NewMarketManager(in map[string]pnl.Market) *MarketManager {
+	markets := make(map[string]*pnl.Market, len(in))
 	for key, val := range in {
 		v := val // copy value to avoid referencing the same instance
-		traders[key] = &v
+		markets[key] = &v
 	}
 	mm := &MarketManager{
-		traders: traders,
+		markets: markets,
 	}
-	for key, trader := range traders {
-		err := mm.UpdateTrader(key, trader.Token)
+	for key, market := range markets {
+		err := mm.UpdateMarket(key, market.Token)
 		if err != nil {
-			panic("could not initialize traders")
+			panic("could not initialize markets")
 		}
 	}
 	return mm
 }
 
-func (c *MarketManager) UpdateMarketTraderToken(key, token string) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	trader, ok := c.traders[key]
-	if !ok {
-		return fmt.Errorf("market trader %q not found", key)
-	}
-	trader.Token = token
-	trader.IsSet = token != ""
-	trader.Details = "Updated " + time.Now().Format(time.RFC3339)
-	c.traders[key] = trader
-	return nil
-}
-
-func (c *MarketManager) GetMarketTraders(all bool) map[string]*pnl.MarketTrader {
+func (c *MarketManager) GetMarkets(all bool) map[string]*pnl.Market {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	filtered := make(map[string]*pnl.MarketTrader)
-	for k, v := range c.traders {
+	filtered := make(map[string]*pnl.Market)
+	for k, v := range c.markets {
 		if all || v.IsSet {
 			filtered[k] = v
 		}
@@ -65,41 +50,41 @@ func (c *MarketManager) GetMarketTraders(all bool) map[string]*pnl.MarketTrader 
 	return filtered
 }
 
-func (m *MarketManager) UpdateTrader(key string, token string) error {
+func (m *MarketManager) UpdateMarket(key string, token string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	trader, ok := m.traders[key]
+	market, ok := m.markets[key]
 	if !ok {
-		return ErrTraderNotFound
+		return ErrMarketNotFound
 	}
-	trader.IsSet = token != ""
-	trader.Token = token // Clear token
-	if trader.IsSet {
-		trader.API = trader.Init(token)
+	market.IsSet = token != ""
+	market.Token = token // Clear token
+	if market.IsSet {
+		market.API = market.Init(token)
 	}
-	m.traders[key] = trader
+	m.markets[key] = market
 	return nil
 }
 
-// getTrader gets a trader's instance
-func (m *MarketManager) getTrader(key string) (*pnl.MarketTrader, error) {
+// getMarket gets a market's instance
+func (m *MarketManager) getMarket(key string) (*pnl.Market, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	trader, ok := m.traders[key]
+	market, ok := m.markets[key]
 	if !ok {
-		return nil, ErrTraderNotFound
+		return nil, ErrMarketNotFound
 	}
-	if !trader.IsSet {
+	if !market.IsSet {
 		return nil, ErrEmptyToken
 	}
-	return trader, nil
+	return market, nil
 }
 
-// ListTraders returns all configured traders
-func (m *MarketManager) ListTraders(all bool) map[string]*pnl.MarketTrader {
-	return m.GetMarketTraders(all) // true = only return configured traders
+// ListTraders returns all configured markets
+func (m *MarketManager) ListTraders(all bool) map[string]*pnl.Market {
+	return m.GetMarkets(all) // true = only return configured markets
 }
 
 // ExecuteBuy executes a buy order
@@ -107,14 +92,14 @@ func (m *MarketManager) ExecuteBuy(marketKey string, options pnl.TradeOptions) (
 	if options.Amount <= 0 {
 		return nil, ErrInvalidTrade
 	}
-	trader, err := m.getTrader(marketKey)
+	market, err := m.getMarket(marketKey)
 	if err != nil {
 		return nil, err
 	}
-	if !trader.API.HealthCheck() {
+	if !market.API.HealthCheck() {
 		return nil, ErrMarketNotHealthy
 	}
-	return trader.API.Buy(options)
+	return market.API.Buy(options)
 }
 
 // ExecuteSell executes a sell order
@@ -122,48 +107,48 @@ func (m *MarketManager) ExecuteSell(marketKey string, options pnl.TradeOptions) 
 	if options.Amount <= 0 {
 		return nil, ErrInvalidTrade
 	}
-	trader, err := m.getTrader(marketKey)
+	market, err := m.getMarket(marketKey)
 	if err != nil {
 		return nil, err
 	}
-	if !trader.API.HealthCheck() {
+	if !market.API.HealthCheck() {
 		return nil, ErrMarketNotHealthy
 	}
-	return trader.API.Sell(options)
+	return market.API.Sell(options)
 }
 
 // FetchBalance gets asset balance from a market
 func (m *MarketManager) FetchBalance(marketKey, symbol string) (float64, error) {
-	trader, err := m.getTrader(marketKey)
+	market, err := m.getMarket(marketKey)
 	if err != nil {
 		return 0, err
 	}
-	return trader.API.FetchAssetAmount(symbol)
+	return market.API.FetchAssetAmount(symbol)
 }
 
 // ImportTrades imports historical trades
 func (m *MarketManager) ImportTrades(marketKey string, pair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
-	trader, err := m.getTrader(marketKey)
+	market, err := m.getMarket(marketKey)
 	if err != nil {
 		return nil, err
 	}
-	return trader.API.ImportTrades(pair, since)
+	return market.API.ImportTrades(pair, since)
 }
 
 // CheckHealth verifies market connection
 func (m *MarketManager) CheckHealth(marketKey string) (bool, error) {
-	trader, err := m.getTrader(marketKey)
+	market, err := m.getMarket(marketKey)
 	if err != nil {
 		return false, err
 	}
-	return trader.API.HealthCheck(), nil
+	return market.API.HealthCheck(), nil
 }
 
 // GetAccountDetails fetches account information
 func (m *MarketManager) GetAccountDetails(marketKey string) (string, error) {
-	trader, err := m.getTrader(marketKey)
+	market, err := m.getMarket(marketKey)
 	if err != nil {
 		return "", err
 	}
-	return trader.API.AccountDetails()
+	return market.API.AccountDetails()
 }

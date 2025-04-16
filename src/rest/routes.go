@@ -48,7 +48,7 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, port strin
 	app.Delete("/pairs/:id", deleteTradingPair(m.TradingPairManager))
 	app.Delete("/trades/:id", deleteTrade(m.TradingPairManager))
 	// POST
-	app.Post("/assets", newAsset(m.AssetCreator))
+	app.Post("/assets", newAsset(m.AssetManager))
 	app.Post("/pairs", newTradingPair(m.TradingPairManager))
 	app.Post("/pairs/:id/trades", newTrade(m.TradingPairManager))
 	app.Post("/pairs/:id/trades/upload", newTradeImport(m.TradingPairManager))

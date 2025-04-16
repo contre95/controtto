@@ -16,7 +16,7 @@ func newAssetForm(c *fiber.Ctx) error {
 	})
 }
 
-func newAsset(ac managing.AssetsCreator) func(*fiber.Ctx) error {
+func newAsset(ac managing.AssetsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Creating new asset")
 		payload := struct {

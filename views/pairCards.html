@@ -1,228 +1,209 @@
-{{ if .Error }}
-<div id="cards" class="grid  p-3 md:p-5 animate__animated animate__fadeIn">
-  <div
-  class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
-  <div class="flex items-center justify-between mb-2 md:mb-3">
-    <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-        stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
+{{/* --- Dashboard Panel --- */}}
+{{/* Use one main container for the dashboard look */}}
+<div id="dashboard-panel" class="bg-white text-center dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-6 border border-gray-200 dark:border-neutral-700 relative animate__animated animate__fadeIn">
+  {{ if .Error }}
+    <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-neutral-800 dark:text-red-400 dark:border-red-800" role="alert">
+      <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
       </svg>
-      <span>Error</span>
-      <span class="text-xs md:text-sm font-medium text-red-500 dark:text-red-400">
-        {{ .Error}}
-        </span>
-    </div>
-    <span class="px-2 py-0.5 text-[10px] md:text-xs rounded-full text-white font-medium bg-red-500"
-      >
-      Error
-    </span>
-  </div>
-  </div>
-</div>
-{{ else }}
-  <!-- The normal (non-error) version of the cards you already have -->
-<div id="cards" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 p-3 md:p-5 animate__animated animate__fadeIn">
-<div
-  class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
-  <div class="flex items-center justify-between mb-2 md:mb-3">
-    <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-        stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
-      </svg>
-      <span>Price</span>
-    </div>
-    <span class="px-2 py-0.5 text-[10px] md:text-xs rounded-full text-white font-medium"
-      style="background-color: {{ .PriceProviderColor }};">
-      {{ .PriceProviderName }}
-    </span>
-  </div>
-  <form
-    hx-get="/ui/pairs/{{ .Pair.BaseAsset.Symbol }}{{ .Pair.QuoteAsset.Symbol }}/cards"
-    hx-target="#cards"
-    hx-swap="outerHTML"
-    hx-vals='js:{ price: document.querySelector("#price-input").value }'
-  >
-    <div class="flex items-baseline gap-2 text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-      <input
-        id="price-input"
-        type="number"
-        name="price"
-        step="any"
-        value="{{ printf "%.7g" .Pair.Calculations.BasePrice }}"
-        class="w-full bg-transparent border-none p-0 m-0 font-bold text-2xl md:text-3xl text-gray-800 dark:text-white focus:outline-none focus:ring-0"
-      />
-      <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
-        {{ .Pair.QuoteAsset.Symbol }}
-      </span>
-    </div>
-    <div class="flex justify-start mt-4">
-      <button
-        type="submit"
-        class="text-sm px-2 py-1 bg-slate-600 hover:bg-slate-700 text-white rounded-md"
-      >
-        <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-        stroke-width="1.5" stroke="currentColor"
-        class="w-4 h-4 md:w-5 md:h-5 {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}text-red-500{{else}}text-green-500{{end}}" >
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-      </svg>
-      <span class="text-white">New PNL</span>
-      </div>
-    </button>   
-    </div>
-  </form>
-  </div>
-    <div
-      class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
-      <div
-        class="flex items-center space-x-2 mb-2 md:mb-3 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-4 h-4 md:w-5 md:h-5">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
-        </svg>
-        <span>Holdings</span>
-      </div>
-      <div class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-        {{ printf "%.6f" .Pair.Calculations.TotalBase }}
-        <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.BaseAsset.Color }}">
-          {{ .Pair.BaseAsset.Symbol }}
-        </span>
-      </div>
-      <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">
-        Value: {{ printf "%.2f" .Pair.Calculations.TotalBaseInQuote }}
-        <span style="color:{{ .Pair.QuoteAsset.Color }}">
-          {{ .Pair.QuoteAsset.Symbol }}
-        </span>
+      <span class="sr-only">Error</span>
+      <div>
+        <span class="font-medium">Error:</span> {{ .Error }}
       </div>
     </div>
-
-    <div
-      class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
-      <div class="flex items-center justify-between mb-2 md:mb-3">
-        <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.238 48.238 0 0 0 12 2.25Z" />
-          </svg>
-          <span>Avg. Buy</span>
-        </div>
-        <button title="Info about average buy price"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-          </svg>
-        </button>
-      </div>
-      <div class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-        {{ printf "%.7g" .Pair.Calculations.AvgBuyPrice }}
-        <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
-          {{ .Pair.QuoteAsset.Symbol }}
-        </span>
-      </div>
-    </div>
-
-<div
-  class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
-  
-  <div class="flex items-center justify-between mb-2 md:mb-3">
-    <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-        stroke-width="1.5" stroke="currentColor"
-        class="w-4 h-4 md:w-5 md:h-5 {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}text-green-500{{else}}text-red-500{{end}}" >
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
-      </svg>
-      <span>P/L</span>
-    </div>
-
-    <span
-      class="p-2 py-0.5 text-[10px] md:text-xs rounded-full {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}text-green-500{{else}}text-red-400{{end}} font-medium"
-      style="background-color: #1f2937;">
-      {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}
-        {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
-      {{ else }}
-        {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
-      {{ end }}
-    </span>
-  </div>
-
-  {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
-    <span class="font-bold text-2xl md:text-3xl text-emerald-500">
-      +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
-      <span style="color:{{ .Pair.QuoteAsset.Color }}">
-        {{ .Pair.QuoteAsset.Symbol }}
-      </span>
-    </span>
   {{ else }}
-    <span class="font-bold text-2xl md:text-3xl text-red-500">
-      {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
-      <span style="color:{{ .Pair.QuoteAsset.Color }}">
-        {{ .Pair.QuoteAsset.Symbol }}
+    {{/* Header: Pair Name and Price Provider */}}
+    <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-200 dark:border-neutral-700">
+      <h2 class="text-xl md:text-2xl font-semibold text-gray-800 dark:text-white">
+        {{ .Pair.BaseAsset.Symbol }} / {{ .Pair.QuoteAsset.Symbol }}
+      </h2>
+      <span class="px-2 py-0.5 text-[10px] md:text-xs rounded-full text-white font-medium" style="background-color: {{ .PriceProviderColor }};">
+        {{ .PriceProviderName }}
       </span>
-    </span>
-  {{ end }}
-</div>
-
-    <div
-      class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
-      <div class="flex items-center justify-between mb-2 md:mb-3">
+    </div>
+    {{/* Main Metrics: Price Input and P/L */}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-5">
+      {{/* Price Section */}}
+    <div class="flex flex-col items-center gap-2 w-full">
         <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
           </svg>
-          <span>Value</span>
+          <span>Current Price</span>
         </div>
-        <button title="Current value based on holdings and price"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-            stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        {{/* Form targets the main panel now */}}
+        <form
+          hx-get="/ui/pairs/{{ .Pair.BaseAsset.Symbol }}{{ .Pair.QuoteAsset.Symbol }}/cards"
+          hx-target="#dashboard-panel"
+          hx-swap="outerHTML"
+          hx-vals='js:{ price: document.querySelector("#price-input").value }'
+        >
+        <div class="flex items-baseline gap-2 text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
+            <div class="relative w-full">
+            <input
+              id="price-input"
+              type="number"
+              name="price"
+              step="any"
+              style="background-color: rgba(0, 0, 0, 0.1); field-sizing: content;"
+              class="min-w-[100px] w-full border border-gray-300 dark:border-neutral-600 rounded-md pr-16 pl-2 py-1 m-0 font-bold text-2xl md:text-3xl text-gray-800 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500 appearance-none text-center"
+              value="{{ printf "%.7g" .Pair.Calculations.BasePrice }}"
+            />
+              <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-lg md:text-xl font-medium" style="color:{{ .Pair.QuoteAsset.Color }}">
+                 {{ .Pair.QuoteAsset.Symbol }}
+              </span>
+            </div>
+          </div>
+            <div class="flex justify-center w-full">
+             <button
+               type="submit"
+               class="text-xs px-2 mt-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md inline-flex items-center space-x-1"
+             >
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                 </svg>
+               <span>Recalculate P/L</span>
+             </button>
+           </div>
+        </form>
+      </div>
+
+      {{/* P/L Section */}}
+  <div class="flex flex-col items-center gap-1">
+  <div class="flex items-center justify-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+          <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5 {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}text-green-500{{else}}text-red-500{{end}}" >
+               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+             </svg>
+             <span>Profit / Loss</span>
+           </div>
+           <span class="px-2 py-0.5 text-[10px] md:text-xs rounded-full {{ if (gt .Pair.Calculations.PNLPercent 0.0) }}bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300{{else}}bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300{{end}} font-medium">
+             {{ printf "%.2f" .Pair.Calculations.PNLPercent }}%
+           </span>
+         </div>
+
+         {{ if (gt .Pair.Calculations.PNLAmount 0.0) }}
+           <div class="font-bold text-2xl md:text-3xl text-emerald-500">
+             +{{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+             <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
+               {{ .Pair.QuoteAsset.Symbol }}
+             </span>
+           </div>
+         {{ else }}
+           <div class="font-bold text-2xl md:text-3xl text-red-500">
+             {{ printf "%.2f" .Pair.Calculations.PNLAmount }}
+             <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
+               {{ .Pair.QuoteAsset.Symbol }}
+             </span>
+           </div>
+         {{ end }}
+      </div>
+    </div>
+
+    {{/* Divider */}}
+    <hr class="my-4 md:my-6 border-gray-200 dark:border-neutral-700">
+
+    {{/* Secondary Metrics Grid */}}
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+
+      {{/* Holdings */}}
+<div class="flex flex-col items-center gap-1">
+  <div class="flex items-center justify-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
           </svg>
-        </button>
+          <span>Holdings</span>
+        </div>
+        <div class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white">
+          {{ printf "%.6f" .Pair.Calculations.TotalBase }}
+          <span class="text-base md:text-lg font-medium ml-1" style="color:{{ .Pair.BaseAsset.Color }}">
+            {{ .Pair.BaseAsset.Symbol }}
+          </span>
+        </div>
+        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+          Value: {{ printf "%.2f" .Pair.Calculations.TotalBaseInQuote }}
+          <span style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </div>
       </div>
-      <div class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-        {{ printf "%.2f" .Pair.Calculations.CurrentBaseAmountInQuote }}
-        <span class="text-lg md:text-xl font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
-          {{ .Pair.QuoteAsset.Symbol }}
-        </span>
-      </div>
-    </div>
+  
+        {{/* Fees */}}
+<div class="flex flex-col items-center gap-1">
+  <div class="flex items-center justify-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+        <div class="flex items-center space-x-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9 0h12a2.25 2.25 0 0 0 2.25-2.25V5.25A2.25 2.25 0 0 0 19.5 3h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 18Z" />
+          </svg>
+          <span>Fees Paid</span>
+        </div>
+           <button title="Current value based on holdings and price" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+               <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+             </svg>
+           </button>
+         </div>
+        <div class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white"> {{/* Slightly smaller */}}
+          {{ printf "%.2f" .Pair.Calculations.TotalFeeInQuote }}
+          <span class="text-sm md:text-base font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </div>
+        <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+           ({{ printf "%.6f" .Pair.Calculations.TotalFeeInBase }}
+           <span style="color:{{ .Pair.BaseAsset.Color }}">
+             {{ .Pair.BaseAsset.Symbol }} </span>)
+        </div>
+       </div>
 
-    <div
-      class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
-      <div
-        class="flex items-center space-x-2 mb-2 md:mb-3 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-          class="w-4 h-4 md:w-5 md:h-5">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9 0h12a2.25 2.25 0 0 0 2.25-2.25V5.25A2.25 2.25 0 0 0 19.5 3h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 18Z" />
-        </svg>
-        <span>Fees</span>
-      </div>
-      <div class="text-xl md:text-2xl font-semibold text-gray-800 dark:text-white">
-        {{ printf "%.2f" .Pair.Calculations.TotalFeeInQuote }}
-        <span class="text-base md:text-lg font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
-          {{ .Pair.QuoteAsset.Symbol }}
-        </span>
-      </div>
-      <div class="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-1">
-        ({{ printf "%.6f" .Pair.Calculations.TotalFeeInBase }}
-        <span style="color:{{ .Pair.BaseAsset.Color }}">
-          {{ .Pair.BaseAsset.Symbol }} </span>)
-      </div>
-    </div>
-  </div>
-{{ end }}
+      {{/* Current Value */}}
+      <div class="flex flex-col items-center gap-1">
+        <div class="flex items-center justify-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+           <div class="flex items-center space-x-2">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+             </svg>
+             <span>Current Value</span>
+           </div>
+           <button title="Current value based on holdings and price" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
+             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+               <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+             </svg>
+           </button>
+         </div>
+         <div class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white">
+           {{ printf "%.2f" .Pair.Calculations.CurrentBaseAmountInQuote }}
+           <span class="text-base md:text-lg font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
+             {{ .Pair.QuoteAsset.Symbol }}
+           </span>
+         </div>
+       </div>
 
+      {{/* Avg. Buy Price */}}
+      <div class="flex flex-col items-center gap-1">
+        <div class="flex items-center justify-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+          <div class="flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.238 48.238 0 0 0 12 2.25Z" />
+            </svg>
+            <span>Avg. Buy Price</span>
+          </div>
+          <button title="Info about average buy price" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+               <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+             </svg>
+          </button>
+        </div>
+        <div class="text-lg md:text-xl font-semibold text-gray-800 dark:text-white">
+          {{ printf "%.7g" .Pair.Calculations.AvgBuyPrice }}
+          <span class="text-base md:text-lg font-medium ml-1" style="color:{{ .Pair.QuoteAsset.Color }}">
+            {{ .Pair.QuoteAsset.Symbol }}
+          </span>
+        </div>
+      </div>
+
+    </div> {{/* End Secondary Metrics Grid */}}
+
+  {{ end }} {{/* End Else (No Error) */}}
+
+</div> {{/* End Dashboard Panel */}}
