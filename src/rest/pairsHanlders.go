@@ -15,6 +15,7 @@ import (
 func pairCards(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		priceStr := c.Query("price")
+		var errMsg string
 		var price float64
 		name := "ERROR"
 		color := "#E0663D"
@@ -22,9 +23,8 @@ func pairCards(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManag
 		req := querying.GetTradingPairReq{TPID: id}
 		resp, err := tpq.GetTradingPair(req)
 		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
+			return c.Render("pairCards", fiber.Map{
+				"Error": err.Error(),
 			})
 		}
 		if priceStr != "" {
@@ -48,9 +48,8 @@ func pairCards(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManag
 		req.WithCalculations = true
 		resp, err = tpq.GetTradingPair(req)
 		if err != nil {
-			return c.Render("toastErr", fiber.Map{
-				"Title": "Error",
-				"Msg":   err,
+			return c.Render("pairCards", fiber.Map{
+				"Error": err.Error(),
 			})
 		}
 		slices.Reverse(resp.Pair.Trades)
@@ -60,6 +59,8 @@ func pairCards(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManag
 			"Price":              price,
 			"PriceProviderName":  name,
 			"PriceProviderColor": color,
+			"Error":              errMsg != "",
+			"ErrMsg":             errMsg,
 		})
 	}
 }

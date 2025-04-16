@@ -146,6 +146,12 @@ func newTradeForm(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderMa
 			AssetSymbolA: resp.Pair.BaseAsset.Symbol,
 			AssetSymbolB: resp.Pair.QuoteAsset.Symbol,
 		})
+		if err != nil {
+			return c.Render("tradingForm", fiber.Map{
+				"Error": err,
+			})
+
+		}
 		return c.Render("tradingForm", fiber.Map{
 			"Pair":  resp.Pair,
 			"Price": qRes.Price,

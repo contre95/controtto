@@ -8,7 +8,8 @@
     </p>
     </div>
   {{ else }}
-  <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+  <!-- <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-3"> -->
+  <div class="grid gap-6 grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
     {{ range $marketName, $trader := .MarketTraders }}
     {{ if $trader.IsSet }}
     <div class="p-4 bg-neutral-50 dark:bg-neutral-900 hover:shadow-md transition-shadow relative">
@@ -19,7 +20,6 @@
         </div>
         {{ end }}
       {{ end }}
-
       <div class="flex items-center gap-3 mb-3">
         <img src="{{ $trader.MarketLogo }}" alt="{{ $marketName }}" class="w-8 h-8">
         <span class="text-base font-semibold text-gray-700 dark:text-gray-100">{{ $trader.MarketName }}</span>
@@ -28,6 +28,8 @@
               text-emerald-600 dark:text-emerald-400 bg-emerald-100/60 dark:bg-emerald-900/30
             {{ else if eq $trader.Type "Broker" }}
               text-blue-600 dark:text-blue-400 bg-blue-100/60 dark:bg-blue-900/30
+            {{ else if eq $trader.Type "Wallet" }}
+              text-purple-600 dark:text-indigo-400 bg-indigo-100/60 dark:bg-indigo-900/30
             {{ else if eq $trader.Type "DEX" }}
               text-purple-600 dark:text-purple-400 bg-purple-100/60 dark:bg-purple-900/30
             {{ else }}
@@ -40,11 +42,11 @@
       <div class="space-y-2 text-sm">
         {{ $info := index $.MarketData $marketName }}
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>{{ $.Pair.BaseAsset.Symbol }} Balance</span>
+          <span>{{ $.Pair.BaseAsset.Symbol }}</span>
           <div class="ml-auto text-right">
             (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">
               $ <span hx-swap="outerHTML" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ printf "%.4f" $info.Amounts 0 }}" hx-trigger="load">
-                {{ printf "%.4f" (index $info.Amounts 0) }}
+                {{ printf "%.2f" (index $info.Amounts 0) }}
               </span>
             </span>)
             <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">
@@ -53,15 +55,23 @@
           </div>
         </div>
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>USDT Balance</span>
+          <span>USDT</span>
           <span class="font-medium" style="color:#009292">
-            {{ printf "%.4f" (index $info.Amounts 1) }}
-          </span>
+          </span>        
+          {{ if ne $trader.Type "Wallet" }}
+            {{ printf "%.2f" (index $info.Amounts 1) }}
+        {{ else }}
+            --.--
+        {{ end }}
         </div>
         <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>USDC Balance</span>
+          <span>USDC</span>
           <span class="font-medium" style="color:#576B83">
-            {{ printf "%.4f" (index $info.Amounts 2) }}
+        {{ if ne $trader.Type "Wallet" }}
+            {{ printf "%.2f" (index $info.Amounts 2) }}
+        {{ else }}
+            --.--
+        {{ end }}
           </span>
         </div>
       </div>

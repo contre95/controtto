@@ -9,6 +9,7 @@ import (
 
 var (
 	tiingo     = "tiingo"
+	bitcoin    = "bitcoin"
 	avantage   = "avantage"
 	coinbase   = "coinbase"
 	binance    = "binance"
@@ -18,6 +19,19 @@ var (
 )
 
 var traders = map[string]pnl.MarketTrader{
+	bitcoin: {
+		IsSet:       os.Getenv(PREFIX+strings.ToUpper(bitcoin)+TRADER_SUFIX) != "",
+		Env:         PREFIX + strings.ToUpper(bitcoin) + TRADER_SUFIX,
+		MarketName:  "Bitcoin",
+		MarketKey:   bitcoin + "_trader",
+		Color:       "#FBD8AE",
+		Type:        pnl.Wallet,
+		Details:     "",
+		Token:       os.Getenv(PREFIX + strings.ToUpper(bitcoin) + TRADER_SUFIX),
+		ProviderURL: "https://bitcoin-api.github.io/docs/#/en-us/swapV2/introduce",
+		MarketLogo:  "/assets/img/" + bitcoin + ".png",
+		Init:        marketTraders.NewBitcoinWalletAPI,
+	},
 	bingx: {
 		IsSet:       os.Getenv(PREFIX+strings.ToUpper(bingx)+TRADER_SUFIX) != "",
 		Env:         PREFIX + strings.ToUpper(bingx) + TRADER_SUFIX,
@@ -55,7 +69,7 @@ var traders = map[string]pnl.MarketTrader{
 		Token:       os.Getenv(PREFIX + strings.ToUpper(binance) + TRADER_SUFIX),
 		ProviderURL: "https://developers.binance.com/en",
 		MarketLogo:  "/assets/img/" + binance + ".png",
-		Init:        marketTraders.NewMockMarketAPI,
+		Init:        marketTraders.NewBinanceAPI,
 	},
 	trading212: {
 		IsSet:       os.Getenv(PREFIX+strings.ToUpper(trading212)+TRADER_SUFIX) != "",

@@ -6,6 +6,7 @@ type MarketType string
 
 const (
 	Exchange MarketType = "Exchange"
+	Wallet   MarketType = "Wallet"
 	Broker   MarketType = "Broker"
 	DEX      MarketType = "DEX"
 )

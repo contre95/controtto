@@ -27,11 +27,9 @@ func NewMarketManager(in map[string]pnl.MarketTrader) *MarketManager {
 		v := val // copy value to avoid referencing the same instance
 		traders[key] = &v
 	}
-
 	mm := &MarketManager{
 		traders: traders,
 	}
-
 	for key, trader := range traders {
 		err := mm.UpdateTrader(key, trader.Token)
 		if err != nil {
@@ -44,7 +42,6 @@ func NewMarketManager(in map[string]pnl.MarketTrader) *MarketManager {
 func (c *MarketManager) UpdateMarketTraderToken(key, token string) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-
 	trader, ok := c.traders[key]
 	if !ok {
 		return fmt.Errorf("market trader %q not found", key)
@@ -53,8 +50,6 @@ func (c *MarketManager) UpdateMarketTraderToken(key, token string) error {
 	trader.IsSet = token != ""
 	trader.Details = "Updated " + time.Now().Format(time.RFC3339)
 	c.traders[key] = trader
-
-	// Send the token update
 	return nil
 }
 
@@ -83,7 +78,6 @@ func (m *MarketManager) UpdateTrader(key string, token string) error {
 	if trader.IsSet {
 		trader.API = trader.Init(token)
 	}
-	trader.Details = "Updated " + time.Now().Format(time.RFC3339)
 	m.traders[key] = trader
 	return nil
 }
@@ -113,16 +107,13 @@ func (m *MarketManager) ExecuteBuy(marketKey string, options pnl.TradeOptions) (
 	if options.Amount <= 0 {
 		return nil, ErrInvalidTrade
 	}
-
 	trader, err := m.getTrader(marketKey)
 	if err != nil {
 		return nil, err
 	}
-
 	if !trader.API.HealthCheck() {
 		return nil, ErrMarketNotHealthy
 	}
-
 	return trader.API.Buy(options)
 }
 
@@ -131,16 +122,13 @@ func (m *MarketManager) ExecuteSell(marketKey string, options pnl.TradeOptions) 
 	if options.Amount <= 0 {
 		return nil, ErrInvalidTrade
 	}
-
 	trader, err := m.getTrader(marketKey)
 	if err != nil {
 		return nil, err
 	}
-
 	if !trader.API.HealthCheck() {
 		return nil, ErrMarketNotHealthy
 	}
-
 	return trader.API.Sell(options)
 }
 

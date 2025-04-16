@@ -1,7 +1,7 @@
 {{define "navbar"}}
 <!-- Mobile Bottom Navigation Bar -->
 <nav
-  class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 shadow-inner"
+  class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-700 shadow-outer shadow-lg"
 >
   <div class="flex justify-around items-center h-16">
     <!-- Dashboard Link -->
@@ -11,9 +11,9 @@
       hx-push-url="true"
       hx-target="#contenido"
       hx-indicator="#loading-indicator"
-      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1"
+      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-150 w-full pt-1"
     >
-      <img src="/assets/img/coins.svg" class="h-6 w-6 mb-1" alt="dashboard" />
+      <img src="/assets/img/dashboard.svg" class="h-10 w-10 mb-1" alt="dashboard" />
       <span class="text-xs font-medium">Dashboard</span>
     </button>
 
@@ -24,9 +24,9 @@
       hx-swap="innerHTML"
       hx-target="#contenido"
       hx-indicator="#loading-indicator"
-      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1"
+      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-150 w-full pt-1"
     >
-      <img src="/assets/img/exchange.svg" class="h-6 w-6 mb-1" alt="trades" />
+      <img src="/assets/img/exchange.svg" class="h-10 w-10 mb-1" alt="trades" />
       <span class="text-xs font-medium">Trades</span>
     </button>
 
@@ -45,9 +45,9 @@
       hx-push-url="true"
       hx-target="#contenido"
       hx-indicator="#loading-indicator"
-      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-150 w-full pt-1"
+      class="mobile-nav-button flex flex-col items-center justify-center text-center text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-150 w-full pt-1"
     >
-      <img src="/assets/img/settings.svg" class="h-6 w-6 mb-1" alt="settings" />
+      <img src="/assets/img/settings.svg" class="h-10 w-10 mb-1" alt="settings" />
       <span class="text-xs font-medium">Settings</span>
     </button>
   </div>

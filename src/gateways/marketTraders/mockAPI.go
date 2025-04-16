@@ -114,7 +114,6 @@ func (m *MockMarketAPI) AccountDetails() (string, error) {
 }
 
 func (m *MockMarketAPI) FetchAssetAmount(symbol string) (float64, error) {
-	fmt.Println("hi")
 	if symbol == "ETH" {
 		return 0, nil
 	}

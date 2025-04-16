@@ -1,3 +1,28 @@
+{{ if .Error }}
+<div id="cards" class="grid  p-3 md:p-5 animate__animated animate__fadeIn">
+  <div
+  class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
+  <div class="flex items-center justify-between mb-2 md:mb-3">
+    <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+        stroke="currentColor" class="w-4 h-4 md:w-5 md:h-5">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
+      </svg>
+      <span>Error</span>
+      <span class="text-xs md:text-sm font-medium text-red-500 dark:text-red-400">
+        {{ .Error}}
+        </span>
+    </div>
+    <span class="px-2 py-0.5 text-[10px] md:text-xs rounded-full text-white font-medium bg-red-500"
+      >
+      Error
+    </span>
+  </div>
+  </div>
+</div>
+{{ else }}
+  <!-- The normal (non-error) version of the cards you already have -->
 <div id="cards" class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 p-3 md:p-5 animate__animated animate__fadeIn">
 <div
   class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
@@ -199,3 +224,5 @@
       </div>
     </div>
   </div>
+{{ end }}
+
