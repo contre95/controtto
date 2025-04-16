@@ -45,8 +45,8 @@
           <span>{{ $.Pair.BaseAsset.Symbol }}</span>
           <div class="ml-auto text-right">
             (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">
-              $ <span hx-swap="outerHTML" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ printf "%.4f" $info.Amounts 0 }}" hx-trigger="load">
-                {{ printf "%.2f" (index $info.Amounts 0) }}
+              $ <span hx-swap="outerHTML" hx-trigger="revealed" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ printf "%.4f" (index $info.Amounts 0) }}" hx-trigger="load">
+                fetching
               </span>
             </span>)
             <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">

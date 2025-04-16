@@ -63,24 +63,26 @@ func calculatePrice(priceProviderManager *querying.PriceProviderManager) func(*f
 		base := c.Query("base")
 		quote := c.Query("quote")
 		amountStr := c.Query("amount")
-
+		fmt.Println(quote, base, amountStr)
 		if base == "" || quote == "" {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":     1,
-				"msg":      "Both base and quote parameters are required",
-				"debugMsg": "",
-				"data":     nil,
-			})
+			return c.SendString("err")
+			// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			// 	"code":     1,
+			// 	"msg":      "Both base and quote parameters are required",
+			// 	"debugMsg": "",
+			// 	"data":     nil,
+			// })
 		}
 
 		amount, err := strconv.ParseFloat(amountStr, 64)
 		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"code":     2,
-				"msg":      "Invalid amount",
-				"debugMsg": err.Error(),
-				"data":     nil,
-			})
+			return c.SendString("err")
+			// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			// 	"code":     2,
+			// 	"msg":      "Invalid amount",
+			// 	"debugMsg": err.Error(),
+			// 	"data":     nil,
+			// })
 		}
 
 		// Try all configured providers until we get a price
@@ -124,17 +126,18 @@ func calculatePrice(priceProviderManager *querying.PriceProviderManager) func(*f
 		}
 
 		totalPrice := price * amount
-		return c.JSON(fiber.Map{
-			"code":     0,
-			"msg":      "Success",
-			"debugMsg": "",
-			"data": fiber.Map{
-				"base":       base,
-				"quote":      quote,
-				"amount":     amount,
-				"price":      price,
-				"totalPrice": totalPrice,
-			},
-		})
+		// return c.JSON(fiber.Map{
+		// 	"code":     0,
+		// 	"msg":      "Success",
+		// 	"debugMsg": "",
+		// 	"data": fiber.Map{
+		// 		"base":       base,
+		// 		"quote":      quote,
+		// 		"amount":     amount,
+		// 		"price":      price,
+		// 		"totalPrice": totalPrice,
+		// 	},
+		// })
+		return c.SendString(fmt.Sprintf("%2.f", totalPrice))
 	}
 }

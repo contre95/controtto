@@ -20,7 +20,7 @@
     <div class="flex items-center flex-col-2 md:float-left md:flex-row justify-end gap-3 w-screen m-3">
 
       <button hx-get="/ui/pairs/{{ .PairID }}/market" hx-swap="innerHTML" hx-target="#market-data"
-        hx-trigger="mouseover once" _="on click toggle .hidden on #market-data"
+        hx-trigger="revealed" _="on click toggle .hidden on #market-data"
         class="flex items-center justify-center lg:w-full w-1/2 md:w-1/6 h-10 px-5 py-2 text-sm tracking-wide border border-neutral-300 rounded-lg bg-white text-gray-800 hover:bg-gray-100 hover:text-black dark:bg-neutral-800 dark:text-gray-200 dark:border-neutral-600 dark:hover:bg-slate-600 dark:hover:text-white transition-colors duration-200">
         <img src="/assets/img/trades.svg" alt="export" class="h-6 w-6 mr-2">
         <span>Markets</span>
