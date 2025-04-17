@@ -11,18 +11,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func getMarketAssets(tpq querying.TradingPairsQuerier, marketManager *managing.MarketManager) func(*fiber.Ctx) error {
+func getMarketAssets(tpq querying.PairsQuerier, marketManager *managing.MarketManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Market assets request received")
 
 		// Get trading pair details
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
+		req := querying.GetPairReq{
 			TPID:             id,
 			WithTrades:       false,
 			WithCalculations: false,
 		}
-		resp, err := tpq.GetTradingPair(req)
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			slog.Error("Failed to get trading pair",
 				"error", err,
@@ -82,19 +82,19 @@ func getMarketAssets(tpq querying.TradingPairsQuerier, marketManager *managing.M
 	}
 }
 
-func newMarketTradingForm(tpq querying.TradingPairsQuerier, marketManager *managing.MarketManager) func(*fiber.Ctx) error {
+func newMarketTradingForm(tpq querying.PairsQuerier, marketManager *managing.MarketManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Create Market Trading UI requested")
 
 		// Get trading pair details
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
+		req := querying.GetPairReq{
 			TPID:             id,
 			WithTrades:       false,
 			WithCalculations: false,
 		}
 
-		resp, err := tpq.GetTradingPair(req)
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			slog.Error("Failed to get trading pair",
 				"error", err,

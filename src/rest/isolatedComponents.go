@@ -8,14 +8,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func pairTape(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func pairTape(tpq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
+		req := querying.GetPairReq{
 			TPID:             id,
 			WithCalculations: false,
 		}
-		resp, err := tpq.GetTradingPair(req)
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
@@ -30,14 +30,14 @@ func pairTape(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
-func pairChart(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func pairChart(tpq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
+		req := querying.GetPairReq{
 			TPID:             id,
 			WithCalculations: false,
 		}
-		resp, err := tpq.GetTradingPair(req)
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",

@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func pairCards(tpq querying.TradingPairsQuerier, pq *managing.PriceProviderManager) func(*fiber.Ctx) error {
+func pairCards(tpq querying.PairsQuerier, pq *managing.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		priceStr := c.Query("price")
 		var errMsg string
@@ -20,8 +20,8 @@ func pairCards(tpq querying.TradingPairsQuerier, pq *managing.PriceProviderManag
 		name := "ERROR"
 		color := "#E0663D"
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{TPID: id}
-		resp, err := tpq.GetTradingPair(req)
+		req := querying.GetPairReq{TPID: id}
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			return c.Render("pairCards", fiber.Map{
 				"Error": err.Error(),
@@ -46,7 +46,7 @@ func pairCards(tpq querying.TradingPairsQuerier, pq *managing.PriceProviderManag
 		fmt.Println("Price", price)
 		req.BasePrice = price
 		req.WithCalculations = true
-		resp, err = tpq.GetTradingPair(req)
+		resp, err = tpq.GetPair(req)
 		if err != nil {
 			return c.Render("pairCards", fiber.Map{
 				"Error": err.Error(),
@@ -83,11 +83,11 @@ func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 }
 
 // Tables handler that renderizer the tables view and returns it to the client
-func tradesTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func tradesTable(aq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Trades table requested")
-		req := querying.ListTradingPairsReq{}
-		resp, err := aq.ListTradingPairs(req)
+		req := querying.ListPairsReq{}
+		resp, err := aq.ListPairs(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
@@ -101,13 +101,13 @@ func tradesTable(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
-func deleteTradingPair(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+func deletePair(tpm managing.PairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		req := managing.DeleteTradingPairReq{
+		req := managing.DeletePairReq{
 			ID: c.Params("id"),
 		}
 		slog.Info("Delete", "id", req.ID)
-		resp, err := tpm.DeleteTradingPair(req)
+		resp, err := tpm.DeletePair(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
@@ -124,7 +124,7 @@ func deleteTradingPair(tpm managing.TradingPairsManager) func(*fiber.Ctx) error 
 	}
 }
 
-func newTradingPair(tpc managing.TradingPairsManager) func(*fiber.Ctx) error {
+func newPair(tpc managing.PairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Creating new pair")
 		payload := struct {
@@ -134,7 +134,7 @@ func newTradingPair(tpc managing.TradingPairsManager) func(*fiber.Ctx) error {
 		if err := c.BodyParser(&payload); err != nil {
 			return err
 		}
-		req := managing.CreateTradingPairReq{
+		req := managing.CreatePairReq{
 			BaseAssetSymbol:  payload.Base,
 			QuoteAssetSymbol: payload.Quote,
 		}

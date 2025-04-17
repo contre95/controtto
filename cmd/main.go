@@ -35,8 +35,8 @@ func main() {
 	// Load configuration
 	cfg := config.NewConfig(PREFIX)
 	ac := managing.NewAssetCreator(sqliteDB)
-	tpc := managing.NewTradingPairManager(cfg, sqliteDB, sqliteDB)
-	tpq := querying.NewTradingPairQuerier(sqliteDB)
+	tpc := managing.NewPairManager(cfg, sqliteDB, sqliteDB)
+	tpq := querying.NewPairQuerier(sqliteDB)
 	mtm := managing.NewMarketManager(traders)
 	ppm := managing.NewPriceProviderManager(pricers)
 	manager := managing.NewService(*ac, *tpc, mtm, ppm)

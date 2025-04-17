@@ -22,7 +22,7 @@ func Home(c *fiber.Ctx) error {
 	return c.Render("main", fiber.Map{"TradesTrigger": ",revealed"})
 }
 
-func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func dashboardSection(aq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		if c.Get("HX-Request") != "true" {
 			return c.Render("main", fiber.Map{
@@ -30,8 +30,8 @@ func dashboardSection(aq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 			})
 		}
 		slog.Info("Dashboard requested")
-		req := querying.ListTradingPairsReq{}
-		resp, err := aq.ListTradingPairs(req)
+		req := querying.ListPairsReq{}
+		resp, err := aq.ListPairs(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",

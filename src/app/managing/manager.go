@@ -15,12 +15,12 @@ var (
 // Service just hols all the managing use cases
 type Service struct {
 	AssetManager         AssetsManager
-	TradingPairManager   TradingPairsManager
+	PairManager   PairsManager
 	MarketManager        *MarketManager
 	PriceProviderManager *PriceProviderManager
 }
 
 // NewService is the interctor for all Managing Use cases
-func NewService(ac AssetsManager, tpc TradingPairsManager, mtm *MarketManager, ppm *PriceProviderManager) Service {
+func NewService(ac AssetsManager, tpc PairsManager, mtm *MarketManager, ppm *PriceProviderManager) Service {
 	return Service{ac, tpc, mtm, ppm}
 }

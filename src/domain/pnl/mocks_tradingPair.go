@@ -14,50 +14,50 @@ func (mm *MockMarkets) GetCurrentPrice(assetA, assetB string) (float64, error) {
 
 }
 
-// MockTradingPairs is a mock implementation of the Pairs interface for testing purposes.
-type MockTradingPairs struct {
-	ListTradingPairsResponse  func() ([]Pair, error)
-	GetTradingPairResponse    func(tpid string) (*Pair, error)
-	DeleteTradingPairResponse func(tpid string) error
-	AddTradingPairResponse    func(tp Pair) error
+// MockPairs is a mock implementation of the Pairs interface for testing purposes.
+type MockPairs struct {
+	ListPairsResponse  func() ([]Pair, error)
+	GetPairResponse    func(tpid string) (*Pair, error)
+	DeletePairResponse func(tpid string) error
+	AddPairResponse    func(tp Pair) error
 	ListTradesResponse  func(tpid string) ([]Trade, error)
-	RecordTradeResponse func(t Trade, tpid TradingPairID) error
+	RecordTradeResponse func(t Trade, tpid PairID) error
 	DeleteTradeResponse func(tid string) error
 }
 
-func (m *MockTradingPairs) AddTradingPair(tp Pair) error {
-	if m.AddTradingPairResponse != nil {
-		return m.AddTradingPairResponse(tp)
+func (m *MockPairs) AddPair(tp Pair) error {
+	if m.AddPairResponse != nil {
+		return m.AddPairResponse(tp)
 	}
-	panic("AddTradingPairResponse not implemented in mock.")
+	panic("AddPairResponse not implemented in mock.")
 }
 
-// ListTradingPairs is a method of the Pairs interface that lists all trading pairs from the repository.
-func (m *MockTradingPairs) ListTradingPairs() ([]Pair, error) {
-	if m.ListTradingPairsResponse != nil {
-		return m.ListTradingPairsResponse()
+// ListPairs is a method of the Pairs interface that lists all trading pairs from the repository.
+func (m *MockPairs) ListPairs() ([]Pair, error) {
+	if m.ListPairsResponse != nil {
+		return m.ListPairsResponse()
 	}
-	panic("ListTradingPairsResponse not implemented in mock.")
+	panic("ListPairsResponse not implemented in mock.")
 }
 
-// GetTradingPair is a method of the Pairs interface that retrieves a trading pair from the repository by its ID.
-func (m *MockTradingPairs) GetTradingPair(tpid string) (*Pair, error) {
-	if m.GetTradingPairResponse != nil {
-		return m.GetTradingPairResponse(tpid)
+// GetPair is a method of the Pairs interface that retrieves a trading pair from the repository by its ID.
+func (m *MockPairs) GetPair(tpid string) (*Pair, error) {
+	if m.GetPairResponse != nil {
+		return m.GetPairResponse(tpid)
 	}
-	panic("GetTradingPairResponse not implemented in mock.")
+	panic("GetPairResponse not implemented in mock.")
 }
 
-// DeleteTradingPair is a method of the Pairs interface that deletes a trading pair from the repository by its ID.
-func (m *MockTradingPairs) DeleteTradingPair(tpid string) error {
-	if m.DeleteTradingPairResponse != nil {
-		return m.DeleteTradingPairResponse(tpid)
+// DeletePair is a method of the Pairs interface that deletes a trading pair from the repository by its ID.
+func (m *MockPairs) DeletePair(tpid string) error {
+	if m.DeletePairResponse != nil {
+		return m.DeletePairResponse(tpid)
 	}
-	panic("DeleteTradingPairResponse not implemented in mock.")
+	panic("DeletePairResponse not implemented in mock.")
 }
 
 // RecordTrade is a method of the Pairs interface that records a trade for a trading pair.
-func (m *MockTradingPairs) RecordTrade(t Trade, tpid TradingPairID) error {
+func (m *MockPairs) RecordTrade(t Trade, tpid PairID) error {
 	if m.RecordTradeResponse != nil {
 		return m.RecordTradeResponse(t, tpid)
 	}
@@ -66,7 +66,7 @@ func (m *MockTradingPairs) RecordTrade(t Trade, tpid TradingPairID) error {
 }
 
 // ListTrades is a method of the Pairs interface that lists all trades for a trading pair by its ID.
-func (m *MockTradingPairs) ListTrades(tpid string) ([]Trade, error) {
+func (m *MockPairs) ListTrades(tpid string) ([]Trade, error) {
 	if m.ListTradesResponse != nil {
 		return m.ListTradesResponse(tpid)
 	}
@@ -74,7 +74,7 @@ func (m *MockTradingPairs) ListTrades(tpid string) ([]Trade, error) {
 }
 
 // DeleteTrade is a method of the Pairs interface that deletes a trade from a trading pair by its ID.
-func (m *MockTradingPairs) DeleteTrade(tid string) error {
+func (m *MockPairs) DeleteTrade(tid string) error {
 	if m.DeleteTradeResponse != nil {
 		return m.DeleteTradeResponse(tid)
 	}

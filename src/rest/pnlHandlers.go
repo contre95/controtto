@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func avgBuyPrice(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func avgBuyPrice(tpq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		// Implementation would go here
 		return nil

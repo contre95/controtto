@@ -2,11 +2,11 @@ package pnl
 
 import "time"
 
-type TradingPairID string
+type PairID string
 
 // Pair represents the primary aggregate root. It contains the main context for profit and loss calculations between two assets
 type Pair struct {
-	ID           TradingPairID
+	ID           PairID
 	BaseAsset    Asset
 	QuoteAsset   Asset
 	Trades       []Trade
@@ -54,11 +54,11 @@ type Trade struct {
 
 // TrasingPairs repository interface
 type Pairs interface {
-	AddTradingPair(tp Pair) error
-	ListTradingPairs() ([]Pair, error)
-	GetTradingPair(tpid string) (*Pair, error)
-	DeleteTradingPair(tpid string) error
+	AddPair(tp Pair) error
+	ListPairs() ([]Pair, error)
+	GetPair(tpid string) (*Pair, error)
+	DeletePair(tpid string) error
 	DeleteTrade(tid string) error
-	RecordTrade(t Trade, tpid TradingPairID) error
+	RecordTrade(t Trade, tpid PairID) error
 	ListTrades(tpid string) ([]Trade, error)
 }

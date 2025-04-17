@@ -10,11 +10,11 @@ import (
 	"github.com/google/uuid"
 )
 
-// NewTradingPair creates a new Pair validating its invariants.
-func NewTradingPair(base Asset, quote Asset) (*Pair, error) {
+// NewPair creates a new Pair validating its invariants.
+func NewPair(base Asset, quote Asset) (*Pair, error) {
 	// I'll leave uniqueness of this to an exception https://stackoverflow.com/questions/2660817/ddd-validation-of-unique-constraint
 	tp := Pair{
-		ID:         TradingPairID(fmt.Sprintf("%s%s", base.Symbol, quote.Symbol)),
+		ID:         PairID(fmt.Sprintf("%s%s", base.Symbol, quote.Symbol)),
 		BaseAsset:  base,
 		QuoteAsset: quote,
 		Trades:     []Trade{},
@@ -40,7 +40,7 @@ func (tp *Pair) NewTrade(baseAmount, quoteAmount, tFee, wFee float64, timestamp 
 
 type InvalidTrade error
 
-// Validate validates a Pair, if all fields are valid it returns itself, otherwise it returns an InvalidTradingPair error.
+// Validate validates a Pair, if all fields are valid it returns itself, otherwise it returns an InvalidPair error.
 func (t *Trade) Validate() (*Trade, error) {
 	// Perform any necessary validation or business logic checks here.
 	if t.FeeInBase > 0 && t.FeeInQuote > 0 {
@@ -58,7 +58,7 @@ func (t *Trade) Validate() (*Trade, error) {
 	return t, nil
 }
 
-// Validate validates a Pair, if all fields are valid it returns itself, otherwise it returns an InvalidTradingPair error.
+// Validate validates a Pair, if all fields are valid it returns itself, otherwise it returns an InvalidPair error.
 func (tp *Pair) Validate() (*Pair, error) {
 	// Perform any necessary validation or business logic checks here.
 	return tp, nil

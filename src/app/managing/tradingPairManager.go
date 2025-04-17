@@ -9,7 +9,7 @@ import (
 )
 
 type RecordTradeReq struct {
-	TradingPairID string
+	PairID string
 	Timestamp     time.Time
 	BaseAmount    float64
 	QuoteAmount   float64
@@ -24,16 +24,16 @@ type RecordTradeResp struct {
 	RecordTime time.Time
 }
 
-type CreateTradingPairResp struct {
+type CreatePairResp struct {
 	ID  string
 	Msg string
 }
 
-type DeleteTradingPairReq struct {
+type DeletePairReq struct {
 	ID string
 }
 
-type DeleteTradingPairResp struct {
+type DeletePairResp struct {
 	ID  string
 	Msg string
 }
@@ -47,34 +47,34 @@ type DeleteTradeResp struct {
 	Msg string
 }
 
-type CreateTradingPairReq struct {
+type CreatePairReq struct {
 	BaseAssetSymbol  string
 	QuoteAssetSymbol string
 }
 
-type TradingPairsManager struct {
+type PairsManager struct {
 	config       *config.ConfigManager
 	assets       pnl.Assets
 	tradingPairs pnl.Pairs
 }
 
-func NewTradingPairManager(cfg *config.ConfigManager, a pnl.Assets, tp pnl.Pairs) *TradingPairsManager {
-	return &TradingPairsManager{cfg, a, tp}
+func NewPairManager(cfg *config.ConfigManager, a pnl.Assets, tp pnl.Pairs) *PairsManager {
+	return &PairsManager{cfg, a, tp}
 }
 
-func (tpm *TradingPairsManager) DeleteTradingPair(req DeleteTradingPairReq) (*DeleteTradingPairResp, error) {
-	err := tpm.tradingPairs.DeleteTradingPair(req.ID)
+func (tpm *PairsManager) DeletePair(req DeletePairReq) (*DeletePairResp, error) {
+	err := tpm.tradingPairs.DeletePair(req.ID)
 	if err != nil {
 		slog.Error("Error deleting trading pair", "error", err)
 		return nil, err
 	}
-	return &DeleteTradingPairResp{
+	return &DeletePairResp{
 		ID:  req.ID,
 		Msg: fmt.Sprintf("Trade %s deleted successfully!", req.ID),
 	}, nil
 }
 
-func (tpm *TradingPairsManager) DeleteTrade(req DeleteTradeReq) (*DeleteTradeResp, error) {
+func (tpm *PairsManager) DeleteTrade(req DeleteTradeReq) (*DeleteTradeResp, error) {
 	err := tpm.tradingPairs.DeleteTrade(req.ID)
 	if err != nil {
 		slog.Error("Error deleting trading pair", "error", err)
@@ -86,9 +86,9 @@ func (tpm *TradingPairsManager) DeleteTrade(req DeleteTradeReq) (*DeleteTradeRes
 	}, nil
 }
 
-func (tpm *TradingPairsManager) RecordTrade(req RecordTradeReq) (*RecordTradeResp, error) {
+func (tpm *PairsManager) RecordTrade(req RecordTradeReq) (*RecordTradeResp, error) {
 	var err error
-	tradingPair, err := tpm.tradingPairs.GetTradingPair(string(req.TradingPairID))
+	tradingPair, err := tpm.tradingPairs.GetPair(string(req.PairID))
 	if err != nil {
 		slog.Error("Could not retrieve Pair", "error", err)
 		return nil, err
@@ -111,7 +111,7 @@ func (tpm *TradingPairsManager) RecordTrade(req RecordTradeReq) (*RecordTradeRes
 	}, nil
 }
 
-func (tpm *TradingPairsManager) Create(req CreateTradingPairReq) (*CreateTradingPairResp, error) {
+func (tpm *PairsManager) Create(req CreatePairReq) (*CreatePairResp, error) {
 	var err error
 	var base, quote *pnl.Asset
 
@@ -142,13 +142,13 @@ func (tpm *TradingPairsManager) Create(req CreateTradingPairReq) (*CreateTrading
 	// 	}
 	// }
 
-	tradingPair, err := pnl.NewTradingPair(*base, *quote)
+	tradingPair, err := pnl.NewPair(*base, *quote)
 	if err != nil {
 		slog.Error("Creating new pair", "Base", base.Name, "Quote", quote.Name, "error", err)
 		return nil, err
 	}
 
-	err = tpm.tradingPairs.AddTradingPair(*tradingPair)
+	err = tpm.tradingPairs.AddPair(*tradingPair)
 	if err != nil {
 		slog.Error("Persisting trading pair", "Trading pair", tradingPair, "error", err)
 		return nil, fmt.Errorf("Could not create pair ( %s/%s )", tradingPair.BaseAsset.Symbol, tradingPair.QuoteAsset.Symbol)
@@ -156,7 +156,7 @@ func (tpm *TradingPairsManager) Create(req CreateTradingPairReq) (*CreateTrading
 
 	slog.Info("New Trading pair created", "Pairs", tradingPair)
 
-	return &CreateTradingPairResp{
+	return &CreatePairResp{
 		ID:  string(tradingPair.ID),
 		Msg: fmt.Sprintf("Trading %s pair created successfully.", string(tradingPair.ID)),
 	}, nil

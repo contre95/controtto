@@ -15,7 +15,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func deleteTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+func deleteTrade(tpm managing.PairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		req := managing.DeleteTradeReq{
 			ID: c.Params("id"),
@@ -37,7 +37,7 @@ func deleteTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+func newTradeImport(tpm managing.PairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Importing trades")
 		file, err := c.FormFile("trancsv")
@@ -78,7 +78,7 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 				})
 			}
 			req := managing.RecordTradeReq{}
-			req.TradingPairID = c.Params("id")
+			req.PairID = c.Params("id")
 			req.Type = line[0]
 			req.Timestamp, err = time.Parse("2006-01-02 15:04", line[1])
 			if err != nil {
@@ -126,16 +126,16 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func newTradeForm(tpq querying.TradingPairsQuerier, pq *managing.PriceProviderManager) func(*fiber.Ctx) error {
+func newTradeForm(tpq querying.PairsQuerier, pq *managing.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Create Trade UI requested")
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
+		req := querying.GetPairReq{
 			TPID:             id,
 			WithTrades:       false,
 			WithCalculations: false,
 		}
-		resp, err := tpq.GetTradingPair(req)
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
@@ -160,7 +160,7 @@ func newTradeForm(tpq querying.TradingPairsQuerier, pq *managing.PriceProviderMa
 	}
 }
 
-func newTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
+func newTrade(tpm managing.PairsManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Recording new trade")
 		payload := struct {
@@ -183,7 +183,7 @@ func newTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 			})
 		}
 		req := managing.RecordTradeReq{
-			TradingPairID: c.Params("id"),
+			PairID: c.Params("id"),
 			Timestamp:     tdate,
 			BaseAmount:    payload.Base,
 			QuoteAmount:   payload.Quote,
@@ -208,15 +208,15 @@ func newTrade(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func tradingTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func tradingTable(tpq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
+		req := querying.GetPairReq{
 			TPID:             id,
 			WithTrades:       true,
 			WithCalculations: false,
 		}
-		resp, err := tpq.GetTradingPair(req)
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			return c.Render("toastErr", fiber.Map{
 				"Title": "Error",
@@ -236,15 +236,15 @@ func tradingTable(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
-func tradingExport(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
+func tradingExport(tpq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		id := c.Params("id")
-		req := querying.GetTradingPairReq{
+		req := querying.GetPairReq{
 			TPID:             id,
 			WithTrades:       true,
 			WithCalculations: false,
 		}
-		resp, err := tpq.GetTradingPair(req)
+		resp, err := tpq.GetPair(req)
 		if err != nil {
 			return c.SendString(fmt.Sprintf("Error exporting trades. %s", err))
 		}

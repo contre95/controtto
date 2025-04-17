@@ -23,8 +23,8 @@ const tables string = `
           BaseAmount REAL,
           QuoteAmount REAL,
           TradeType TEXT,
-          TradingPairID TEXT,
-          FOREIGN KEY (TradingPairID) REFERENCES Pairs (ID)
+          PairID TEXT,
+          FOREIGN KEY (PairID) REFERENCES Pairs (ID)
 		);
 
         CREATE TABLE IF NOT EXISTS Asset (
@@ -90,63 +90,63 @@ var demo string = `
 		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('TSLAUSD', 'TSLA', 'USD');
 
 		-- Trades with alternating Buy and Sell in the same pair, three times per pair
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:00:00', 1, 86500.00, 'Buy', 'BTCUSDT');
 
 		-- ETHUSDT
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:30:00', 1.5, 4800.00, 'Buy', 'ETHUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:35:00', 1.0, 4900.00, 'Sell', 'ETHUSDT'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:40:00', 1.2, 4950.00, 'Buy', 'ETHUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:45:00', 1.0, 5100.00, 'Sell', 'ETHUSDT'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:50:00', 1.8, 5200.00, 'Buy', 'ETHUSDT');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:55:00', 1.5, 5300.00, 'Sell', 'ETHUSDT'); -- Positive PnL
 
 		-- EURUSD
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:00:00', 1000, 1080.00, 'Buy', 'EURUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:05:00', 1000, 1100.00, 'Sell', 'EURUSD'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:10:00', 1200, 1120.00, 'Buy', 'EURUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:15:00', 1100, 1150.00, 'Sell', 'EURUSD'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:20:00', 1500, 1180.00, 'Buy', 'EURUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:25:00', 1400, 1200.00, 'Sell', 'EURUSD'); -- Positive PnL
 
 		-- GBPJPY
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:30:00', 500, 87000.00, 'Buy', 'GBPJPY');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:35:00', 500, 88000.00, 'Sell', 'GBPJPY'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:40:00', 700, 89000.00, 'Buy', 'GBPJPY');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:45:00', 600, 90000.00, 'Sell', 'GBPJPY'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:50:00', 1000, 91500.00, 'Buy', 'GBPJPY');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:55:00', 1000, 92000.00, 'Sell', 'GBPJPY'); -- Positive PnL
 
 		-- AAPLUSD
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T12:00:00', 20, 3600.00, 'Buy', 'AAPLUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T12:05:00', 20, 3800.00, 'Sell', 'AAPLUSD'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T12:10:00', 30, 3850.00, 'Buy', 'AAPLUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T12:15:00', 25, 3900.00, 'Sell', 'AAPLUSD'); -- Positive PnL
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T12:20:00', 50, 4000.00, 'Buy', 'AAPLUSD');
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
+		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T12:25:00', 50, 4200.00, 'Sell', 'AAPLUSD'); -- Positive PnL
 	`
 
@@ -218,7 +218,7 @@ func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
 }
 
 // Add adds a new trading pair to the database.
-func (s *SQLiteStorage) AddTradingPair(tp pnl.Pair) error {
+func (s *SQLiteStorage) AddPair(tp pnl.Pair) error {
 	_, err := s.db.Exec("INSERT INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES (?, ?, ?)", string(tp.ID), tp.BaseAsset.Symbol, tp.QuoteAsset.Symbol)
 	if err != nil {
 		slog.Error("Error adding trading pair", "error", err)
@@ -228,7 +228,7 @@ func (s *SQLiteStorage) AddTradingPair(tp pnl.Pair) error {
 }
 
 // List returns a list of all trading pairs.
-func (s *SQLiteStorage) GetTradingPair(tpid string) (*pnl.Pair, error) {
+func (s *SQLiteStorage) GetPair(tpid string) (*pnl.Pair, error) {
 	var tp pnl.Pair
 	var baseSymbol, quoteSymbol string
 	err := s.db.QueryRow("SELECT ID, BaseAsset, QuoteAsset FROM Pairs WHERE ID = ?", tpid).Scan(&tp.ID, &baseSymbol, &quoteSymbol)
@@ -250,7 +250,7 @@ func (s *SQLiteStorage) GetTradingPair(tpid string) (*pnl.Pair, error) {
 }
 
 // List returns a list of all trading pairs.
-func (s *SQLiteStorage) ListTradingPairs() ([]pnl.Pair, error) {
+func (s *SQLiteStorage) ListPairs() ([]pnl.Pair, error) {
 	rows, err := s.db.Query("SELECT ID, BaseAsset, QuoteAsset FROM Pairs")
 	if err != nil {
 		return nil, err
@@ -281,15 +281,15 @@ func (s *SQLiteStorage) ListTradingPairs() ([]pnl.Pair, error) {
 }
 
 // RecordTrade records a new trade for a trading pair.
-func (s *SQLiteStorage) RecordTrade(t pnl.Trade, tpid pnl.TradingPairID) error {
-	_, err := s.db.Exec("INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) VALUES (?, ?, ?, ?, ?)",
+func (s *SQLiteStorage) RecordTrade(t pnl.Trade, tpid pnl.PairID) error {
+	_, err := s.db.Exec("INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) VALUES (?, ?, ?, ?, ?)",
 		t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TradeType, string(tpid))
 	return err
 }
 
 // ListTrades returns a list of trades for a given trading pair ID.
 func (s *SQLiteStorage) ListTrades(tpid string) ([]pnl.Trade, error) {
-	rows, err := s.db.Query("SELECT ID, Timestamp, BaseAmount, QuoteAmount, TradeType FROM Trades WHERE TradingPairID = ?", tpid)
+	rows, err := s.db.Query("SELECT ID, Timestamp, BaseAmount, QuoteAmount, TradeType FROM Trades WHERE PairID = ?", tpid)
 	if err != nil {
 		return nil, err
 	}
@@ -307,8 +307,8 @@ func (s *SQLiteStorage) ListTrades(tpid string) ([]pnl.Trade, error) {
 	return trades, nil
 }
 
-// DeleteTradingPair deletes a trading pair by its ID.
-func (s *SQLiteStorage) DeleteTradingPair(tpid string) error {
+// DeletePair deletes a trading pair by its ID.
+func (s *SQLiteStorage) DeletePair(tpid string) error {
 	_, err := s.db.Exec("DELETE FROM Pairs WHERE ID = ?", tpid)
 	if err != nil {
 		slog.Error("Error deleting trading pair", "error", err)

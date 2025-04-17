@@ -14,7 +14,7 @@ var (
 // Request and Response DTOs
 type TradeRequest struct {
 	MarketKey     string
-	Pair   TradingPairDTO
+	Pair   PairDTO
 	Amount        float64
 	Price         *float64 // Optional price for limit orders
 	IsMarketOrder bool
@@ -39,7 +39,7 @@ type AssetDTO struct {
 	Type        string `json:"type"`
 }
 
-type TradingPairDTO struct {
+type PairDTO struct {
 	ID         string   `json:"id"`
 	BaseAsset  AssetDTO `json:"base_asset"`
 	QuoteAsset AssetDTO `json:"quote_asset"`
@@ -47,7 +47,7 @@ type TradingPairDTO struct {
 
 type ImportTradesRequest struct {
 	MarketKey string         `json:"market_key"`
-	Pair      TradingPairDTO `json:"pair"`
+	Pair      PairDTO `json:"pair"`
 	Since     time.Time      `json:"since"`
 }
 
@@ -74,7 +74,7 @@ func toDomainAsset(dto AssetDTO) (*pnl.Asset, error) {
 	)
 }
 
-func toDomainPair(dto TradingPairDTO) (*pnl.Pair, error) {
+func toDomainPair(dto PairDTO) (*pnl.Pair, error) {
 	baseAsset, err := toDomainAsset(dto.BaseAsset)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func toDomainPair(dto TradingPairDTO) (*pnl.Pair, error) {
 		return nil, err
 	}
 
-	return pnl.NewTradingPair(*baseAsset, *quoteAsset)
+	return pnl.NewPair(*baseAsset, *quoteAsset)
 }
 
 func toTradeResponse(domain pnl.Trade) TradeResponse {

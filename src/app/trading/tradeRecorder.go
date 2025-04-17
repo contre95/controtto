@@ -44,7 +44,7 @@ func (tpm *TradeRecorder) DeleteTrade(req DeleteTradeReq) (*DeleteTradeResp, err
 }
 
 type RecordTradeReq struct {
-	TradingPairID string    `json:"trading_pair_id"`
+	PairID string    `json:"trading_pair_id"`
 	Timestamp     time.Time `json:"timestamp"`
 	BaseAmount    float64   `json:"base_amount"`
 	QuoteAmount   float64   `json:"quote_amount"`
@@ -66,11 +66,11 @@ func (tpm *TradeRecorder) RecordTrade(req RecordTradeReq) (*RecordTradeResp, err
 	}
 
 	// Get trading pair
-	tradingPair, err := tpm.tradingPairs.GetTradingPair(req.TradingPairID)
+	tradingPair, err := tpm.tradingPairs.GetPair(req.PairID)
 	if err != nil {
 		slog.Error("Failed to get trading pair",
 			"error", err,
-			"trading_pair_id", req.TradingPairID)
+			"trading_pair_id", req.PairID)
 		return nil, fmt.Errorf("failed to get trading pair: %w", err)
 	}
 
@@ -86,7 +86,7 @@ func (tpm *TradeRecorder) RecordTrade(req RecordTradeReq) (*RecordTradeResp, err
 	if err != nil {
 		slog.Error("Failed to create trade",
 			"error", err,
-			"trading_pair_id", req.TradingPairID)
+			"trading_pair_id", req.PairID)
 		return nil, fmt.Errorf("failed to create trade: %w", err)
 	}
 
