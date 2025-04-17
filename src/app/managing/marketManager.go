@@ -3,7 +3,6 @@ package managing
 import (
 	"controtto/src/domain/pnl"
 	"sync"
-	"time"
 )
 
 // MarketManager handles all market operations
@@ -79,36 +78,6 @@ func (m *MarketManager) ListTraders(all bool) map[string]*pnl.Market {
 	return m.GetMarkets(all) // true = only return configured markets
 }
 
-// ExecuteBuy executes a buy order
-func (m *MarketManager) ExecuteBuy(marketKey string, options pnl.TradeOptions) (*pnl.Trade, error) {
-	if options.Amount <= 0 {
-		return nil, ErrInvalidTrade
-	}
-	market, err := m.getMarket(marketKey)
-	if err != nil {
-		return nil, err
-	}
-	if !market.API.HealthCheck() {
-		return nil, ErrMarketNotHealthy
-	}
-	return market.API.Buy(options)
-}
-
-// ExecuteSell executes a sell order
-func (m *MarketManager) ExecuteSell(marketKey string, options pnl.TradeOptions) (*pnl.Trade, error) {
-	if options.Amount <= 0 {
-		return nil, ErrInvalidTrade
-	}
-	market, err := m.getMarket(marketKey)
-	if err != nil {
-		return nil, err
-	}
-	if !market.API.HealthCheck() {
-		return nil, ErrMarketNotHealthy
-	}
-	return market.API.Sell(options)
-}
-
 // FetchBalance gets asset balance from a market
 func (m *MarketManager) FetchBalance(marketKey, symbol string) (float64, error) {
 	market, err := m.getMarket(marketKey)
@@ -116,15 +85,6 @@ func (m *MarketManager) FetchBalance(marketKey, symbol string) (float64, error) 
 		return 0, err
 	}
 	return market.API.FetchAssetAmount(symbol)
-}
-
-// ImportTrades imports historical trades
-func (m *MarketManager) ImportTrades(marketKey string, pair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
-	market, err := m.getMarket(marketKey)
-	if err != nil {
-		return nil, err
-	}
-	return market.API.ImportTrades(pair, since)
 }
 
 // CheckHealth verifies market connection
