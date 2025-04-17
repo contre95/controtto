@@ -45,7 +45,7 @@ func main() {
 	manager := managing.NewService(*ac, *pc, mm, ppm)
 	querier := querying.NewService(*aq, *pq)
 	tr := trading.NewTradeRecorder(sqliteDB)
-	at := trading.NewAssetTrader(mm, *aq)
+	at := trading.NewAssetTrader(mm, sqliteDB)
 	trader := trading.NewService(*at, *tr)
 	// *trading.NewAssetTrader(markets map[string]pnl.Market)
 

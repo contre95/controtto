@@ -31,7 +31,7 @@ type MarketTraderNotFound error
 
 // MarketTrader repository interface
 type TradeOptions struct {
-	Pair   Pair
+	Pair          Pair
 	Amount        float64
 	Price         *float64 // Optional price for limit orders
 	IsMarketOrder bool

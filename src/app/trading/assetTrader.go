@@ -2,7 +2,6 @@ package trading
 
 import (
 	"controtto/src/app/managing"
-	"controtto/src/app/querying"
 	"controtto/src/domain/pnl"
 	"errors"
 	"time"
@@ -16,7 +15,7 @@ var (
 // Request and Response DTOs
 type TradeRequest struct {
 	MarketKey     string
-	Pair          PairDTO
+	PairID        string
 	Amount        float64
 	Price         *float64 // Optional price for limit orders
 	IsMarketOrder bool
@@ -33,61 +32,23 @@ type TradeResponse struct {
 	Price       float64   `json:"price"`
 }
 
-type AssetDTO struct {
-	Symbol      string `json:"symbol"`
-	Color       string `json:"color"`
-	Name        string `json:"name"`
-	CountryCode string `json:"country_code"`
-	Type        string `json:"type"`
-}
-
-type PairDTO struct {
-	ID         string   `json:"id"`
-	BaseAsset  AssetDTO `json:"base_asset"`
-	QuoteAsset AssetDTO `json:"quote_asset"`
-}
-
 type ImportTradesRequest struct {
 	MarketKey string    `json:"market_key"`
-	Pair      PairDTO   `json:"pair"`
+	PairID    string    `json:"pair_id"`
 	Since     time.Time `json:"since"`
 }
 
 type AssetTrader struct {
 	markets *managing.MarketManager
-	assets  querying.AssetsQuerier
+	assets  pnl.Assets
+	pairs   pnl.Pairs
 }
 
-func NewAssetTrader(mm *managing.MarketManager, aq querying.AssetsQuerier) *AssetTrader {
+func NewAssetTrader(mm *managing.MarketManager, p pnl.Pairs) *AssetTrader {
 	return &AssetTrader{
 		markets: mm,
-		assets:  aq,
+		pairs:   p,
 	}
-}
-
-// Helper functions for domain <-> DTO conversion
-func toDomainAsset(dto AssetDTO) (*pnl.Asset, error) {
-	return pnl.NewAsset(
-		dto.Symbol,
-		dto.Color,
-		dto.Name,
-		dto.CountryCode,
-		dto.Type,
-	)
-}
-
-func toDomainPair(dto PairDTO) (*pnl.Pair, error) {
-	baseAsset, err := toDomainAsset(dto.BaseAsset)
-	if err != nil {
-		return nil, err
-	}
-
-	quoteAsset, err := toDomainAsset(dto.QuoteAsset)
-	if err != nil {
-		return nil, err
-	}
-
-	return pnl.NewPair(*baseAsset, *quoteAsset)
 }
 
 func toTradeResponse(domain pnl.Trade) TradeResponse {
@@ -111,6 +72,14 @@ func (m *AssetTrader) getMarket(marketKey string) (*pnl.Market, error) {
 	return market, nil
 }
 
+func (m *AssetTrader) getPair(pairID string) (*pnl.Pair, error) {
+	pair, err := m.pairs.GetPair(pairID)
+	if err != nil {
+		return nil, err
+	}
+	return pair, nil
+}
+
 func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeResponse, error) {
 	if req.Amount <= 0 {
 		return nil, ErrInvalidTrade
@@ -125,7 +94,7 @@ func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeResponse, error) {
 		return nil, ErrMarketNotHealthy
 	}
 
-	pair, err := toDomainPair(req.Pair)
+	pair, err := m.getPair(req.PairID)
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +129,7 @@ func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeResponse, error) {
 		return nil, ErrMarketNotHealthy
 	}
 
-	pair, err := toDomainPair(req.Pair)
+	pair, err := m.getPair(req.PairID)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +156,7 @@ func (m *AssetTrader) ImportTrades(req ImportTradesRequest) ([]TradeResponse, er
 		return nil, err
 	}
 
-	pair, err := toDomainPair(req.Pair)
+	pair, err := m.getPair(req.PairID)
 	if err != nil {
 		return nil, err
 	}
