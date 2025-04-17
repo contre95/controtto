@@ -3,7 +3,6 @@ package rest
 import (
 	"controtto/src/app/config"
 	"controtto/src/app/managing"
-	"controtto/src/app/querying"
 	"fmt"
 	"log/slog"
 
@@ -20,7 +19,7 @@ import (
 //			return c.SendString(fmt.Sprintf("%t", marketsSet(marketManager)))
 //		}
 //	}
-func saveSettingsForm(priceProviderManager *querying.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
+func saveSettingsForm(priceProviderManager *managing.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		// Update price providers
 		providers := priceProviderManager.ListProviders(true) // true = get all providers

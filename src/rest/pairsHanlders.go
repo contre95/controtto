@@ -12,7 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func pairCards(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManager) func(*fiber.Ctx) error {
+func pairCards(tpq querying.TradingPairsQuerier, pq *managing.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		priceStr := c.Query("price")
 		var errMsg string
@@ -35,7 +35,7 @@ func pairCards(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManag
 				name = "BadPrice"
 				color = "#E0668D"
 			}
-		} else if priceResp, err := pq.QueryPrice(querying.QueryPriceReq{
+		} else if priceResp, err := pq.QueryPrice(managing.QueryPriceReq{
 			AssetSymbolA: resp.Pair.BaseAsset.Symbol,
 			AssetSymbolB: resp.Pair.QuoteAsset.Symbol,
 		}); err == nil {

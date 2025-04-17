@@ -2,16 +2,8 @@ package managing
 
 import (
 	"controtto/src/domain/pnl"
-	"errors"
 	"sync"
 	"time"
-)
-
-var (
-	ErrMarketNotFound   = errors.New("market traders not found")
-	ErrEmptyToken       = errors.New("market traders not configured")
-	ErrInvalidTrade     = errors.New("invalid trade parameters")
-	ErrMarketNotHealthy = errors.New("market API not healthy")
 )
 
 // MarketManager handles all market operations
@@ -127,7 +119,7 @@ func (m *MarketManager) FetchBalance(marketKey, symbol string) (float64, error) 
 }
 
 // ImportTrades imports historical trades
-func (m *MarketManager) ImportTrades(marketKey string, pair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
+func (m *MarketManager) ImportTrades(marketKey string, pair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
 	market, err := m.getMarket(marketKey)
 	if err != nil {
 		return nil, err

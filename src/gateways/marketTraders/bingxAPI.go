@@ -128,7 +128,7 @@ func (b *BingxMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 	panic("Sell not implemented")
 }
 
-func (b *BingxMarketAPI) ImportTrades(pair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
+func (b *BingxMarketAPI) ImportTrades(pair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
 	panic("ImportTrades not implemented")
 }
 

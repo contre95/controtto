@@ -72,7 +72,7 @@ func pairSection() func(*fiber.Ctx) error {
 	}
 }
 
-func settingsSection(priceProviderManager *querying.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
+func settingsSection(priceProviderManager *managing.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		if c.Get("HX-Request") != "true" {
 			return c.Render("main", fiber.Map{

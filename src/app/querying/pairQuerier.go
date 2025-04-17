@@ -7,11 +7,11 @@ import (
 )
 
 type TradingPairsQuerier struct {
-	tradingPairs pnl.TradingPairs
+	tradingPairs pnl.Pairs
 }
 
 // NewTradingPairQuerier returns a new intereactor with all the Trading Pair related use cases.
-func NewTradingPairQuerier(a pnl.TradingPairs) *TradingPairsQuerier {
+func NewTradingPairQuerier(a pnl.Pairs) *TradingPairsQuerier {
 	return &TradingPairsQuerier{a}
 }
 
@@ -19,7 +19,7 @@ func NewTradingPairQuerier(a pnl.TradingPairs) *TradingPairsQuerier {
 
 type ListTradingPairsReq struct{}
 type ListTradingPairsResp struct {
-	Pairs []pnl.TradingPair
+	Pairs []pnl.Pair
 }
 
 func (tpq *TradingPairsQuerier) ListTradingPairs(req ListTradingPairsReq) (*ListTradingPairsResp, error) {
@@ -48,10 +48,10 @@ func (tpq *TradingPairsQuerier) ListTrades(req TradesReq) (*TradesResp, error) {
 	var err error
 	trades, err := tpq.getTrades(req.TradingPairID)
 	if err != nil {
-		slog.Error("Error getting list from DB", "TradingPair", req.TradingPairID, "error", err)
+		slog.Error("Error getting list from DB", "Pair", req.TradingPairID, "error", err)
 		return nil, err
 	}
-	slog.Error("Trades retrieved succesfully", "TradingPair", req.TradingPairID, "TradeCount", len(trades))
+	slog.Error("Trades retrieved succesfully", "Pair", req.TradingPairID, "TradeCount", len(trades))
 	resp := TradesResp{
 		Trades: trades,
 	}
@@ -69,7 +69,7 @@ type GetTradingPairReq struct {
 }
 
 type GetTradingPairResp struct {
-	Pair pnl.TradingPair
+	Pair pnl.Pair
 }
 
 func (tpq *TradingPairsQuerier) GetTradingPair(req GetTradingPairReq) (*GetTradingPairResp, error) {

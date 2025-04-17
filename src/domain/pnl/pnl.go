@@ -5,7 +5,7 @@ import (
 	"log/slog"
 )
 
-func (tp *TradingPair) Calculate() error {
+func (tp *Pair) Calculate() error {
 	if err := tp.calculateBuyPrice(); err != nil {
 		return err
 	}
@@ -17,10 +17,10 @@ func (tp *TradingPair) Calculate() error {
 	return nil
 }
 
-func (tp *TradingPair) calculateProfit() error {
+func (tp *Pair) calculateProfit() error {
 	// Perform any necessary validation or business logic checks here.
 	if tp.Calculations.BasePrice == 0 {
-		slog.Error("Error calculating P&L", "error", "TradingPair doens't have current base price.")
+		slog.Error("Error calculating P&L", "error", "Pair doens't have current base price.")
 		return errors.New("Error calculating P&L. No current base price.")
 	}
 	tp.Calculations.PNLAmount = tp.Calculations.BasePrice*tp.Calculations.TotalBase - tp.Calculations.TotalQuoteSpent
@@ -29,10 +29,10 @@ func (tp *TradingPair) calculateProfit() error {
 	return nil
 }
 
-func (tp *TradingPair) calculateBuyPrice() error {
+func (tp *Pair) calculateBuyPrice() error {
 	// Perform any necessary validation or business logic checks here.
 	if len(tp.Trades) == 0 {
-		slog.Error("Error calculating P&L", "error", "TradingPair doens't have any trades")
+		slog.Error("Error calculating P&L", "error", "Pair doens't have any trades")
 		return errors.New("Please add some trades in order to calculate you profit and loss")
 	}
 	// tp.Calculations.TotalBase = 0

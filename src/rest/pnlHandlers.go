@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"fmt"
 	"log/slog"
@@ -16,7 +17,7 @@ func avgBuyPrice(tpq querying.TradingPairsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
-func checkPrice(priceProviderManager *querying.PriceProviderManager) func(*fiber.Ctx) error {
+func checkPrice(priceProviderManager *managing.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		base := c.Query("base")
 		quote := c.Query("quote")
@@ -33,7 +34,7 @@ func checkPrice(priceProviderManager *querying.PriceProviderManager) func(*fiber
 		providers := priceProviderManager.ListProviders(false) // false = only configured providers
 
 		for providerKey := range providers {
-			req := querying.QueryPriceReq{
+			req := managing.QueryPriceReq{
 				AssetSymbolA: base,
 				AssetSymbolB: quote,
 			}
@@ -58,7 +59,7 @@ func checkPrice(priceProviderManager *querying.PriceProviderManager) func(*fiber
 	}
 }
 
-func calculatePrice(priceProviderManager *querying.PriceProviderManager) func(*fiber.Ctx) error {
+func calculatePrice(priceProviderManager *managing.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		base := c.Query("base")
 		quote := c.Query("quote")
@@ -66,32 +67,19 @@ func calculatePrice(priceProviderManager *querying.PriceProviderManager) func(*f
 		fmt.Println(quote, base, amountStr)
 		if base == "" || quote == "" {
 			return c.SendString("err")
-			// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			// 	"code":     1,
-			// 	"msg":      "Both base and quote parameters are required",
-			// 	"debugMsg": "",
-			// 	"data":     nil,
-			// })
 		}
 
 		amount, err := strconv.ParseFloat(amountStr, 64)
 		if err != nil {
 			return c.SendString("err")
-			// return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			// 	"code":     2,
-			// 	"msg":      "Invalid amount",
-			// 	"debugMsg": err.Error(),
-			// 	"data":     nil,
-			// })
 		}
-
 		// Try all configured providers until we get a price
 		var price float64
 		var lastError error
 		providers := priceProviderManager.ListProviders(false) // false = only configured providers
 
 		for providerKey := range providers {
-			req := querying.QueryPriceReq{
+			req := managing.QueryPriceReq{
 				AssetSymbolA: base,
 				AssetSymbolB: quote,
 			}

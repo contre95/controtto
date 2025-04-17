@@ -218,6 +218,6 @@ func (b *BinanceMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 	panic("Sell not implemented")
 }
 
-func (b *BinanceMarketAPI) ImportTrades(pair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
+func (b *BinanceMarketAPI) ImportTrades(pair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
 	panic("ImportTrades not implemented")
 }
