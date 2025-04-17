@@ -4,8 +4,8 @@ import "time"
 
 type TradingPairID string
 
-// TradingPair represents the primary aggregate root. It contains the main context for profit and loss calculations between two assets
-type TradingPair struct {
+// Pair represents the primary aggregate root. It contains the main context for profit and loss calculations between two assets
+type Pair struct {
 	ID           TradingPairID
 	BaseAsset    Asset
 	QuoteAsset   Asset
@@ -13,7 +13,7 @@ type TradingPair struct {
 	Calculations Calculations
 }
 
-// Calculation is a value object for a TradingPair and it is populated with the function Calculate. It hold the data inferred from the TradingPair trades
+// Calculation is a value object for a Pair and it is populated with the function Calculate. It hold the data inferred from the Pair trades
 type Calculations struct {
 	AvgBuyPrice              float64
 	BasePrice                float64
@@ -53,10 +53,10 @@ type Trade struct {
 }
 
 // TrasingPairs repository interface
-type TradingPairs interface {
-	AddTradingPair(tp TradingPair) error
-	ListTradingPairs() ([]TradingPair, error)
-	GetTradingPair(tpid string) (*TradingPair, error)
+type Pairs interface {
+	AddTradingPair(tp Pair) error
+	ListTradingPairs() ([]Pair, error)
+	GetTradingPair(tpid string) (*Pair, error)
 	DeleteTradingPair(tpid string) error
 	DeleteTrade(tid string) error
 	RecordTrade(t Trade, tpid TradingPairID) error

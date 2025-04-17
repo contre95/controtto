@@ -45,7 +45,7 @@ func (t *Trading212API) Buy(options pnl.TradeOptions) (*pnl.Trade, error) {
 	//
 	// marketRequest := MarketRequest{
 	// 	Quantity: options.Amount,
-	// 	Ticker:   string(options.TradingPair.BaseAsset.Symbol + "_" + options.TradingPair.QuoteAsset.Symbol), // Assuming pnl.TradingPair can be directly used as Ticker
+	// 	Ticker:   string(options.Pair.BaseAsset.Symbol + "_" + options.Pair.QuoteAsset.Symbol), // Assuming pnl.Pair can be directly used as Ticker
 	// }
 	//
 	// order, err := t.placeMarketOrder(marketRequest)
@@ -75,7 +75,7 @@ func (t *Trading212API) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 	//
 	// marketRequest := MarketRequest{
 	// 	Quantity: options.Amount,
-	// 	Ticker:   string(options.TradingPair.BaseAsset.Symbol + "_" + options.TradingPair.QuoteAsset.Symbol), // Assuming pnl.TradingPair can be directly used as Ticker
+	// 	Ticker:   string(options.Pair.BaseAsset.Symbol + "_" + options.Pair.QuoteAsset.Symbol), // Assuming pnl.Pair can be directly used as Ticker
 	// }
 	//
 	// order, err := t.placeMarketOrder(marketRequest)
@@ -98,7 +98,7 @@ func (t *Trading212API) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 }
 
 // ImportTrades fetches historical order data from Trading 212 API
-func (t *Trading212API) ImportTrades(tradingPair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
+func (t *Trading212API) ImportTrades(tradingPair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
 	// endpoint := fmt.Sprintf("%s/api/v0/equity/history/orders", t.baseURL)
 	// req, err := http.NewRequest("GET", endpoint, nil)
 	// if err != nil {

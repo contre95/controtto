@@ -11,7 +11,7 @@ import (
 )
 
 const tables string = `
-        CREATE TABLE IF NOT EXISTS TradingPairs (
+        CREATE TABLE IF NOT EXISTS Pairs (
           ID TEXT PRIMARY KEY,
           BaseAsset TEXT,
           QuoteAsset TEXT
@@ -24,7 +24,7 @@ const tables string = `
           QuoteAmount REAL,
           TradeType TEXT,
           TradingPairID TEXT,
-          FOREIGN KEY (TradingPairID) REFERENCES TradingPairs (ID)
+          FOREIGN KEY (TradingPairID) REFERENCES Pairs (ID)
 		);
 
         CREATE TABLE IF NOT EXISTS Asset (
@@ -82,12 +82,12 @@ const tables string = `
 
 var demo string = `
 			-- Trading Pairs
-		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('BTCUSDT', 'BTC', 'USDT');
-		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('ETHUSDT', 'ETH', 'USDT');
-		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('EURUSD', 'EUR', 'USD');
-		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('GBPJPY', 'GBP', 'JPY');
-		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('AAPLUSD', 'AAPL', 'USD');
-		INSERT OR IGNORE INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES ('TSLAUSD', 'TSLA', 'USD');
+		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('BTCUSDT', 'BTC', 'USDT');
+		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('ETHUSDT', 'ETH', 'USDT');
+		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('EURUSD', 'EUR', 'USD');
+		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('GBPJPY', 'GBP', 'JPY');
+		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('AAPLUSD', 'AAPL', 'USD');
+		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('TSLAUSD', 'TSLA', 'USD');
 
 		-- Trades with alternating Buy and Sell in the same pair, three times per pair
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, TradingPairID) 
@@ -150,7 +150,7 @@ var demo string = `
 		VALUES ('2025-04-13T12:25:00', 50, 4200.00, 'Sell', 'AAPLUSD'); -- Positive PnL
 	`
 
-// SQLiteStorage implements the TradingPairs interface using SQLiteStorage.
+// SQLiteStorage implements the Pairs interface using SQLiteStorage.
 type SQLiteStorage struct {
 	db *sql.DB
 }
@@ -161,7 +161,7 @@ func NewSQLite(dbPath string) (*SQLiteStorage, error) {
 	if err != nil {
 		return nil, err
 	}
-	// Create the TradingPair and Trade tables if they don't exist.
+	// Create the Pair and Trade tables if they don't exist.
 	qString := tables
 	if os.Getenv("LOAD_SAMPLE_DATA") == "true" {
 		qString += demo
@@ -218,8 +218,8 @@ func (s *SQLiteStorage) ListAssets() ([]pnl.Asset, error) {
 }
 
 // Add adds a new trading pair to the database.
-func (s *SQLiteStorage) AddTradingPair(tp pnl.TradingPair) error {
-	_, err := s.db.Exec("INSERT INTO TradingPairs (ID, BaseAsset, QuoteAsset) VALUES (?, ?, ?)", string(tp.ID), tp.BaseAsset.Symbol, tp.QuoteAsset.Symbol)
+func (s *SQLiteStorage) AddTradingPair(tp pnl.Pair) error {
+	_, err := s.db.Exec("INSERT INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES (?, ?, ?)", string(tp.ID), tp.BaseAsset.Symbol, tp.QuoteAsset.Symbol)
 	if err != nil {
 		slog.Error("Error adding trading pair", "error", err)
 		return err
@@ -228,10 +228,10 @@ func (s *SQLiteStorage) AddTradingPair(tp pnl.TradingPair) error {
 }
 
 // List returns a list of all trading pairs.
-func (s *SQLiteStorage) GetTradingPair(tpid string) (*pnl.TradingPair, error) {
-	var tp pnl.TradingPair
+func (s *SQLiteStorage) GetTradingPair(tpid string) (*pnl.Pair, error) {
+	var tp pnl.Pair
 	var baseSymbol, quoteSymbol string
-	err := s.db.QueryRow("SELECT ID, BaseAsset, QuoteAsset FROM TradingPairs WHERE ID = ?", tpid).Scan(&tp.ID, &baseSymbol, &quoteSymbol)
+	err := s.db.QueryRow("SELECT ID, BaseAsset, QuoteAsset FROM Pairs WHERE ID = ?", tpid).Scan(&tp.ID, &baseSymbol, &quoteSymbol)
 	if err != nil {
 		slog.Error("Error retrieving Trading pair", "ID", tpid, "error", err)
 		return nil, err
@@ -250,16 +250,16 @@ func (s *SQLiteStorage) GetTradingPair(tpid string) (*pnl.TradingPair, error) {
 }
 
 // List returns a list of all trading pairs.
-func (s *SQLiteStorage) ListTradingPairs() ([]pnl.TradingPair, error) {
-	rows, err := s.db.Query("SELECT ID, BaseAsset, QuoteAsset FROM TradingPairs")
+func (s *SQLiteStorage) ListTradingPairs() ([]pnl.Pair, error) {
+	rows, err := s.db.Query("SELECT ID, BaseAsset, QuoteAsset FROM Pairs")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var tradingPairs []pnl.TradingPair
+	var tradingPairs []pnl.Pair
 	for rows.Next() {
-		var tp pnl.TradingPair
+		var tp pnl.Pair
 		var baseSymbol, quoteSymbol string
 		if err := rows.Scan(&tp.ID, &baseSymbol, &quoteSymbol); err != nil {
 			return nil, err
@@ -309,7 +309,7 @@ func (s *SQLiteStorage) ListTrades(tpid string) ([]pnl.Trade, error) {
 
 // DeleteTradingPair deletes a trading pair by its ID.
 func (s *SQLiteStorage) DeleteTradingPair(tpid string) error {
-	_, err := s.db.Exec("DELETE FROM TradingPairs WHERE ID = ?", tpid)
+	_, err := s.db.Exec("DELETE FROM Pairs WHERE ID = ?", tpid)
 	if err != nil {
 		slog.Error("Error deleting trading pair", "error", err)
 		return err

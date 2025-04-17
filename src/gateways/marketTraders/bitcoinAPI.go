@@ -88,6 +88,6 @@ func (b *BitcoinWalletAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 	panic("Sell not supported for BTC wallet")
 }
 
-func (b *BitcoinWalletAPI) ImportTrades(pair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
+func (b *BitcoinWalletAPI) ImportTrades(pair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
 	panic("ImportTrades not implemented for BTC wallet")
 }

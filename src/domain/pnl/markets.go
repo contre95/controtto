@@ -31,7 +31,7 @@ type MarketTraderNotFound error
 
 // MarketTrader repository interface
 type TradeOptions struct {
-	TradingPair   TradingPair
+	Pair   Pair
 	Amount        float64
 	Price         *float64 // Optional price for limit orders
 	IsMarketOrder bool
@@ -43,7 +43,7 @@ type MarketAPI interface {
 	FetchAssetAmount(symbol string) (float64, error)
 	AccountDetails() (string, error)
 	HealthCheck() bool
-	ImportTrades(tradingPair TradingPair, since time.Time) ([]Trade, error)
+	ImportTrades(tradingPair Pair, since time.Time) ([]Trade, error)
 	Buy(options TradeOptions) (*Trade, error)
 	Sell(options TradeOptions) (*Trade, error)
 }

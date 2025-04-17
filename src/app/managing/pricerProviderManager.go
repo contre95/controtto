@@ -1,18 +1,10 @@
-package querying
+package managing
 
 import (
 	"controtto/src/domain/pnl"
-	"errors"
 	"fmt"
 	"log/slog"
 	"sync"
-)
-
-var (
-	ErrProviderNotFound   = errors.New("price provider not found")
-	ErrEmptyToken         = errors.New("pricer provider token provided is empty")
-	ErrInvalidAssetPair   = errors.New("invalid asset pair")
-	ErrProviderNotHealthy = errors.New("price provider API not healthy")
 )
 
 // PriceProviderManager handles all price provider operations

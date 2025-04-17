@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type TradingPair string
+type Pair string
 
 type Asset struct {
 	Symbol string
@@ -33,7 +33,7 @@ func (m *MockMarketAPI) Buy(options pnl.TradeOptions) (*pnl.Trade, error) {
 		price = *options.Price
 	}
 	return &pnl.Trade{
-		ID:          fmt.Sprintf("mock-trade-buy-%s", options.TradingPair),
+		ID:          fmt.Sprintf("mock-trade-buy-%s", options.Pair),
 		Timestamp:   time.Time{},
 		BaseAmount:  options.Amount,
 		QuoteAmount: options.Amount * price,
@@ -53,7 +53,7 @@ func (m *MockMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 		price = *options.Price
 	}
 	return &pnl.Trade{
-		ID:          fmt.Sprintf("mock-trade-buy-%s", options.TradingPair),
+		ID:          fmt.Sprintf("mock-trade-buy-%s", options.Pair),
 		Timestamp:   time.Time{},
 		BaseAmount:  options.Amount,
 		QuoteAmount: options.Amount * price,
@@ -64,7 +64,7 @@ func (m *MockMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 	}, nil
 }
 
-func (m *MockMarketAPI) ImportTrades(tradingPair pnl.TradingPair, since time.Time) ([]pnl.Trade, error) {
+func (m *MockMarketAPI) ImportTrades(tradingPair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
 	return []pnl.Trade{
 		{
 			ID:          "trade-001",

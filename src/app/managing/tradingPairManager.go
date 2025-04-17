@@ -55,10 +55,10 @@ type CreateTradingPairReq struct {
 type TradingPairsManager struct {
 	config       *config.ConfigManager
 	assets       pnl.Assets
-	tradingPairs pnl.TradingPairs
+	tradingPairs pnl.Pairs
 }
 
-func NewTradingPairManager(cfg *config.ConfigManager, a pnl.Assets, tp pnl.TradingPairs) *TradingPairsManager {
+func NewTradingPairManager(cfg *config.ConfigManager, a pnl.Assets, tp pnl.Pairs) *TradingPairsManager {
 	return &TradingPairsManager{cfg, a, tp}
 }
 
@@ -90,7 +90,7 @@ func (tpm *TradingPairsManager) RecordTrade(req RecordTradeReq) (*RecordTradeRes
 	var err error
 	tradingPair, err := tpm.tradingPairs.GetTradingPair(string(req.TradingPairID))
 	if err != nil {
-		slog.Error("Could not retrieve TradingPair", "error", err)
+		slog.Error("Could not retrieve Pair", "error", err)
 		return nil, err
 	}
 	trade, err := tradingPair.NewTrade(req.BaseAmount, req.QuoteAmount, req.FeeInBase, req.FeeInQuote, req.Timestamp, pnl.TradeType(req.Type))
@@ -154,7 +154,7 @@ func (tpm *TradingPairsManager) Create(req CreateTradingPairReq) (*CreateTrading
 		return nil, fmt.Errorf("Could not create pair ( %s/%s )", tradingPair.BaseAsset.Symbol, tradingPair.QuoteAsset.Symbol)
 	}
 
-	slog.Info("New Trading pair created", "TradingPairs", tradingPair)
+	slog.Info("New Trading pair created", "Pairs", tradingPair)
 
 	return &CreateTradingPairResp{
 		ID:  string(tradingPair.ID),

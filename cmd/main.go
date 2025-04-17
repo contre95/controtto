@@ -38,11 +38,11 @@ func main() {
 	tpc := managing.NewTradingPairManager(cfg, sqliteDB, sqliteDB)
 	tpq := querying.NewTradingPairQuerier(sqliteDB)
 	mtm := managing.NewMarketManager(traders)
-	ppm := querying.NewPriceProviderManager(pricers)
-	manager := managing.NewService(*ac, *tpc, mtm)
+	ppm := managing.NewPriceProviderManager(pricers)
+	manager := managing.NewService(*ac, *tpc, mtm, ppm)
 	aq := querying.NewAssetQuerier(sqliteDB)
 	config := config.NewService(cfg)
-	querier := querying.NewService(*aq, *tpq, ppm)
+	querier := querying.NewService(*aq, *tpq)
 
 	port := cfg.Port
 	slog.Info("Initiating server", "port", port)

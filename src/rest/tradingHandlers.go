@@ -126,7 +126,7 @@ func newTradeImport(tpm managing.TradingPairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func newTradeForm(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderManager) func(*fiber.Ctx) error {
+func newTradeForm(tpq querying.TradingPairsQuerier, pq *managing.PriceProviderManager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Create Trade UI requested")
 		id := c.Params("id")
@@ -142,7 +142,7 @@ func newTradeForm(tpq querying.TradingPairsQuerier, pq *querying.PriceProviderMa
 				"Msg":   err,
 			})
 		}
-		qRes, err := pq.QueryPrice(querying.QueryPriceReq{
+		qRes, err := pq.QueryPrice(managing.QueryPriceReq{
 			AssetSymbolA: resp.Pair.BaseAsset.Symbol,
 			AssetSymbolB: resp.Pair.QuoteAsset.Symbol,
 		})
