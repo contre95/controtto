@@ -4,13 +4,14 @@ import (
 	"controtto/src/app/config"
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"controtto/src/app/trading"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 )
 
-func Run(c *config.Service, m *managing.Service, q *querying.Service, port string) {
+func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading.Service) {
 	engine := html.New("./views", ".html")
 	engine.Debug(true)
 	app := fiber.New(fiber.Config{
@@ -46,13 +47,13 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, port strin
 	// DELETE
 	app.Delete("/empty", empty())
 	app.Delete("/pairs/:id", deletePair(m.PairManager))
-	app.Delete("/trades/:id", deleteTrade(m.PairManager))
+	app.Delete("/trades/:id", deleteTrade(t.TradeRecorder))
 	// POST
 	app.Post("/assets", newAsset(m.AssetManager))
 	app.Post("/pairs", newPair(m.PairManager))
-	app.Post("/pairs/:id/trades", newTrade(m.PairManager))
-	app.Post("/pairs/:id/trades/upload", newTradeImport(m.PairManager))
+	app.Post("/pairs/:id/trades", newTrade(t.TradeRecorder))
+	app.Post("/pairs/:id/trades/upload", newTradeImport(t.TradeRecorder))
 	app.Post("/settings/edit", saveSettingsForm(m.PriceProviderManager, m.MarketManager, c.ConfigManager))
 
-	log.Fatal(app.Listen("0.0.0.0" + ":" + port))
+	log.Fatal(app.Listen("0.0.0.0" + ":" + c.ConfigManager.GetPort()))
 }

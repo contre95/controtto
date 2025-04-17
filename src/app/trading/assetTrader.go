@@ -1,6 +1,8 @@
 package trading
 
 import (
+	"controtto/src/app/managing"
+	"controtto/src/app/querying"
 	"controtto/src/domain/pnl"
 	"errors"
 	"time"
@@ -14,7 +16,7 @@ var (
 // Request and Response DTOs
 type TradeRequest struct {
 	MarketKey     string
-	Pair   PairDTO
+	Pair          PairDTO
 	Amount        float64
 	Price         *float64 // Optional price for limit orders
 	IsMarketOrder bool
@@ -46,20 +48,20 @@ type PairDTO struct {
 }
 
 type ImportTradesRequest struct {
-	MarketKey string         `json:"market_key"`
-	Pair      PairDTO `json:"pair"`
-	Since     time.Time      `json:"since"`
+	MarketKey string    `json:"market_key"`
+	Pair      PairDTO   `json:"pair"`
+	Since     time.Time `json:"since"`
 }
 
 type AssetTrader struct {
-	markets map[string]pnl.Market
+	markets *managing.MarketManager
+	assets  querying.AssetsQuerier
 }
 
-// NewAssetTrader receives a copy of the markets, so if someone changes
-// it through the Manager and change is it won't affect any running job
-func NewAssetTrader(markets map[string]pnl.Market) *AssetTrader {
+func NewAssetTrader(mm *managing.MarketManager, aq querying.AssetsQuerier) *AssetTrader {
 	return &AssetTrader{
-		markets: markets,
+		markets: mm,
+		assets:  aq,
 	}
 }
 
@@ -102,11 +104,11 @@ func toTradeResponse(domain pnl.Trade) TradeResponse {
 }
 
 func (m *AssetTrader) getMarket(marketKey string) (*pnl.Market, error) {
-	market, exists := m.markets[marketKey]
+	market, exists := m.markets.GetMarkets(false)[marketKey]
 	if !exists {
 		return nil, errors.New("market not found")
 	}
-	return &market, nil
+	return market, nil
 }
 
 func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeResponse, error) {
@@ -129,7 +131,7 @@ func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeResponse, error) {
 	}
 
 	options := pnl.TradeOptions{
-		Pair:   *pair,
+		Pair:          *pair,
 		Amount:        req.Amount,
 		Price:         req.Price,
 		IsMarketOrder: req.IsMarketOrder,
@@ -164,7 +166,7 @@ func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeResponse, error) {
 	}
 
 	options := pnl.TradeOptions{
-		Pair:   *pair,
+		Pair:          *pair,
 		Amount:        req.Amount,
 		Price:         req.Price,
 		IsMarketOrder: req.IsMarketOrder,

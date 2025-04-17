@@ -3,6 +3,7 @@ package rest
 import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"controtto/src/app/trading"
 	"encoding/csv"
 	"io"
 	"strconv"
@@ -15,9 +16,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func deleteTrade(tpm managing.PairsManager) func(*fiber.Ctx) error {
+func deleteTrade(tpm trading.TradeRecorder) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		req := managing.DeleteTradeReq{
+		req := trading.DeleteTradeReq{
 			ID: c.Params("id"),
 		}
 		slog.Info("Trade delete requested.", "id", req.ID)
@@ -37,7 +38,7 @@ func deleteTrade(tpm managing.PairsManager) func(*fiber.Ctx) error {
 	}
 }
 
-func newTradeImport(tpm managing.PairsManager) func(*fiber.Ctx) error {
+func newTradeImport(tpm trading.TradeRecorder) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Importing trades")
 		file, err := c.FormFile("trancsv")
@@ -65,7 +66,7 @@ func newTradeImport(tpm managing.PairsManager) func(*fiber.Ctx) error {
 		// Iterate over the CSV records
 		csvReader.Read() // Skip column
 		tCount := 0
-		reqs := []managing.RecordTradeReq{}
+		reqs := []trading.RecordTradeReq{}
 		for {
 			line, err := csvReader.Read()
 			if err == io.EOF {
@@ -77,7 +78,7 @@ func newTradeImport(tpm managing.PairsManager) func(*fiber.Ctx) error {
 					"Msg":   fmt.Sprintln("Error reading CSV req:", err),
 				})
 			}
-			req := managing.RecordTradeReq{}
+			req := trading.RecordTradeReq{}
 			req.PairID = c.Params("id")
 			req.Type = line[0]
 			req.Timestamp, err = time.Parse("2006-01-02 15:04", line[1])
@@ -160,7 +161,7 @@ func newTradeForm(tpq querying.PairsQuerier, pq *managing.PriceProviderManager) 
 	}
 }
 
-func newTrade(tpm managing.PairsManager) func(*fiber.Ctx) error {
+func newTrade(tpm trading.TradeRecorder) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Recording new trade")
 		payload := struct {
@@ -182,14 +183,14 @@ func newTrade(tpm managing.PairsManager) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		req := managing.RecordTradeReq{
-			PairID: c.Params("id"),
-			Timestamp:     tdate,
-			BaseAmount:    payload.Base,
-			QuoteAmount:   payload.Quote,
-			FeeInBase:     payload.BFee,
-			FeeInQuote:    payload.QFee,
-			Type:          payload.TType,
+		req := trading.RecordTradeReq{
+			PairID:      c.Params("id"),
+			Timestamp:   tdate,
+			BaseAmount:  payload.Base,
+			QuoteAmount: payload.Quote,
+			FeeInBase:   payload.BFee,
+			FeeInQuote:  payload.QFee,
+			Type:        payload.TType,
 		}
 		resp, err := tpm.RecordTrade(req)
 		if err != nil {

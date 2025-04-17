@@ -4,6 +4,7 @@ import (
 	"controtto/src/app/config"
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"controtto/src/app/trading"
 	"controtto/src/gateways/sqlite"
 	"controtto/src/rest"
 	"log/slog"
@@ -34,17 +35,21 @@ func main() {
 
 	// Load configuration
 	cfg := config.NewConfig(PREFIX)
-	ac := managing.NewAssetCreator(sqliteDB)
-	tpc := managing.NewPairManager(cfg, sqliteDB, sqliteDB)
-	tpq := querying.NewPairQuerier(sqliteDB)
-	mtm := managing.NewMarketManager(traders)
-	ppm := managing.NewPriceProviderManager(pricers)
-	manager := managing.NewService(*ac, *tpc, mtm, ppm)
-	aq := querying.NewAssetQuerier(sqliteDB)
 	config := config.NewService(cfg)
-	querier := querying.NewService(*aq, *tpq)
+	ac := managing.NewAssetCreator(sqliteDB)
+	pc := managing.NewPairManager(cfg, sqliteDB, sqliteDB)
+	pq := querying.NewPairQuerier(sqliteDB)
+	mm := managing.NewMarketManager(traders)
+	ppm := managing.NewPriceProviderManager(pricers)
+	aq := querying.NewAssetQuerier(sqliteDB)
+	manager := managing.NewService(*ac, *pc, mm, ppm)
+	querier := querying.NewService(*aq, *pq)
+	tr := trading.NewTradeRecorder(sqliteDB)
+	at := trading.NewAssetTrader(mm, *aq)
+	trader := trading.NewService(*at, *tr)
+	// *trading.NewAssetTrader(markets map[string]pnl.Market)
 
 	port := cfg.Port
 	slog.Info("Initiating server", "port", port)
-	rest.Run(&config, &manager, &querier, port)
+	rest.Run(&config, &manager, &querier, &trader)
 }
