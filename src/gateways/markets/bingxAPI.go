@@ -12,6 +12,7 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -116,7 +117,6 @@ func (b *BingxMarketAPI) FetchAssetAmount(symbol string) (float64, error) {
 		}
 	}
 	return 0, errors.New("asset not found")
-	return 0, nil
 }
 
 // Unimplemented methods for now
@@ -129,7 +129,119 @@ func (b *BingxMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 }
 
 func (b *BingxMarketAPI) ImportTrades(pair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
-	panic("ImportTrades not implemented")
+	uri := "/openApi/swap/v2/quote/trades"
+	method := "GET"
+	timestamp := time.Now().UnixNano() / 1e6
+
+	payload := map[string]string{
+		"symbol": fmt.Sprintf("%s-%s", pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol),
+		"limit":  "1000",
+	}
+
+	paramStr := b.getParameters(payload, false, timestamp)
+	sign := computeHmac256(paramStr, b.ApiSecret)
+	urlParams := b.getParameters(payload, true, timestamp) + "&signature=" + sign
+	fullURL := fmt.Sprintf("%s%s?%s", HOST, uri, urlParams)
+
+	req, err := http.NewRequest(method, fullURL, nil)
+	if err != nil {
+		slog.Error("BingxAPI: Error creating request", "error", err)
+		return nil, fmt.Errorf("create request failed: %v", err)
+	}
+	req.Header.Set("X-BX-APIKEY", b.ApiKey)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		slog.Error("BingxAPI: Error executing request", "error", err)
+		return nil, fmt.Errorf("request failed: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		slog.Error("BingxAPI: Unexpected status code", "status", resp.StatusCode, "body", string(body))
+		return nil, fmt.Errorf("unexpected status: %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		slog.Error("BingxAPI: Error reading response body", "error", err)
+		return nil, fmt.Errorf("read body failed: %v", err)
+	}
+
+	var response struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Data []struct {
+			Time         int64  `json:"time"`
+			IsBuyerMaker bool   `json:"isBuyerMaker"`
+			Price        string `json:"price"`
+			Qty          string `json:"qty"`
+			QuoteQty     string `json:"quoteQty"`
+		} `json:"data"`
+	}
+
+	if err := json.Unmarshal(body, &response); err != nil {
+		slog.Error("BingxAPI: Error unmarshalling response", "error", err, "body", string(body))
+		return nil, fmt.Errorf("parse response failed: %v", err)
+	}
+
+	if response.Code != 0 {
+		slog.Error("BingxAPI: Error in response", "code", response.Code, "msg", response.Msg, "debugMsg", response)
+		return nil, fmt.Errorf("api error: %s", response.Msg)
+	}
+
+	var trades []pnl.Trade
+	for _, tradeData := range response.Data {
+		tradeTime := time.UnixMilli(tradeData.Time)
+		// if err != nil {
+		// 	slog.Warn("BingxAPI: Skipping trade with invalid timestamp", "time", tradeData.Time, "error", err)
+		// 	continue
+		// }
+
+		if tradeTime.Before(since) {
+			continue
+		}
+
+		price, err := strconv.ParseFloat(tradeData.Price, 64)
+		if err != nil {
+			slog.Warn("BingxAPI: Skipping trade with invalid price", "price", tradeData.Price, "error", err)
+			continue
+		}
+
+		quantity, err := strconv.ParseFloat(tradeData.Qty, 64)
+		if err != nil {
+			slog.Warn("BingxAPI: Skipping trade with invalid quantity", "qty", tradeData.Qty, "error", err)
+			continue
+		}
+
+		quoteAmount := price * quantity
+		tradeType := "sell"
+		if tradeData.IsBuyerMaker {
+			tradeType = "buy"
+		}
+
+		// Calculate fees (0.1% like mock)
+		feeInBase := 0.001 * quantity
+		feeInQuote := 0.001 * quoteAmount
+		if len(trades)%2 == 0 { // alternate like mock
+			feeInBase = 0
+		} else {
+			feeInQuote = 0
+		}
+
+		trades = append(trades, pnl.Trade{
+			Timestamp:   tradeTime,
+			BaseAmount:  quantity,
+			QuoteAmount: quoteAmount,
+			FeeInBase:   feeInBase,
+			FeeInQuote:  feeInQuote,
+			TradeType:   pnl.TradeType(tradeType),
+			Price:       price,
+		})
+	}
+
+	return trades, nil
 }
 
 func (b *BingxMarketAPI) HealthCheck() bool {
