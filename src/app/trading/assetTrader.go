@@ -21,7 +21,7 @@ type TradeRequest struct {
 	IsMarketOrder bool
 }
 
-type TradeResponse struct {
+type TradeAssetResp struct {
 	ID          string    `json:"id"`
 	Timestamp   time.Time `json:"timestamp"`
 	BaseAmount  float64   `json:"base_amount"`
@@ -51,8 +51,8 @@ func NewAssetTrader(mm *managing.MarketManager, p pnl.Pairs) *AssetTrader {
 	}
 }
 
-func toTradeResponse(domain pnl.Trade) TradeResponse {
-	return TradeResponse{
+func toTradeAssetResp(domain pnl.Trade) TradeAssetResp {
+	return TradeAssetResp{
 		ID:          domain.ID,
 		Timestamp:   domain.Timestamp,
 		BaseAmount:  domain.BaseAmount,
@@ -80,7 +80,7 @@ func (m *AssetTrader) getPair(pairID string) (*pnl.Pair, error) {
 	return pair, nil
 }
 
-func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeResponse, error) {
+func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeAssetResp, error) {
 	if req.Amount <= 0 {
 		return nil, ErrInvalidTrade
 	}
@@ -111,11 +111,11 @@ func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeResponse, error) {
 		return nil, err
 	}
 
-	resp := toTradeResponse(*trade)
+	resp := toTradeAssetResp(*trade)
 	return &resp, nil
 }
 
-func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeResponse, error) {
+func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeAssetResp, error) {
 	if req.Amount <= 0 {
 		return nil, ErrInvalidTrade
 	}
@@ -146,11 +146,11 @@ func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeResponse, error) {
 		return nil, err
 	}
 
-	resp := toTradeResponse(*trade)
+	resp := toTradeAssetResp(*trade)
 	return &resp, nil
 }
 
-func (m *AssetTrader) FetchTrades(req FetchTradesReq) ([]TradeResponse, error) {
+func (m *AssetTrader) FetchTrades(req FetchTradesReq) ([]TradeAssetResp, error) {
 	market, err := m.getMarket(req.MarketKey)
 	if err != nil {
 		return nil, err
@@ -166,9 +166,9 @@ func (m *AssetTrader) FetchTrades(req FetchTradesReq) ([]TradeResponse, error) {
 		return nil, err
 	}
 
-	var response []TradeResponse
+	var response []TradeAssetResp
 	for _, trade := range trades {
-		response = append(response, toTradeResponse(trade))
+		response = append(response, toTradeAssetResp(trade))
 	}
 
 	return response, nil

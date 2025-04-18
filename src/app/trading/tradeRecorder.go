@@ -44,13 +44,13 @@ func (tpm *TradeRecorder) DeleteTrade(req DeleteTradeReq) (*DeleteTradeResp, err
 }
 
 type RecordTradeReq struct {
-	PairID string    `json:"trading_pair_id"`
-	Timestamp     time.Time `json:"timestamp"`
-	BaseAmount    float64   `json:"base_amount"`
-	QuoteAmount   float64   `json:"quote_amount"`
-	FeeInBase     float64   `json:"fee_in_base"`
-	FeeInQuote    float64   `json:"fee_in_quote"`
-	Type          string    `json:"type"`
+	PairID      string    `json:"trading_pair_id"`
+	Timestamp   time.Time `json:"timestamp"`
+	BaseAmount  float64   `json:"base_amount"`
+	QuoteAmount float64   `json:"quote_amount"`
+	FeeInBase   float64   `json:"fee_in_base"`
+	FeeInQuote  float64   `json:"fee_in_quote"`
+	Type        string    `json:"type"`
 }
 
 type RecordTradeResp struct {
@@ -64,8 +64,7 @@ func (tpm *TradeRecorder) RecordTrade(req RecordTradeReq) (*RecordTradeResp, err
 	if !isValidTradeType(req.Type) {
 		return nil, fmt.Errorf("invalid trade type: %s", req.Type)
 	}
-
-	// Get trading pair
+	fmt.Println("RecordTradeReq", req)
 	tradingPair, err := tpm.tradingPairs.GetPair(req.PairID)
 	if err != nil {
 		slog.Error("Failed to get trading pair",

@@ -1,4 +1,4 @@
-package marketTraders
+package markets
 
 import (
 	"controtto/src/domain/pnl"
@@ -39,7 +39,7 @@ func (m *MockMarketAPI) Buy(options pnl.TradeOptions) (*pnl.Trade, error) {
 		QuoteAmount: options.Amount * price,
 		FeeInBase:   0.05 * options.Amount,
 		FeeInQuote:  0,
-		TradeType:   "Buy",
+		TradeType:   pnl.Buy,
 		Price:       price,
 	}, nil
 }
@@ -59,7 +59,7 @@ func (m *MockMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 		QuoteAmount: options.Amount * price,
 		FeeInBase:   0.05 * options.Amount,
 		FeeInQuote:  0,
-		TradeType:   "Buy",
+		TradeType:   pnl.Sell,
 		Price:       price,
 	}, nil
 }
@@ -70,40 +70,40 @@ func (m *MockMarketAPI) ImportTrades(tradingPair pnl.Pair, since time.Time) ([]p
 			ID:          "trade-001",
 			Timestamp:   time.Now().Add(-2 * time.Hour),
 			BaseAmount:  0.5,
-			QuoteAmount: 15000,
+			QuoteAmount: 15000.0,
 			FeeInBase:   0.0005,
 			FeeInQuote:  15,
-			TradeType:   "buy",
+			TradeType:   pnl.Buy,
 			Price:       30000,
 		},
 		{
 			ID:          "trade-002",
 			Timestamp:   time.Now().Add(-90 * time.Minute),
 			BaseAmount:  0.2,
-			QuoteAmount: 6000,
+			QuoteAmount: 6000.0,
 			FeeInBase:   0,
 			FeeInQuote:  6,
-			TradeType:   "sell",
+			TradeType:   pnl.Sell,
 			Price:       30000,
 		},
 		{
 			ID:          "trade-003",
 			Timestamp:   time.Now().Add(-45 * time.Minute),
 			BaseAmount:  1.0,
-			QuoteAmount: 29500,
+			QuoteAmount: 29500.0,
 			FeeInBase:   0.001,
 			FeeInQuote:  0,
-			TradeType:   "buy",
+			TradeType:   pnl.Buy,
 			Price:       29500,
 		},
 		{
 			ID:          "trade-004",
 			Timestamp:   time.Now().Add(-10 * time.Minute),
 			BaseAmount:  0.75,
-			QuoteAmount: 22500,
+			QuoteAmount: 22500.0,
 			FeeInBase:   0.00075,
 			FeeInQuote:  10,
-			TradeType:   "sell",
+			TradeType:   pnl.Sell,
 			Price:       30000,
 		},
 	}, nil

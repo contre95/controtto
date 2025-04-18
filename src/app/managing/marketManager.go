@@ -29,6 +29,17 @@ func NewMarketManager(in map[string]pnl.Market) *MarketManager {
 	return mm
 }
 
+func (c *MarketManager) GetMarket(key string) (*pnl.Market, error) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	for k, v := range c.markets {
+		if key == k {
+			return v, nil
+		}
+	}
+	return nil, ErrMarketNotSet
+}
+
 func (c *MarketManager) GetMarkets(all bool) map[string]*pnl.Market {
 	c.mu.RLock()
 	defer c.mu.RUnlock()

@@ -10,12 +10,13 @@ var (
 	ErrMarketNotHealthy   = errors.New("market API not healthy")
 	ErrProviderNotFound   = errors.New("price provider not found")
 	ErrProviderNotHealthy = errors.New("price provider API not healthy")
+	ErrMarketNotSet       = errors.New("market is not setup")
 )
 
 // Service just hols all the managing use cases
 type Service struct {
 	AssetManager         AssetsManager
-	PairManager   PairsManager
+	PairManager          PairsManager
 	MarketManager        *MarketManager
 	PriceProviderManager *PriceProviderManager
 }

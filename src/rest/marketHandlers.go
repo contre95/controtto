@@ -5,6 +5,7 @@ import (
 	"controtto/src/app/querying"
 	"controtto/src/app/trading"
 	"controtto/src/domain/pnl"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"time"
@@ -152,7 +153,7 @@ func newMarketTradingForm(tpq querying.PairsQuerier, marketManager *managing.Mar
 // 	}
 // }
 
-func fetchMarketTrades(at trading.AssetTrader) fiber.Handler {
+func fetchMarketTrades(at trading.AssetTrader, mm *managing.MarketManager) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		pairID := c.Params("id")
 		marketKey := c.Params("mktkey")
@@ -177,8 +178,78 @@ func fetchMarketTrades(at trading.AssetTrader) fiber.Handler {
 				"error": err.Error(),
 			})
 		}
-		return c.Render("marketTradesTable", fiber.Map{
-			"Trades": trades,
+		market, err := mm.GetMarket(marketKey)
+		if err != nil {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"error": "Market not found",
+			})
+		}
+		return c.Render("marketTradesModal", fiber.Map{
+			"Trades":    trades,
+			"PairID":    pairID,
+			"MarketKey": marketKey,
+			"Market":    market,
+		})
+	}
+}
+
+func importMarketTrades(tr trading.TradeRecorder) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		pairID := c.Params("id")
+		if pairID == "" {
+			return c.Status(fiber.StatusBadRequest).SendString("Pair ID is required")
+		}
+		tradesJSON := c.FormValue("trades")
+		if tradesJSON == "" {
+			return c.Status(fiber.StatusBadRequest).SendString("No trades data provided")
+		}
+		var rawTrades struct {
+			Trades []struct {
+				Timestamp string  `json:"timestamp"`
+				Type      string  `json:"type"`
+				Price     float64 `json:"price"`
+				Amount    float64 `json:"amount"`
+				Total     float64 `json:"total"`
+				FeeBase   float64 `json:"fee_base"`
+				FeeQuote  float64 `json:"fee_quote"`
+			} `json:"trades"`
+		}
+		if err := json.Unmarshal([]byte(tradesJSON), &rawTrades); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error":   "Invalid trades data format",
+				"details": err.Error(),
+			})
+		}
+		var tradeResponses []trading.RecordTradeResp
+		for _, rawTrade := range rawTrades.Trades {
+			timestamp, err := time.Parse(time.RFC3339, rawTrade.Timestamp)
+			if err != nil {
+				return c.Render("toastErr", fiber.Map{
+					"Msg": fmt.Sprintf("Could not import trades: %s", err.Error()),
+				})
+			}
+			req := trading.RecordTradeReq{
+				PairID:      pairID,
+				Timestamp:   timestamp,
+				BaseAmount:  rawTrade.Amount,
+				QuoteAmount: rawTrade.Total,
+				FeeInBase:   rawTrade.FeeBase,
+				FeeInQuote:  rawTrade.FeeQuote,
+				Type:        rawTrade.Type,
+			}
+			resp, err := tr.RecordTrade(req)
+			if err != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error": fmt.Sprintf("Failed to record trade: %v", err),
+				})
+			}
+
+			tradeResponses = append(tradeResponses, *resp)
+		}
+		// Render the updated trades table
+		c.Append("HX-Trigger", "newTrade")
+		return c.Render("toastOk", fiber.Map{
+			"Msg": fmt.Sprintf("Successfully imported %d trades", len(tradeResponses)),
 		})
 	}
 }

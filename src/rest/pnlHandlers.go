@@ -23,16 +23,12 @@ func checkPrice(priceProviderManager *managing.PriceProviderManager) func(*fiber
 		quote := c.Query("quote")
 		fmt.Println(quote)
 		fmt.Println(base)
-
 		if base == "" || quote == "" {
 			return c.Status(fiber.StatusBadRequest).SendString("Both base and quote parameters are required")
 		}
-
-		// Try all configured providers until we get a price
 		var price float64
 		var lastError error
 		providers := priceProviderManager.ListProviders(false) // false = only configured providers
-
 		for providerKey := range providers {
 			req := managing.QueryPriceReq{
 				AssetSymbolA: base,
@@ -50,11 +46,9 @@ func checkPrice(priceProviderManager *managing.PriceProviderManager) func(*fiber
 				"pair", fmt.Sprintf("%s/%s", base, quote),
 			)
 		}
-
 		if price == 0 && lastError != nil {
 			return c.Status(fiber.StatusServiceUnavailable).SendString(lastError.Error())
 		}
-
 		return c.SendString(fmt.Sprintf("%f", price))
 	}
 }
@@ -68,16 +62,13 @@ func calculatePrice(priceProviderManager *managing.PriceProviderManager) func(*f
 		if base == "" || quote == "" {
 			return c.SendString("err")
 		}
-
 		amount, err := strconv.ParseFloat(amountStr, 64)
 		if err != nil {
 			return c.SendString("err")
 		}
-		// Try all configured providers until we get a price
 		var price float64
 		var lastError error
 		providers := priceProviderManager.ListProviders(false) // false = only configured providers
-
 		for providerKey := range providers {
 			req := managing.QueryPriceReq{
 				AssetSymbolA: base,
@@ -95,7 +86,6 @@ func calculatePrice(priceProviderManager *managing.PriceProviderManager) func(*f
 				"pair", fmt.Sprintf("%s/%s", base, quote),
 			)
 		}
-
 		if price == 0 {
 			if lastError != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -112,20 +102,7 @@ func calculatePrice(priceProviderManager *managing.PriceProviderManager) func(*f
 				"data":     nil,
 			})
 		}
-
 		totalPrice := price * amount
-		// return c.JSON(fiber.Map{
-		// 	"code":     0,
-		// 	"msg":      "Success",
-		// 	"debugMsg": "",
-		// 	"data": fiber.Map{
-		// 		"base":       base,
-		// 		"quote":      quote,
-		// 		"amount":     amount,
-		// 		"price":      price,
-		// 		"totalPrice": totalPrice,
-		// 	},
-		// })
 		return c.SendString(fmt.Sprintf("%2.f", totalPrice))
 	}
 }

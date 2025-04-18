@@ -1,0 +1,147 @@
+<div onclick="if (event.target === this) this.remove()"
+  class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 animate__animated  animate__fadeIn">
+  <div
+    class="bg-white dark:bg-neutral-900 rounded-2xl shadow-lg max-w-3xl w-full mx-4 p-6 animate-fade-in-up overflow-hidden">
+    <div class="flex flex-col gap-4">
+      <div class="flex justify-between items-center">
+        <img src="{{ .Market.MarketLogo }}" alt="logo" class="w-8 h-8 ">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Import Trades
+          ( <span class="text-neutral-500 dark:text-neutral-400">{{ .Market.MarketName }}</span> )
+        </h3>
+        <button type="button" onclick="this.closest('div[onclick]').remove()"
+          class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="w-full overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+        <table class="w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-200">
+            <tr>
+              <th class="px-4 py-2 text-left">
+                <input type="checkbox" id="select-all"
+                  class="rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                  onclick="toggleAllCheckboxes(this)">
+              </th>
+              <th class="px-2 py-1 text-left">Time</th>
+              <th class="px-2 py-1 text-left">Type</th>
+              <th class="px-2 py-1 text-right">Price</th>
+              <th class="px-2 py-1 text-right">Amount</th>
+              <th class="px-2 py-1 text-right">Total</th>
+              <th class="px-2 py-1 text-right">Fee (Base)</th>
+              <th class="px-2 py-1 text-right">Fee (Quote)</th>
+            </tr>
+          </thead>
+          <tbody
+            class="bg-white dark:bg-neutral-900 divide-y divide-gray-200 dark:divide-gray-700 text-gray-900 dark:text-gray-100"
+            id="trades-table">
+            {{ range .Trades }}
+            <tr class="hover:bg-gray-50 dark:hover:bg-neutral-800">
+              <td class="px-4 py-2">
+                <input type="checkbox"
+                  class="trade-checkbox rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                  data-trade='{
+                    "timestamp": "{{ .Timestamp.Format "2006-01-02T15:04:05Z07:00" }}",
+                    "type": "{{ .TradeType }}",
+                    "price": {{ .Price }},
+                    "amount": {{ .BaseAmount }},
+                    "total": {{ .QuoteAmount }},
+                    "fee_base": {{ .FeeInBase }},
+                    "fee_quote": {{ .FeeInQuote }}
+                  }'>
+              </td>
+              <td class="px-2 py-1 whitespace-nowrap">{{ .Timestamp.Format "01/02/06" }}
+                <br>
+                <small class="text-gray-500 text-xs">{{ .Timestamp.Format "15:04:05" }}</small>
+              </td>
+              <td class="px-2 py-1">
+                {{ if eq .TradeType "Buy" }}
+                <span class="text-green-600 dark:text-green-400 font-semibold">BUY</span>
+                {{ else }}
+                <span class="text-red-600 dark:text-red-400 font-semibold">SELL</span>
+                {{ end }}
+              </td>
+              <td class="px-2 py-1 text-right">{{ printf "%.4f" .Price }}</td>
+              <td class="px-2 py-1 text-right">{{ printf "%.4f" .BaseAmount }}</td>
+              <td class="px-2 py-1 text-right">{{ printf "%.4f" .QuoteAmount }}</td>
+              <td class="px-2 py-1 text-right text-gray-500 dark:text-gray-400">
+                {{ printf "%.4f" .FeeInBase }}
+              </td>
+              <td class="px-2 py-1 text-right text-gray-500 dark:text-gray-400">
+                {{ printf "%.4f" .FeeInQuote }}
+              </td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-end gap-3 pt-4">
+        <button type="button" onclick="this.closest('div[onclick]').remove()"
+          class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-lg shadow-sm dark:text-gray-200 dark:bg-gray-700 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+          Cancel
+        </button>
+
+              <button id="import-selected-btn"
+                class="inline-flex items-center px-4 py-2 text-sm font-semibold text-cyan-700 bg-indigo-100 border border-indigo-300 rounded-lg shadow-sm dark:text-indigo-400 dark:bg-indigo-900/30 dark:border-indigo-800 hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-all duration-200 ease-in-out"
+                hx-get="/pairs/{{ .PairID }}/market/{{ .Market.MarketName }}/trades?since=2006-01-02T15:04:05Z07:00"
+                hx-swap="innerHTML" hx-target="#market-modal" hx-trigger="click">
+                <span class="htmx-request:hidden flex items-center gap-2">
+                  <i class="fas fa-date"></i>
+                Fetch Traders
+                </span>
+              </button>
+  
+        <button id="import-selected-btn"
+          class="inline-flex items-center px-4 py-2 text-sm font-semibold text-indigo-700 bg-indigo-100 border border-indigo-300 rounded-lg shadow-sm dark:text-indigo-400 dark:bg-indigo-900/30 dark:border-indigo-800 hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-all duration-200 ease-in-out"
+          hx-post="/pairs/{{ .PairID }}/trades" hx-target="#mitoast" hx-indicator="#import-indicator" hx-trigger="click"
+          hx-vals='js:{ "trades": getSelectedTrades()}'>
+          <span class="htmx-request:hidden flex items-center gap-2">
+            <i class="fas fa-download"></i>
+            Import
+          </span>
+        </button>
+      </div>
+
+      <script>
+        // Toggle all checkboxes
+        function toggleAllCheckboxes(source) {
+          const checkboxes = document.querySelectorAll('.trade-checkbox');
+          checkboxes.forEach(checkbox => {
+            checkbox.checked = source.checked;
+          });
+          updateHxVals();
+        }
+
+        // Update the hx-vals with selected trades
+        function getSelectedTrades() {
+          const checkboxes = document.querySelectorAll('.trade-checkbox:checked');
+          const trades = Array.from(checkboxes).map(checkbox => {
+            return JSON.parse(checkbox.getAttribute('data-trade'));
+          });
+          return {trades: trades};
+        }
+
+        // Update when any checkbox changes
+        function updateHxVals() {
+          const selectAll = document.getElementById('select-all');
+          const checkboxes = document.querySelectorAll('.trade-checkbox');
+
+          // Update "select all" checkbox state
+          selectAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+          selectAll.indeterminate =
+            !selectAll.checked &&
+            Array.from(checkboxes).some(checkbox => checkbox.checked);
+        }
+
+        // Initialize checkbox states
+        document.addEventListener('DOMContentLoaded', () => {
+          const checkboxes = document.querySelectorAll('.trade-checkbox');
+          checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateHxVals);
+          });
+          updateHxVals();
+        });
+      </script>

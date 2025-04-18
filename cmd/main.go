@@ -13,9 +13,9 @@ import (
 
 const (
 	PREFIX              = "CONTROTTO_"
-	TRADER_PREFIX       = "CONTROTTO_TRADER_"
+	MARKET_PREFIX       = "CONTROTTO_TRADER_"
 	PRICER_PREFIX       = "CONTROTTO_PRICER_"
-	TRADER_SUFIX        = "_TOKEN"
+	MARKET_SUFIX        = "_TOKEN"
 	PRIVATE_PRICE_SUFIX = "_TOKEN"
 	PUBLIC_PRICE_SUFIX  = "_ENABLED"
 )
@@ -39,7 +39,7 @@ func main() {
 	ac := managing.NewAssetCreator(sqliteDB)
 	pc := managing.NewPairManager(cfg, sqliteDB, sqliteDB)
 	pq := querying.NewPairQuerier(sqliteDB)
-	mm := managing.NewMarketManager(traders)
+	mm := managing.NewMarketManager(marketsConfig)
 	ppm := managing.NewPriceProviderManager(pricers)
 	aq := querying.NewAssetQuerier(sqliteDB)
 	manager := managing.NewService(*ac, *pc, mm, ppm)

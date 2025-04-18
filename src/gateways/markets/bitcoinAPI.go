@@ -1,4 +1,4 @@
-package marketTraders
+package markets
 
 import (
 	"controtto/src/domain/pnl"
