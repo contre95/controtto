@@ -82,7 +82,7 @@ var traders = map[string]pnl.Market{
 		MarketKey:            trading212 + "_trader",
 		Details:              "",
 		Color:                "#00AAE4",
-		MarketTradingSymbols: []string{"USD"},
+		MarketTradingSymbols: []string{"USD", "EUR"},
 		Type:                 pnl.Broker,
 		Token:                os.Getenv(PREFIX + strings.ToUpper(trading212) + TRADER_SUFIX),
 		ProviderURL:          "https://helpcentre.trading212.com/hc/en-us/articles/14584770928157-How-can-I-generate-an-API-key",

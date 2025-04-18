@@ -39,41 +39,40 @@ func getMarketAssets(tpq querying.PairsQuerier, marketManager *managing.MarketMa
 		marketData := make(map[string]struct {
 			HasError     bool
 			ErrorMessage string
-			Amounts      [3]float64 // [base, USDT, USDC]
+			Amounts      map[string]float64 // [base, USDT, USDC]
 		})
 		for marketName, trader := range marketTraders {
-			var usdtAmt, usdcAmt float64
-			var err2, err3 error
+			var assetAmounts = make(map[string]float64, len(trader.MarketTradingSymbols)+1)
+			var err2 error
 			var errMsg string
 			baseAmt, err1 := marketManager.FetchBalance(marketName, resp.Pair.BaseAsset.Symbol)
 			if err1 != nil {
 				errMsg += "Base: " + err1.Error() + ". "
 			}
+			assetAmounts[resp.Pair.BaseAsset.Symbol] = baseAmt
 			if trader.Type != pnl.Wallet {
-				usdtAmt, err2 = marketManager.FetchBalance(marketName, "USDT")
-				if err2 != nil {
-					errMsg += "USDT: " + err2.Error() + ". "
-				}
-				usdcAmt, err3 = marketManager.FetchBalance(marketName, "USDC")
-				if err3 != nil {
-					errMsg += "USDC: " + err3.Error() + ". "
+				for _, symbol := range trader.MarketTradingSymbols {
+					amount, err2 := marketManager.FetchBalance(marketName, symbol)
+					if err2 != nil {
+						errMsg += symbol + err2.Error() + ". "
+					}
+					assetAmounts[symbol] = amount
 				}
 			}
-			hasErr := err1 != nil || err2 != nil || err3 != nil
+			hasErr := err1 != nil || err2 != nil
 			if hasErr {
 				fmt.Println("Error fetching market data:", errMsg)
 			}
 			marketData[marketName] = struct {
 				HasError     bool
 				ErrorMessage string
-				Amounts      [3]float64
+				Amounts      map[string]float64
 			}{
 				HasError:     hasErr,
 				ErrorMessage: errMsg,
-				Amounts:      [3]float64{baseAmt, usdtAmt, usdcAmt},
+				Amounts:      assetAmounts,
 			}
 		}
-
 		return c.Render("marketAssets", fiber.Map{
 			"Pair":          resp.Pair,
 			"MarketTraders": marketTraders,

@@ -81,6 +81,19 @@ func newPairForm(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 		})
 	}
 }
+func getAssetColor(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		symbol := c.Params("symbol")
+		req := querying.QueryAssetReq{
+			Symbol: symbol,
+		}
+		resp, err := aq.GetAsset(req)
+		if err != nil {
+			return c.SendString("")
+		}
+		return c.SendString(resp.Asset.Color)
+	}
+}
 
 // Tables handler that renderizer the tables view and returns it to the client
 func tradesTable(aq querying.PairsQuerier) func(*fiber.Ctx) error {

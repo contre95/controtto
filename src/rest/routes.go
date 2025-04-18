@@ -27,6 +27,7 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading
 	app.Get("/trades", tradesSection)
 	app.Get("/ui/trades/table", tradesTable(q.PairQuerier))
 	app.Get("/pairs/:id/", pairSection())
+	app.Get("/asset/:symbol/color", getAssetColor(q.AssetQuerier))
 	app.Get("/ui/assets/form", newAssetForm)
 	app.Get("/ui/pairs/form", newPairForm(q.AssetQuerier))
 	app.Get("/healthcheck/price", checkPrice(m.PriceProviderManager))

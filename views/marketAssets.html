@@ -41,39 +41,27 @@
 
       <div class="space-y-2 text-sm">
         {{ $info := index $.MarketData $marketName }}
-        <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>{{ $.Pair.BaseAsset.Symbol }}</span>
-          <div class="ml-auto text-right">
-            (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">
-              $ <span hx-swap="outerHTML" hx-trigger="revealed" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ printf "%.4f" (index $info.Amounts 0) }}" hx-trigger="load">
-                fetching
+        {{ range $key, $val := $info.Amounts }}
+          <div class="flex justify-between text-gray-600 dark:text-gray-400 border-b border-1 border-neutral-300 dark:border-neutral-800 pb-1">
+            <span>{{ $key }}</span>
+            <span class="font-medium">
+            {{ if eq $key $.Pair.BaseAsset.Symbol}}
+              (<span class="font-medium" style="color:{{ $.Pair.QuoteAsset.Color }}">
+              $ <span hx-swap="outerHTML" hx-trigger="revealed delay:1s" hx-target="this" hx-get="/calc/price?base={{ $.Pair.BaseAsset.Symbol }}&quote={{ $.Pair.QuoteAsset.Symbol }}&amount={{ printf "%.4f" $val }}" hx-trigger="load">
+                ...
               </span>
             </span>)
-            <span class="font-medium" style="color:{{ $.Pair.BaseAsset.Color }}">
-              {{ printf "%.4f" (index $info.Amounts 0) }}
+            {{ end }}
+            {{ if or (eq $key $.Pair.BaseAsset.Symbol) (ne $trader.Type "Wallet") }}
+            <span _="on load fetch `/asset/{{ $key }}/color` then put it into my.style.color">
+              {{ printf "%.2f" $val }}
+            </span>
+              {{ else }}
+                --.--
+              {{ end }}
             </span>
           </div>
-        </div>
-        <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>USDT</span>
-          <span class="font-medium" style="color:#009292">
-          </span>        
-          {{ if ne $trader.Type "Wallet" }}
-            {{ printf "%.2f" (index $info.Amounts 1) }}
-        {{ else }}
-            --.--
         {{ end }}
-        </div>
-        <div class="flex justify-between text-gray-600 dark:text-gray-400">
-          <span>USDC</span>
-          <span class="font-medium" style="color:#576B83">
-        {{ if ne $trader.Type "Wallet" }}
-            {{ printf "%.2f" (index $info.Amounts 2) }}
-        {{ else }}
-            --.--
-        {{ end }}
-          </span>
-        </div>
       </div>
     </div>
     {{ end }}
