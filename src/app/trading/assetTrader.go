@@ -32,7 +32,7 @@ type TradeResponse struct {
 	Price       float64   `json:"price"`
 }
 
-type ImportTradesRequest struct {
+type FetchTradesReq struct {
 	MarketKey string    `json:"market_key"`
 	PairID    string    `json:"pair_id"`
 	Since     time.Time `json:"since"`
@@ -150,7 +150,7 @@ func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeResponse, error) {
 	return &resp, nil
 }
 
-func (m *AssetTrader) ImportTrades(req ImportTradesRequest) ([]TradeResponse, error) {
+func (m *AssetTrader) FetchTrades(req FetchTradesReq) ([]TradeResponse, error) {
 	market, err := m.getMarket(req.MarketKey)
 	if err != nil {
 		return nil, err

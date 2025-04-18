@@ -3,6 +3,7 @@ package rest
 import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
+	"controtto/src/app/trading"
 	"controtto/src/domain/pnl"
 	"fmt"
 	"log/slog"
@@ -112,6 +113,72 @@ func newMarketTradingForm(tpq querying.PairsQuerier, marketManager *managing.Mar
 			"Pair":          resp.Pair,
 			"Today":         time.Now().Format("2006-01-02"),
 			"MarketTraders": marketTraders,
+		})
+	}
+}
+
+// func fetchMarketTrades(at trading.AssetTrader) fiber.Handler {
+// 	return func(c *fiber.Ctx) error {
+// 		// Get path parameters
+// 		pairID := c.Params("id")
+// 		marketKey := c.Params("mtkkey")
+// 		fmt.Println("Market Key:", marketKey)
+// 		// Parse query parameter
+// 		var since time.Time
+// 		if sinceStr := c.Query("since"); sinceStr != "" {
+// 			parsedSince, err := time.Parse(time.RFC3339, sinceStr)
+// 			if err != nil {
+// 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+// 					"error": "invalid since parameter, must be RFC3339 format",
+// 				})
+// 			}
+// 			since = parsedSince
+// 		}
+// 		// Create request object
+// 		req := trading.FetchTradesReq{
+// 			MarketKey: marketKey,
+// 			PairID:    pairID,
+// 			Since:     since,
+// 		}
+// 		// Fetch trades using AssetTrader
+// 		trades, err := at.FetchTrades(req)
+// 		if err != nil {
+// 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+// 				"error": err.Error(),
+// 			})
+// 		}
+// 		// Return successful response
+// 		return c.Status(http.StatusOK).JSON(trades)
+// 	}
+// }
+
+func fetchMarketTrades(at trading.AssetTrader) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		pairID := c.Params("id")
+		marketKey := c.Params("mktkey")
+		var since time.Time
+		if sinceStr := c.Query("since"); sinceStr != "" {
+			parsedSince, err := time.Parse(time.RFC3339, sinceStr)
+			if err != nil {
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+					"error": "invalid since parameter, must be RFC3339 format",
+				})
+			}
+			since = parsedSince
+		}
+		req := trading.FetchTradesReq{
+			MarketKey: marketKey,
+			PairID:    pairID,
+			Since:     since,
+		}
+		trades, err := at.FetchTrades(req)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		return c.Render("marketTradesTable", fiber.Map{
+			"Trades": trades,
 		})
 	}
 }
