@@ -160,7 +160,6 @@ func (m *AssetTrader) FetchTrades(req FetchTradesReq) ([]TradeAssetResp, error) 
 	if err != nil {
 		return nil, err
 	}
-
 	trades, err := market.API.ImportTrades(*pair, req.Since)
 	if err != nil {
 		return nil, err

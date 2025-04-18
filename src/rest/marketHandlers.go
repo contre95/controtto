@@ -157,16 +157,18 @@ func fetchMarketTrades(at trading.AssetTrader, mm *managing.MarketManager) fiber
 	return func(c *fiber.Ctx) error {
 		pairID := c.Params("id")
 		marketKey := c.Params("mktkey")
-		var since time.Time
-		if sinceStr := c.Query("since"); sinceStr != "" {
-			parsedSince, err := time.Parse(time.RFC3339, sinceStr)
-			if err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-					"error": "invalid since parameter, must be RFC3339 format",
-				})
-			}
-			since = parsedSince
-		}
+		var since = time.Now().AddDate(0, -6, 0)
+		// var since time.Time
+		// if sinceStr := c.Query("since"); sinceStr != "" {
+		// 	parsedSince, err := time.Parse(time.RFC3339, sinceStr)
+		// 	if err != nil {
+		// 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		// 			"error": "invalid since parameter, must be RFC3339 format",
+		// 		})
+		// 	}
+		// 	since = parsedSince
+		// }
+		fmt.Println(since.Format(time.RFC3339))
 		req := trading.FetchTradesReq{
 			MarketKey: marketKey,
 			PairID:    pairID,

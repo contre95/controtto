@@ -2,7 +2,6 @@
 <div onclick="if (event.target === this) this.remove()"
   class="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center py-24 z-50 animate__animated animate__fadeIn">
 
-
   <!-- MODAL CONTAINER -->
   <div
     class="border-neutral-600 dark:border-neutral-200 border bg-white dark:bg-neutral-900 rounded-2xl shadow-lg max-w-3xl w-full max-h-[90vh] mx-4 p-6 animate-fade-in-up overflow-hidden flex flex-col">
@@ -44,12 +43,16 @@
           class="bg-white dark:bg-neutral-900 divide-y divide-gray-200 dark:divide-gray-700 text-gray-900 dark:text-gray-100"
           id="trades-table">
           {{ range .Trades }}
-          <tr class="hover:bg-gray-50 dark:hover:bg-neutral-800" _="on click set #oloo.checked to true">
+          <tr class="hover:bg-gray-50 dark:hover:bg-neutral-800 ">
             <td class="px-4 py-2">
-              <input type="checkbox"
-                id="oloo"
-                class="trade-checkbox rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
-                data-trade='{
+              {{ if eq .TradeType "Buy" }}
+              <div class="flex items-center">
+                <div
+                  class="w-2  h-2 bg-green-500 mr-3 rounded-full shadow-[0_0_6px_2px_rgba(74,222,128,0.7)] animate-pulse">
+                </div>
+                <input type="checkbox" id="oloo"
+                  class="trade-checkbox rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                  data-trade='{
                   "timestamp": "{{ .Timestamp.Format "2006-01-02T15:04:05Z07:00" }}",
                   "type": "{{ .TradeType }}",
                   "price": {{ .Price }},
@@ -58,6 +61,22 @@
                   "fee_base": {{ .FeeInBase }},
                   "fee_quote": {{ .FeeInQuote }}
                 }'>
+                {{ else }}
+                <div class="flex items-center">
+                  <div class="w-2 h-2 bg-red-500 mr-3 rounded-full shadow-[0_0_6px_2px_rgba(239,68,68,0.7)]"></div>
+                  <input type="checkbox" id="oloo"
+                    class="trade-checkbox rounded text-blue-600 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+                    data-trade='{
+                  "timestamp": "{{ .Timestamp.Format "2006-01-02T15:04:05Z07:00" }}",
+                  "type": "{{ .TradeType }}",
+                  "price": {{ .Price }},
+                  "amount": {{ .BaseAmount }},
+                  "total": {{ .QuoteAmount }},
+                  "fee_base": {{ .FeeInBase }},
+                  "fee_quote": {{ .FeeInQuote }}
+                }'>
+
+                  {{ end }}
             </td>
             <td class="px-2 py-1 whitespace-nowrap">{{ .Timestamp.Format "01/02/06" }}
               <br>
@@ -65,7 +84,7 @@
             </td>
             <td class="px-2 py-1">
               {{ if eq .TradeType "Buy" }}
-              <span class="text-green-600 dark:text-green-400 font-semibold">BUY</span>
+              <span class="text-green-600 pl-2 dark:text-green-400 font-semibold">BUY</span>
               {{ else }}
               <span class="text-red-600 dark:text-red-400 font-semibold">SELL</span>
               {{ end }}
@@ -114,4 +133,43 @@
     </div>
   </div>
 </div>
+<script>
+  // Toggle all checkboxes
+  function toggleAllCheckboxes(source) {
+    const checkboxes = document.querySelectorAll('.trade-checkbox');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = source.checked;
+    });
+    updateHxVals();
+  }
 
+  // Update the hx-vals with selected trades
+  function getSelectedTrades() {
+    const checkboxes = document.querySelectorAll('.trade-checkbox:checked');
+    const trades = Array.from(checkboxes).map(checkbox => {
+      return JSON.parse(checkbox.getAttribute('data-trade'));
+    });
+    return {trades: trades};
+  }
+
+  // Update when any checkbox changes
+  function updateHxVals() {
+    const selectAll = document.getElementById('select-all');
+    const checkboxes = document.querySelectorAll('.trade-checkbox');
+
+    // Update "select all" checkbox state
+    selectAll.checked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+    selectAll.indeterminate =
+      !selectAll.checked &&
+      Array.from(checkboxes).some(checkbox => checkbox.checked);
+  }
+
+  // Initialize checkbox states
+  document.addEventListener('DOMContentLoaded', () => {
+    const checkboxes = document.querySelectorAll('.trade-checkbox');
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', updateHxVals);
+    });
+    updateHxVals();
+  });
+</script>
