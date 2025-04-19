@@ -50,28 +50,27 @@ class DynamicSelect {
     let optionsHTML = "";
     for (let i = 0; i < this.data.length; i++) {
       let optionWidth = 100 / this.columns;
-      let optionContent = "";
-      if (this.data[i].html) {
-        optionContent = this.data[i].html;
-      } else {
-        optionContent = `
-                    ${this.data[i].img ? `<img src="${this.data[i].img}" alt="${this.data[i].text}" class="${this.data[i].imgWidth && this.data[i].imgHeight ? "dynamic-size" : ""}" style="${this.data[i].imgWidth ? "width:" + this.data[i].imgWidth + ";" : ""}${this.data[i].imgHeight ? "height:" + this.data[i].imgHeight + ";" : ""}">` : ""}
-                    ${this.data[i].text ? '<span class="dynamic-select-option-text">' + this.data[i].text + "</span>" : ""}
-                `;
-      }
+      let optionContent =
+        this.data[i].html ||
+        `
+        ${this.data[i].img ? `<img src="${this.data[i].img}" alt="${this.data[i].text}" class="${this.data[i].imgWidth && this.data[i].imgHeight ? "dynamic-size" : ""}" style="${this.data[i].imgWidth ? "width:" + this.data[i].imgWidth + ";" : ""}${this.data[i].imgHeight ? "height:" + this.data[i].imgHeight + ";" : ""}">` : ""}
+        ${this.data[i].text ? `<span class="dynamic-select-option-text">${this.data[i].text}</span>` : ""}`;
+
       optionsHTML += `
-                <div class="dynamic-select-option${this.data[i].value == this.selectedValue ? " dynamic-select-selected" : ""}${this.data[i].text || this.data[i].html ? "" : " dynamic-select-no-text"}" data-value="${this.data[i].value}" style="width:${optionWidth}%;${this.height ? "height:" + this.height + ";" : ""}">
-                    ${optionContent}
-                </div>
-            `;
+        <div class="dynamic-select-option${this.data[i].value == this.selectedValue ? " dynamic-select-selected" : ""}${this.data[i].text || this.data[i].html ? "" : " dynamic-select-no-text"}" data-value="${this.data[i].value}" style="width:${optionWidth}%;${this.height ? "height:" + this.height + ";" : ""}">
+          ${optionContent}
+        </div>`;
     }
+
     let template = `
-            <div class="dynamic-select ${this.name}"${this.selectElement.id ? ' id="' + this.selectElement.id + '"' : ""} style="${this.width ? "width:" + this.width + ";" : ""}${this.height ? "height:" + this.height + ";" : ""}">
-                <input type="hidden" name="${this.name}" value="${this.selectedValue}">
-                <div class="dynamic-select-header" style="${this.width ? "width:" + this.width + ";" : ""}${this.height ? "height:" + this.height + ";" : ""}"><span class="dynamic-select-header-placeholder">${this.placeholder}</span></div>
-                <div class="dynamic-select-options" style="${this.options.dropdownWidth ? "width:" + this.options.dropdownWidth + ";" : ""}${this.options.dropdownHeight ? "height:" + this.options.dropdownHeight + ";" : ""}">${optionsHTML}</div>
-            </div>
-        `;
+      <div class="dynamic-select ${this.name}"${this.selectElement.id ? ` id="${this.selectElement.id}"` : ""} style="${this.width ? "width:" + this.width + ";" : ""}${this.height ? "height:" + this.height + ";" : ""}">
+        <input type="hidden" name="${this.name}" value="${this.selectedValue}">
+        <div class="dynamic-select-header text-gray-800 bg-white dark:text-gray-200 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700" style="${this.width ? "width:" + this.width + ";" : ""}${this.height ? "height:" + this.height + ";" : ""}">
+          <span class="dynamic-select-header-placeholder text-gray-800 bg-white dark:text-gray-200 dark:bg-neutral-800 border border-gray-300 dark:border-neutral-700">${this.placeholder}</span>
+        </div>
+        <div class="dynamic-select-options" style="${this.options.dropdownWidth ? "width:" + this.options.dropdownWidth + ";" : ""}${this.options.dropdownHeight ? "height:" + this.options.dropdownHeight + ";" : ""}">${optionsHTML}</div>
+      </div>`;
+
     let element = document.createElement("div");
     element.innerHTML = template;
     return element;
@@ -93,42 +92,46 @@ class DynamicSelect {
           this.element.querySelector("input").value =
             option.getAttribute("data-value");
           this.data.forEach((data) => (data.selected = false));
-          this.data.filter(
+          this.data.find(
             (data) => data.value == option.getAttribute("data-value"),
-          )[0].selected = true;
+          ).selected = true;
           this.element
             .querySelector(".dynamic-select-header")
             .classList.remove("dynamic-select-header-active");
           this.options.onChange(
             option.getAttribute("data-value"),
-            option.querySelector(".dynamic-select-option-text")
-              ? option.querySelector(".dynamic-select-option-text").innerHTML
-              : "",
+            option.querySelector(".dynamic-select-option-text")?.innerHTML ||
+            "",
             option,
           );
         };
       });
+
     this.element.querySelector(".dynamic-select-header").onclick = () => {
       this.element
         .querySelector(".dynamic-select-header")
         .classList.toggle("dynamic-select-header-active");
     };
+
     if (
       this.selectElement.id &&
-      document.querySelector('label[for="' + this.selectElement.id + '"]')
+      document.querySelector(`label[for="${this.selectElement.id}"]`)
     ) {
-      document.querySelector(
-        'label[for="' + this.selectElement.id + '"]',
-      ).onclick = () => {
-        this.element
-          .querySelector(".dynamic-select-header")
-          .classList.toggle("dynamic-select-header-active");
-      };
+      document.querySelector(`label[for="${this.selectElement.id}"]`).onclick =
+        () => {
+          this.element
+            .querySelector(".dynamic-select-header")
+            .classList.toggle("dynamic-select-header-active");
+        };
     }
+
     document.addEventListener("click", (event) => {
       if (
         !event.target.closest("." + this.name) &&
-        !event.target.closest('label[for="' + this.selectElement.id + '"]')
+        !(
+          this.selectElement.id &&
+          event.target.closest(`label[for="${this.selectElement.id}"]`)
+        )
       ) {
         this.element
           .querySelector(".dynamic-select-header")
@@ -146,8 +149,7 @@ class DynamicSelect {
 
   get selectedValue() {
     let selected = this.data.filter((option) => option.selected);
-    selected = selected.length ? selected[0].value : "";
-    return selected;
+    return selected.length ? selected[0].value : "";
   }
 
   set data(value) {
@@ -214,6 +216,7 @@ class DynamicSelect {
     return this.options.height;
   }
 }
+
 document
   .querySelectorAll("[data-dynamic-select]")
   .forEach((select) => new DynamicSelect(select));

@@ -29,15 +29,16 @@ func NewMarketManager(in map[string]pnl.Market) *MarketManager {
 	return mm
 }
 
-func (c *MarketManager) GetMarket(key string) (*pnl.Market, error) {
+// GetMarket returns a copy of a market
+func (c *MarketManager) GetMarket(key string) (pnl.Market, error) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	for k, v := range c.markets {
 		if key == k {
-			return v, nil
+			return *v, nil
 		}
 	}
-	return nil, ErrMarketNotSet
+	return pnl.Market{}, ErrMarketNotSet
 }
 
 func (c *MarketManager) GetMarkets(all bool) map[string]*pnl.Market {
@@ -82,11 +83,6 @@ func (m *MarketManager) getMarket(key string) (*pnl.Market, error) {
 		return nil, ErrEmptyToken
 	}
 	return market, nil
-}
-
-// ListTraders returns all configured markets
-func (m *MarketManager) ListTraders(all bool) map[string]*pnl.Market {
-	return m.GetMarkets(all) // true = only return configured markets
 }
 
 // FetchBalance gets asset balance from a market

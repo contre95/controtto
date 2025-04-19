@@ -46,8 +46,8 @@ func main() {
 	querier := querying.NewService(*aq, *pq)
 	tr := trading.NewTradeRecorder(sqliteDB)
 	at := trading.NewAssetTrader(mm, sqliteDB)
-	trader := trading.NewService(*at, *tr)
-	// *trading.NewAssetTrader(markets map[string]pnl.Market)
+	tb := trading.NewTraderBot(mm, sqliteDB)
+	trader := trading.NewService(*at, *tr, tb)
 
 	port := cfg.Port
 	slog.Info("Initiating server", "port", port)

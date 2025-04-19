@@ -9,13 +9,13 @@ import (
 
 // TradeRecorder handles trade recording operations
 type TradeRecorder struct {
-	tradingPairs pnl.Pairs
+	pairs pnl.Pairs
 }
 
 // NewTradeRecorder creates a new TradeRecorder instance
 func NewTradeRecorder(tradingPairsRepo pnl.Pairs) *TradeRecorder {
 	return &TradeRecorder{
-		tradingPairs: tradingPairsRepo,
+		pairs: tradingPairsRepo,
 	}
 }
 
@@ -29,7 +29,7 @@ type DeleteTradeResp struct {
 }
 
 func (tpm *TradeRecorder) DeleteTrade(req DeleteTradeReq) (*DeleteTradeResp, error) {
-	err := tpm.tradingPairs.DeleteTrade(req.ID)
+	err := tpm.pairs.DeleteTrade(req.ID)
 	if err != nil {
 		slog.Error("Error deleting trade",
 			"error", err,
@@ -65,7 +65,7 @@ func (tpm *TradeRecorder) RecordTrade(req RecordTradeReq) (*RecordTradeResp, err
 		return nil, fmt.Errorf("invalid trade type: %s", req.Type)
 	}
 	fmt.Println("RecordTradeReq", req)
-	tradingPair, err := tpm.tradingPairs.GetPair(req.PairID)
+	tradingPair, err := tpm.pairs.GetPair(req.PairID)
 	if err != nil {
 		slog.Error("Failed to get trading pair",
 			"error", err,
@@ -90,7 +90,7 @@ func (tpm *TradeRecorder) RecordTrade(req RecordTradeReq) (*RecordTradeResp, err
 	}
 
 	// Persist trade
-	if err := tpm.tradingPairs.RecordTrade(*trade, tradingPair.ID); err != nil {
+	if err := tpm.pairs.RecordTrade(*trade, tradingPair.ID); err != nil {
 		slog.Error("Failed to record trade",
 			"error", err,
 			"trade_id", trade.ID)

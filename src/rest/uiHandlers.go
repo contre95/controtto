@@ -19,7 +19,7 @@ func empty() func(*fiber.Ctx) error {
 // Home hanlder reders the homescreen
 func Home(c *fiber.Ctx) error {
 	slog.Info("HOME")
-	return c.Render("main", fiber.Map{"TradesTrigger": ",revealed"})
+	return c.Render("main", fiber.Map{"PairsTrigger": ",revealed"})
 }
 
 func dashboardSection(aq querying.PairsQuerier) func(*fiber.Ctx) error {
@@ -45,14 +45,26 @@ func dashboardSection(aq querying.PairsQuerier) func(*fiber.Ctx) error {
 	}
 }
 
-func tradesSection(c *fiber.Ctx) error {
+func pairsSection(c *fiber.Ctx) error {
 	slog.Info("Trades Section")
 	if c.Get("HX-Request") != "true" {
 		return c.Render("main", fiber.Map{
-			"TradesTrigger": ",revealed",
+			"PairsTrigger": ",revealed",
 		})
 	}
-	return c.Render("tradesSection", fiber.Map{
+	return c.Render("pairsSection", fiber.Map{
+		"Amount": 4,
+	})
+}
+
+func algoTradingSection(c *fiber.Ctx) error {
+	slog.Info("Algo Trading Section")
+	if c.Get("HX-Request") != "true" {
+		return c.Render("main", fiber.Map{
+			"AlgoTradingTrigger": ",revealed",
+		})
+	}
+	return c.Render("algoTradingSection", fiber.Map{
 		"Amount": 4,
 	})
 }
@@ -79,11 +91,9 @@ func settingsSection(priceProviderManager *managing.PriceProviderManager, market
 				"SettingsTrigger": ",revealed",
 			})
 		}
-
 		// Get configured price providers and market traders
 		providers := priceProviderManager.ListProviders(true) // true = show all providers
-		traders := marketManager.ListTraders(true)            // true = show all traders
-
+		traders := marketManager.GetMarkets(true)             // true = show all traders
 		return c.Render("settingsSection", fiber.Map{
 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
 			"Uncommon":       cfg.GetUncommonPairs(),

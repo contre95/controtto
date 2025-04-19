@@ -224,12 +224,11 @@ func tradingTable(tpq querying.PairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-
 		// TODO: Should this happen here? or in the app layer ?
 		slices.Reverse(resp.Pair.Trades)
 		slog.Info("Pair Section requested", "Pair", resp.Pair.ID)
 		c.Append("HX-Trigger", "refreshTrade")
-		return c.Render("tradingTable", fiber.Map{
+		return c.Render("tradesTable", fiber.Map{
 			"Today":      time.Now().Format(time.UnixDate),
 			"TodayShort": time.Now().Format("02/01/2006"),
 			"Pair":       resp.Pair,

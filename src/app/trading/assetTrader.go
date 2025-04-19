@@ -64,14 +64,6 @@ func toTradeAssetResp(domain pnl.Trade) TradeAssetResp {
 	}
 }
 
-func (m *AssetTrader) getMarket(marketKey string) (*pnl.Market, error) {
-	market, exists := m.markets.GetMarkets(false)[marketKey]
-	if !exists {
-		return nil, errors.New("market not found")
-	}
-	return market, nil
-}
-
 func (m *AssetTrader) getPair(pairID string) (*pnl.Pair, error) {
 	pair, err := m.pairs.GetPair(pairID)
 	if err != nil {
@@ -85,7 +77,7 @@ func (m *AssetTrader) ExecuteBuy(req TradeRequest) (*TradeAssetResp, error) {
 		return nil, ErrInvalidTrade
 	}
 
-	market, err := m.getMarket(req.MarketKey)
+	market, err := m.markets.GetMarket(req.MarketKey)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +112,7 @@ func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeAssetResp, error) {
 		return nil, ErrInvalidTrade
 	}
 
-	market, err := m.getMarket(req.MarketKey)
+	market, err := m.markets.GetMarket(req.MarketKey)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +143,7 @@ func (m *AssetTrader) ExecuteSell(req TradeRequest) (*TradeAssetResp, error) {
 }
 
 func (m *AssetTrader) FetchTrades(req FetchTradesReq) ([]TradeAssetResp, error) {
-	market, err := m.getMarket(req.MarketKey)
+	market, err := m.markets.GetMarket(req.MarketKey)
 	if err != nil {
 		return nil, err
 	}

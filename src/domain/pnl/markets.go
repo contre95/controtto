@@ -40,7 +40,8 @@ type TradeOptions struct {
 
 type MarketAPI interface {
 	// Fetches how much of this asset you have in the Market
-	FetchAssetAmount(symbol string) (float64, error)
+	FetchAssetAmount(ticket string) (float64, error)
+	// FetchPrice(ticket string) (float64, error)
 	AccountDetails() (string, error)
 	HealthCheck() bool
 	ImportTrades(tradingPair Pair, since time.Time) ([]Trade, error)

@@ -96,7 +96,7 @@ func getAssetColor(aq querying.AssetsQuerier) func(*fiber.Ctx) error {
 }
 
 // Tables handler that renderizer the tables view and returns it to the client
-func tradesTable(aq querying.PairsQuerier) func(*fiber.Ctx) error {
+func pairsTable(aq querying.PairsQuerier) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		slog.Info("Trades table requested")
 		req := querying.ListPairsReq{}
@@ -107,7 +107,7 @@ func tradesTable(aq querying.PairsQuerier) func(*fiber.Ctx) error {
 				"Msg":   err,
 			})
 		}
-		return c.Render("tradesTable", fiber.Map{
+		return c.Render("pairsTable", fiber.Map{
 			"Title": "Trading Pairs",
 			"Pairs": resp.Pairs,
 		})

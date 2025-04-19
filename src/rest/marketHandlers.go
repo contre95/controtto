@@ -36,7 +36,7 @@ func getMarketAssets(tpq querying.PairsQuerier, marketManager *managing.MarketMa
 			})
 		}
 		// Get configured market traders
-		marketTraders := marketManager.ListTraders(false) // false = only configured traders
+		marketTraders := marketManager.GetMarkets(false) // false = only configured traders
 		// Prepare market data (mock data - replace with actual implementation)
 		marketData := make(map[string]struct {
 			HasError     bool
@@ -108,7 +108,7 @@ func newMarketTradingForm(tpq querying.PairsQuerier, marketManager *managing.Mar
 		}
 
 		// Get all market traders (including unconfigured ones)
-		marketTraders := marketManager.ListTraders(true) // true = show all traders
+		marketTraders := marketManager.GetMarkets(true) // true = show all traders
 
 		return c.Render("marketTradingForm", fiber.Map{
 			"Pair":          resp.Pair,

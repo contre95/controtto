@@ -55,11 +55,9 @@ func saveSettingsForm(priceProviderManager *managing.PriceProviderManager, marke
 				})
 			}
 		}
-
 		// Update uncommon pairs setting
 		uncommon := c.FormValue("uncommon_pairs") != ""
 		cfg.SetUncommonPairs(uncommon)
-
 		c.Append("HX-Trigger", "reloadSettings")
 		slog.Info("Config updated successfully")
 		return c.Render("toastOk", fiber.Map{
