@@ -1,10 +1,10 @@
 <!-- OUTER MODAL WRAPPER -->
 <div onclick="if (event.target === this) this.remove()"
-  class="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center py-24 z-50 animate__animated animate__fadeIn">
+  class="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center py-24 z-50 animate__animated animate__fadeIn">
 
   <!-- MODAL CONTAINER -->
   <div
-    class="border-neutral-600 dark:border-neutral-200 border bg-white dark:bg-neutral-900 rounded-2xl shadow-lg max-w-3xl w-full max-h-[90vh] mx-4 p-6 animate-fade-in-up overflow-hidden flex flex-col">
+    class="max-w-3xl w-full max-h-[90vh] p-4 animate-fade-in-up overflow-auto flex flex-col rounded-lg" >
 
     <!-- HEADER -->
     <div class="flex justify-between items-center mb-4">
@@ -21,7 +21,7 @@
     </div>
 
     <!-- SCROLLABLE TABLE AREA -->
-    <div class="flex-1 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
+    <div class="overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700 max-h-[70vh]">
       <table class="w-full text-sm divide-y divide-gray-200 dark:divide-gray-700">
         <thead class="bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-gray-200 sticky top-0 z-10">
           <tr>
