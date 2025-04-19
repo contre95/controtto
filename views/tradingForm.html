@@ -1,7 +1,7 @@
 {{ if .Error }}
 <div id="cards" class="grid  p-3 md:p-5 animate__animated animate__fadeIn">
   <div
-  class="bg-white dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
+  class="bg-white dark:bg-neutral-900 rounded-xl shadow-md p-4 md:p-5 border border-gray-200 dark:border-neutral-700 relative">
   <div class="flex items-center justify-between mb-2 md:mb-3">
     <div class="flex items-center space-x-2 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -22,7 +22,7 @@
 </div>
 {{ else }}
 <section
-  class="p-5 bg-white dark:bg-neutral-700 w-full divide-y rounded-md divide-gray-200 border border-neutral-200 dark:border-neutral-700 dark:divide-gray-700 animate__animated animate__fadeInUp">
+  class="p-5 bg-white dark:bg-neutral-900 w-full divide-y rounded-md divide-gray-200 border border-neutral-200 dark:border-neutral-700 dark:divide-gray-700 animate__animated animate__fadeInUp">
   <h2 class="text-lg font-semibold text-gray-700 capitalize dark:text-white">
     New Trade
   </h2>
@@ -141,19 +141,19 @@
     <div class="flex md:flex–nowrap flex-wrap md:justify-between justify-center mt-6 gap-y-4">
       <div class="group flex items-center justify-center w-full md:w-auto">
         <form id="import-form" class="">
-          <button hx-encoding="multipart/form-data" hx-post="/pairs/{{ .Pair.ID }}/trades/upload" hx-target="#mitoast"
+          <button hx-encoding="multipart/form-data" hx-post="/pairs/{{ .Pair.ID }}/trades/csvImport" hx-target="#mitoast"
             id="import" hx-include="#import-form"
-            class="flex items-center border-2 border-neutral-300 border-solid justify-center px-5 py-2 text-sm tracking-wide text-dark transition-colors duration-200 bg-white rounded-lg hover:bg-gray-600 hover:text-gray-200 dark:hover:bg-blue-500 dark:bg-neutral-300">
+            class="inline-flex items-center px-4 py-2 text-md font-semibold text-indigo-700 bg-indigo-100 border border-indigo-300 rounded-lg shadow-sm dark:text-indigo-400 dark:bg-indigo-900/30 dark:border-indigo-800 hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-all duration-200 ease-in-out">
             <img src="/assets/img/import.svg" alt="import" class="h-6 w-6" />
             <span>Import</span>
           </button>
           <input type="file" name="trancsv"
-            class="flex p-2 ml-2 group-hover:scale-100 lg:scale-0 transition-transform duration-200 text-sm text-gray-600 bg-white border border-neutral-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-600 dark:bg-neutral-900 dark:focus:border-blue-300" />
+            class="flex px-2 ml-2 group-hover:scale-100 lg:scale-0 transition-transform duration-200 text-sm text-gray-600 bg-white border border-neutral-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full dark:file:bg-gray-800 dark:file:text-gray-200 dark:text-gray-300 placeholder-gray-400/70 dark:placeholder-gray-500 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 dark:border-neutral-600 dark:bg-neutral-900 dark:focus:border-blue-300" />
         </form>
       </div>
-      <div class="flex w-full md:w-auto">
+      <div class="">
         <button hx-post="/pairs/{{ .Pair.ID }}/trades" hx-include="#trans-form" hx-target="#mitoast" hx-swap="innerHTML"
-          class="px-8 py-2.5 justify-end leading-5 text-white transition-colors w-full duration-300 transform bg-gray-700 rounded-md dark:text-gray-800 dark:bg-neutral-200 hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+          class="inline-flex items-center px-4 py-2 text-md font-semibold text-indigo-700 bg-indigo-100 border border-indigo-300 rounded-lg shadow-sm dark:text-indigo-400 dark:bg-indigo-900/30 dark:border-indigo-800 hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-all duration-200 ease-in-out">
           Record
         </button>
       </div>
