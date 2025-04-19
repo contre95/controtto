@@ -1,6 +1,6 @@
 {{/* --- Dashboard Panel --- */}}
 {{/* Use one main container for the dashboard look */}}
-<div id="dashboard-panel{{ .Pair.BaseAsset.Symbol }}{{ .Pair.QuoteAsset.Symbol }}" class="bg-white text-center dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-6 border border-gray-200 dark:border-neutral-700 relative animate__animated animate__fadeIn">
+<div id="dashboard-panel{{ .Pair.BaseAsset.Symbol }}{{ .Pair.QuoteAsset.Symbol }}" class="bg-white m-4 text-center dark:bg-neutral-800 rounded-xl shadow-md p-4 md:p-6 border border-gray-200 dark:border-neutral-700 relative animate__animated animate__fadeIn">
   {{ if .Error }}
     <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-neutral-800 dark:text-red-400 dark:border-red-800" role="alert">
       <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
