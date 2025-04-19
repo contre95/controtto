@@ -42,7 +42,6 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading
 	app.Get("/ui/pairs/:id/newTrade/form", newTradeForm(q.PairQuerier, m.PriceProviderManager))
 	// In rest/rest.go, add this line to the GET section:
 	app.Get("/pairs/:id/market/:mktkey/trades", fetchMarketTrades(t.AssetTrader, m.MarketManager))
-	app.Post("/pairs/:id/trades", importMarketTrades(t.TradeRecorder))
 	app.Get("/settings", settingsSection(m.PriceProviderManager, m.MarketManager, c.ConfigManager))
 	// app.Get("/settings/anyMarket", marketsSetAPI(c.ConfigManager))
 	// app.Get("/markets", marketsSection(m.MarketManager))
@@ -56,7 +55,8 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading
 	app.Post("/assets", newAsset(m.AssetManager))
 	app.Post("/pairs", newPair(m.PairManager))
 	app.Post("/pairs/:id/trades", newTrade(t.TradeRecorder))
-	app.Post("/pairs/:id/trades/upload", newTradeImport(t.TradeRecorder))
+	app.Post("/pairs/:id/trades/mktImport", importMarketTrades(t.TradeRecorder))
+	app.Post("/pairs/:id/trades/csvImport", newTradeImport(t.TradeRecorder))
 	app.Post("/settings/edit", saveSettingsForm(m.PriceProviderManager, m.MarketManager, c.ConfigManager))
 
 	log.Fatal(app.Listen("0.0.0.0" + ":" + c.ConfigManager.GetPort()))

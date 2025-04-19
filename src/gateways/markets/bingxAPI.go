@@ -131,92 +131,107 @@ func (b *BingxMarketAPI) Sell(options pnl.TradeOptions) (*pnl.Trade, error) {
 }
 
 func (b *BingxMarketAPI) ImportTrades(pair pnl.Pair, since time.Time) ([]pnl.Trade, error) {
-	uri := "/openApi/swap/v2/trade/allFillOrders"
+	// Validate input parameters
+	if pair.BaseAsset.Symbol == "" || pair.QuoteAsset.Symbol == "" {
+		return nil, fmt.Errorf("invalid pair: base and quote symbols required")
+	}
+	uri := "/openApi/spot/v1/trade/historyOrders"
 	method := "GET"
-	timestamp := time.Now().UnixNano() / 1e6
+	timestamp := time.Now().UnixMilli()
+	endTime := time.Now().UnixMilli()
+
 	payload := map[string]string{
 		"symbol":    fmt.Sprintf("%s-%s", pair.BaseAsset.Symbol, pair.QuoteAsset.Symbol),
-		"startTs":   fmt.Sprintf("%d", since.UnixMilli()),
-		"endTs":     fmt.Sprintf("%d", time.Now().UnixMilli()),
-		"timestamp": fmt.Sprintf("%d", timestamp), // Add timestamp to payload
+		"startTime": fmt.Sprintf("%d", since.UnixMilli()),
+		"endTime":   fmt.Sprintf("%d", endTime),
+		"timestamp": fmt.Sprintf("%d", timestamp),
+		"limit":     "500", // Use maximum allowed limit
 	}
 
-	// Create parameter string for signing (no URL encoding)
+	// Create parameter string for signing
 	var paramBuilder strings.Builder
 	keys := make([]string, 0, len(payload))
 	for k := range payload {
 		keys = append(keys, k)
 	}
-	sort.Strings(keys) // Parameters must be sorted alphabetically
+	sort.Strings(keys)
 
-	for _, k := range keys {
+	for i, k := range keys {
+		if i > 0 {
+			paramBuilder.WriteString("&")
+		}
 		paramBuilder.WriteString(k)
 		paramBuilder.WriteString("=")
 		paramBuilder.WriteString(payload[k])
-		paramBuilder.WriteString("&")
 	}
-	paramStr := strings.TrimSuffix(paramBuilder.String(), "&")
+	paramStr := paramBuilder.String()
 
 	// Compute signature
 	sign := computeHmac256(paramStr, b.ApiSecret)
 
-	// Create URL-encoded parameters for the request
-	urlParams := url.Values{}
-	for k, v := range payload {
-		urlParams.Add(k, v)
-	}
-	urlParams.Add("signature", sign)
-
-	fullURL := fmt.Sprintf("%s%s?%s", HOST, uri, urlParams.Encode())
-
-	req, err := http.NewRequest(method, fullURL, nil)
+	// Create request
+	req, err := http.NewRequest(method, fmt.Sprintf("%s%s?%s&signature=%s", HOST, uri, paramStr, sign), nil)
 	if err != nil {
 		slog.Error("BingxAPI: Error creating request", "error", err)
-		return nil, fmt.Errorf("create request failed: %v", err)
+		return nil, fmt.Errorf("create request failed: %w", err)
 	}
-	req.Header.Set("X-BX-APIKEY", b.ApiKey)
-	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
+	req.Header.Set("X-BX-APIKEY", b.ApiKey)
+	req.Header.Set("Accept", "application/json")
+
+	// Execute request with timeout
+	client := &http.Client{Timeout: 30 * time.Second}
+	resp, err := client.Do(req)
 	if err != nil {
 		slog.Error("BingxAPI: Error executing request", "error", err)
-		return nil, fmt.Errorf("request failed: %v", err)
+		return nil, fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
+	// Handle non-200 responses
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
-		slog.Error("BingxAPI: Unexpected status code", "status", resp.StatusCode, "body", string(body))
+		slog.Error("BingxAPI: Unexpected status code",
+			"status", resp.StatusCode,
+			"url", req.URL.Redacted(),
+			"body", string(body))
 		return nil, fmt.Errorf("unexpected status: %d", resp.StatusCode)
+	}
+
+	// Parse response
+	var response struct {
+		Code int    `json:"code"`
+		Msg  string `json:"msg"`
+		Data struct {
+			Orders []struct {
+				OrderID     int64   `json:"orderId"`
+				Symbol      string  `json:"symbol"`
+				Price       string  `json:"price"`
+				StopPrice   string  `json:"StopPrice"`
+				OrigQty     string  `json:"origQty"`
+				ExecutedQty string  `json:"executedQty"`
+				CumQuoteQty string  `json:"cummulativeQuoteQty"`
+				Status      string  `json:"status"`
+				Type        string  `json:"type"`
+				Side        string  `json:"side"`
+				Time        int64   `json:"time"`
+				UpdateTime  int64   `json:"updateTime"`
+				Fee         float64 `json:"fee"`
+				FeeAsset    string  `json:"feeAsset"`
+				AvgPrice    float64 `json:"avgPrice"`
+			} `json:"orders"`
+		} `json:"data"`
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		slog.Error("BingxAPI: Error reading response body", "error", err)
-		return nil, fmt.Errorf("read body failed: %v", err)
-	}
-	fmt.Println(string(body))
-	var response struct {
-		Code int    `json:"code"`
-		Msg  string `json:"msg"`
-		Data struct {
-			FillOrders []struct {
-				FilledTm   string `json:"filledTm"`
-				Volume     string `json:"volume"`
-				Price      string `json:"price"`
-				Amount     string `json:"amount"`
-				Commission string `json:"commission"`
-				Currency   string `json:"currency"`
-				OrderID    string `json:"orderId"`
-				FilledTime string `json:"filledTime"`
-				Symbol     string `json:"symbol"`
-			} `json:"fill_orders"`
-		} `json:"data"`
+		return nil, fmt.Errorf("read body failed: %w", err)
 	}
 
 	if err := json.Unmarshal(body, &response); err != nil {
 		slog.Error("BingxAPI: Error unmarshalling response", "error", err, "body", string(body))
-		return nil, fmt.Errorf("parse response failed: %v", err)
+		return nil, fmt.Errorf("parse response failed: %w", err)
 	}
 
 	if response.Code != 0 {
@@ -225,55 +240,57 @@ func (b *BingxMarketAPI) ImportTrades(pair pnl.Pair, since time.Time) ([]pnl.Tra
 	}
 
 	var trades []pnl.Trade
-	for _, tradeData := range response.Data.FillOrders {
-		tradeTime, err := time.Parse(time.RFC3339, tradeData.FilledTm)
-		if err != nil {
-			slog.Warn("BingxAPI: Skipping trade with invalid timestamp", "time", tradeData.FilledTm, "error", err)
+	for _, order := range response.Data.Orders {
+		// Skip orders that aren't filled
+		if order.Status != "FILLED" {
 			continue
 		}
 
+		// Parse timestamps
+		tradeTime := time.Unix(0, order.UpdateTime*int64(time.Millisecond))
 		if tradeTime.Before(since) {
 			continue
 		}
 
-		// Parse string values to float64
-		price, err := strconv.ParseFloat(tradeData.Price, 64)
+		// Parse numeric values
+		price, err := strconv.ParseFloat(order.Price, 64)
 		if err != nil {
-			slog.Warn("BingxAPI: Skipping trade with invalid price", "price", tradeData.Price, "error", err)
+			// Fallback to average price if available
+			if order.AvgPrice > 0 {
+				price = order.AvgPrice
+			} else {
+				slog.Warn("BingxAPI: Skipping trade with invalid price", "price", order.Price, "error", err)
+				continue
+			}
+		}
+
+		quantity, err := strconv.ParseFloat(order.ExecutedQty, 64)
+		if err != nil {
+			slog.Warn("BingxAPI: Skipping trade with invalid quantity", "qty", order.ExecutedQty, "error", err)
 			continue
 		}
 
-		quantity, err := strconv.ParseFloat(tradeData.Volume, 64)
-		if err != nil {
-			slog.Warn("BingxAPI: Skipping trade with invalid quantity", "volume", tradeData.Volume, "error", err)
-			continue
-		}
-
-		commission, err := strconv.ParseFloat(tradeData.Commission, 64)
-		if err != nil {
-			slog.Warn("BingxAPI: Skipping trade with invalid commission", "commission", tradeData.Commission, "error", err)
-			continue
-		}
-
-		quoteAmount, err := strconv.ParseFloat(tradeData.Amount, 64)
-		if err != nil {
-			quoteAmount = price * quantity // Fallback calculation
-		}
-
-		// Determine trade type based on commission sign
-		// Negative commission means it was deducted (usually for taker trades)
-		tradeType := pnl.Sell
-		if strings.Contains(tradeData.Commission, "-") {
+		// Determine trade type
+		var tradeType pnl.TradeType
+		if order.Side == "BUY" {
 			tradeType = pnl.Buy
+		} else {
+			tradeType = pnl.Sell
 		}
 
-		// Handle fees based on currency
+		// Handle fees (fee is already float64 in the response)
 		feeInBase := 0.0
 		feeInQuote := 0.0
-		if strings.EqualFold(tradeData.Currency, pair.BaseAsset.Symbol) {
-			feeInBase = math.Abs(commission)
-		} else if strings.EqualFold(tradeData.Currency, pair.QuoteAsset.Symbol) {
-			feeInQuote = math.Abs(commission)
+		if strings.EqualFold(order.FeeAsset, pair.BaseAsset.Symbol) {
+			feeInBase = math.Abs(order.Fee)
+		} else if strings.EqualFold(order.FeeAsset, pair.QuoteAsset.Symbol) {
+			feeInQuote = math.Abs(order.Fee)
+		}
+
+		// Calculate quote amount
+		quoteAmount, err := strconv.ParseFloat(order.CumQuoteQty, 64)
+		if err != nil {
+			quoteAmount = price * quantity // Fallback calculation
 		}
 
 		trades = append(trades, pnl.Trade{
@@ -284,6 +301,7 @@ func (b *BingxMarketAPI) ImportTrades(pair pnl.Pair, since time.Time) ([]pnl.Tra
 			FeeInQuote:  feeInQuote,
 			TradeType:   tradeType,
 			Price:       price,
+			ID:          strconv.FormatInt(order.OrderID, 10),
 		})
 	}
 
