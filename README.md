@@ -15,7 +15,11 @@ In order to fetch the price of an asset, Controtto relies on mainly 4 APIs ([see
 
 ## Demo
 You can also check out the demo at [demo.contre.io](https://demo.contre.io), the database resets every hour.
-![controtto screenshot](./public/assets/demo.gif)
+
+
+https://github.com/user-attachments/assets/28bf8782-6118-47c0-a94b-085e1a7045b2
+
+
 
 
 All configurations are set in the `.env` file and passed as environment variables. Variables `CONTROTTO_PORT` and `CONTROTTO_DB_PATH` are available.
