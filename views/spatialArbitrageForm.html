@@ -120,10 +120,8 @@
 
       <script>
         const logElement = document.getElementById("logs");
-
         // Connect to the SSE endpoint
         const eventSource = new EventSource("/strategy/logs/spatial");
-
         eventSource.onmessage = function (e) {
           // Create new log entry
           const logEntry = document.createElement("div");

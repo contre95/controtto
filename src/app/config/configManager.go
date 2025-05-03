@@ -8,7 +8,7 @@ import (
 
 const (
 	PORT           = "PORT"
-	DEFAULT_PORT   = "8000"
+	DEFAULT_PORT   = "8800"
 	UNCOMMON_PAIRS = "UNCOMMON_PAIRS"
 )
 
