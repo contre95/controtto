@@ -27,6 +27,7 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading
 	app.Get("/pairs", pairsSection)
 	app.Get("/algoTrading", algoTradingSection)
 	app.Get("/ui/algoTrading/spatialArbitrageForm", getSpatialArbitrageForm(q.PairQuerier, m.MarketManager))
+	app.Get("/strategy/logs/spatial", runSpatialArbitrage())
 	app.Get("/ui/pairs/table", pairsTable(q.PairQuerier))
 	app.Get("/pairs/:id/", pairSection())
 	app.Get("/asset/:symbol/color", getAssetColor(q.AssetQuerier))

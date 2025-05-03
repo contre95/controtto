@@ -89,10 +89,6 @@ var demo string = `
 		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('AAPLUSD', 'AAPL', 'USD');
 		INSERT OR IGNORE INTO Pairs (ID, BaseAsset, QuoteAsset) VALUES ('TSLAUSD', 'TSLA', 'USD');
 
-		-- Trades with alternating Buy and Sell in the same pair, three times per pair
-		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
-		VALUES ('2025-04-13T10:00:00', 1, 86500.00, 'Buy', 'BTCUSDT');
-
 		-- ETHUSDT
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T10:30:00', 1.5, 4800.00, 'Buy', 'ETHUSDT');
@@ -121,19 +117,19 @@ var demo string = `
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
 		VALUES ('2025-04-13T11:25:00', 1400, 1200.00, 'Sell', 'EURUSD'); -- Positive PnL
 
-		-- GBPJPY
+		-- BTCUSDT
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
-		VALUES ('2025-04-13T11:30:00', 500, 87000.00, 'Buy', 'GBPJPY');
+		VALUES ('2025-04-13T11:30:00', 500, 87000.00, 'Buy', 'BTCUSDT');
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
-		VALUES ('2025-04-13T11:35:00', 500, 88000.00, 'Sell', 'GBPJPY'); -- Positive PnL
+		VALUES ('2025-04-13T11:35:00', 500, 88000.00, 'Sell', 'BTCUSDT'); -- Positive PnL
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
-		VALUES ('2025-04-13T11:40:00', 700, 89000.00, 'Buy', 'GBPJPY');
+		VALUES ('2025-04-13T11:40:00', 700, 89000.00, 'Buy', 'BTCUSDT');
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
-		VALUES ('2025-04-13T11:45:00', 600, 90000.00, 'Sell', 'GBPJPY'); -- Positive PnL
+		VALUES ('2025-04-13T11:45:00', 600, 90000.00, 'Sell', 'BTCUSDT'); -- Positive PnL
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
-		VALUES ('2025-04-13T11:50:00', 1000, 91500.00, 'Buy', 'GBPJPY');
+		VALUES ('2025-04-13T11:50:00', 1000, 91500.00, 'Buy', 'BTCUSDT');
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
-		VALUES ('2025-04-13T11:55:00', 1000, 92000.00, 'Sell', 'GBPJPY'); -- Positive PnL
+		VALUES ('2025-04-13T11:55:00', 1000, 92000.00, 'Sell', 'BTCUSDT'); -- Positive PnL
 
 		-- AAPLUSD
 		INSERT OR IGNORE INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) 
@@ -163,6 +159,7 @@ func NewSQLite(dbPath string) (*SQLiteStorage, error) {
 	}
 	// Create the Pair and Trade tables if they don't exist.
 	qString := tables
+	// TODO: This shuold not go here but in the configManager, also I will need oto add the prefix CONTROTTO
 	if os.Getenv("LOAD_SAMPLE_DATA") == "true" {
 		qString += demo
 	}
