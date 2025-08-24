@@ -5,6 +5,7 @@ import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"controtto/src/app/trading"
+	"controtto/src/rest/ui"
 	"fmt"
 	"log"
 
@@ -15,6 +16,7 @@ import (
 func Run(c *config.Manager, m *managing.Service, q *querying.Service, t *trading.Service) {
 	engine := html.New("./views", ".html")
 	engine.Debug(true)
+	engine.AddFunc("displayPrice", ui.DisplayPrice)
 	app := fiber.New(fiber.Config{
 		Views: engine,
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
