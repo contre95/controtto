@@ -24,6 +24,8 @@ const tables string = `
           QuoteAmount REAL,
           TradeType TEXT,
           PairID TEXT,
+          FeeInBase REAL,
+          FeeInQuote REAL,
           FOREIGN KEY (PairID) REFERENCES Pairs (ID)
 		);
 
@@ -282,14 +284,14 @@ func (s *SQLiteStorage) ListPairs() ([]pnl.Pair, error) {
 
 // RecordTrade records a new trade for a trading pair.
 func (s *SQLiteStorage) RecordTrade(t pnl.Trade, tpid pnl.PairID) error {
-	_, err := s.db.Exec("INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID) VALUES (?, ?, ?, ?, ?)",
-		t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TradeType, string(tpid))
+	_, err := s.db.Exec("INSERT INTO Trades (Timestamp, BaseAmount, QuoteAmount, TradeType, PairID, FeeInBase, FeeInQuote) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		t.Timestamp, t.BaseAmount, t.QuoteAmount, t.TradeType, string(tpid), t.FeeInBase, t.FeeInQuote)
 	return err
 }
 
 // ListTrades returns a list of trades for a given trading pair ID.
 func (s *SQLiteStorage) ListTrades(tpid string) ([]pnl.Trade, error) {
-	rows, err := s.db.Query("SELECT ID, Timestamp, BaseAmount, QuoteAmount, TradeType FROM Trades WHERE PairID = ?", tpid)
+	rows, err := s.db.Query("SELECT ID, Timestamp, BaseAmount, QuoteAmount, TradeType, FeeInBase, FeeInQuote FROM Trades WHERE PairID = ?", tpid)
 	if err != nil {
 		return nil, err
 	}
@@ -298,7 +300,7 @@ func (s *SQLiteStorage) ListTrades(tpid string) ([]pnl.Trade, error) {
 	var trades []pnl.Trade
 	for rows.Next() {
 		var t pnl.Trade
-		if err := rows.Scan(&t.ID, &t.Timestamp, &t.BaseAmount, &t.QuoteAmount, &t.TradeType); err != nil {
+		if err := rows.Scan(&t.ID, &t.Timestamp, &t.BaseAmount, &t.QuoteAmount, &t.TradeType, &t.FeeInBase, &t.FeeInQuote); err != nil {
 			return nil, err
 		}
 		trades = append(trades, t)
