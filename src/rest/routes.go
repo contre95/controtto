@@ -5,13 +5,14 @@ import (
 	"controtto/src/app/managing"
 	"controtto/src/app/querying"
 	"controtto/src/app/trading"
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 )
 
-func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading.Service) {
+func Run(c *config.Manager, m *managing.Service, q *querying.Service, t *trading.Service) {
 	engine := html.New("./views", ".html")
 	engine.Debug(true)
 	app := fiber.New(fiber.Config{
@@ -42,7 +43,7 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading
 	app.Get("/ui/pairs/:id/newTrade/form", newTradeForm(q.PairQuerier, m.PriceProviderManager))
 	// In rest/rest.go, add this line to the GET section:
 	app.Get("/pairs/:id/market/:mktkey/trades", fetchMarketTrades(t.AssetTrader, m.MarketManager))
-	app.Get("/settings", settingsSection(m.PriceProviderManager, m.MarketManager, c.ConfigManager))
+	app.Get("/settings", settingsSection(m.PriceProviderManager, m.MarketManager, c))
 	// app.Get("/settings/anyMarket", marketsSetAPI(c.ConfigManager))
 	// app.Get("/markets", marketsSection(m.MarketManager))
 	app.Get("/ui/pairs/:id/market", getMarketAssets(q.PairQuerier, m.MarketManager))
@@ -57,7 +58,7 @@ func Run(c *config.Service, m *managing.Service, q *querying.Service, t *trading
 	app.Post("/pairs/:id/trades", newTrade(t.TradeRecorder))
 	app.Post("/pairs/:id/trades/mktImport", importMarketTrades(t.TradeRecorder))
 	app.Post("/pairs/:id/trades/csvImport", newTradeImport(t.TradeRecorder))
-	app.Post("/settings/edit", saveSettingsForm(m.PriceProviderManager, m.MarketManager, c.ConfigManager))
+	app.Post("/settings/edit", saveSettingsForm(m.PriceProviderManager, m.MarketManager, c))
 
-	log.Fatal(app.Listen("0.0.0.0" + ":" + c.ConfigManager.GetPort()))
+	log.Fatal(app.Listen("0.0.0.0" + ":" + fmt.Sprint(c.Get().Port)))
 }

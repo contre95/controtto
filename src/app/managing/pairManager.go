@@ -27,12 +27,12 @@ type CreatePairReq struct {
 }
 
 type PairsManager struct {
-	config       *config.ConfigManager
+	config       *config.Manager
 	assets       pnl.Assets
 	tradingPairs pnl.Pairs
 }
 
-func NewPairManager(cfg *config.ConfigManager, a pnl.Assets, tp pnl.Pairs) *PairsManager {
+func NewPairManager(cfg *config.Manager, a pnl.Assets, tp pnl.Pairs) *PairsManager {
 	return &PairsManager{cfg, a, tp}
 }
 
@@ -65,7 +65,7 @@ func (tpm *PairsManager) Create(req CreatePairReq) (*CreatePairResp, error) {
 	}
 
 	// // Uncommon pairs validation
-	if !tpm.config.GetUncommonPairs() {
+	if !tpm.config.Get().UncommonPairs {
 		bt := base.Type // Assuming these are strings like "Crypto", "Forex", etc.
 		qt := quote.Type
 		valid := (bt == "Crypto" && qt == "Crypto") ||
