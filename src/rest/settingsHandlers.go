@@ -19,7 +19,7 @@ import (
 //			return c.SendString(fmt.Sprintf("%t", marketsSet(marketManager)))
 //		}
 //	}
-func saveSettingsForm(priceProviderManager *managing.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
+func saveSettingsForm(priceProviderManager *managing.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.Manager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		// Update price providers
 		providers := priceProviderManager.ListProviders(true) // true = get all providers
@@ -58,7 +58,9 @@ func saveSettingsForm(priceProviderManager *managing.PriceProviderManager, marke
 
 		// Update uncommon pairs setting
 		uncommon := c.FormValue("uncommon_pairs") != ""
-		cfg.SetUncommonPairs(uncommon)
+		cfg.Update(&config.Config{
+			UncommonPairs: uncommon,
+		})
 
 		c.Append("HX-Trigger", "reloadSettings")
 		slog.Info("Config updated successfully")

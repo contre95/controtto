@@ -72,7 +72,7 @@ func pairSection() func(*fiber.Ctx) error {
 	}
 }
 
-func settingsSection(priceProviderManager *managing.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.ConfigManager) func(*fiber.Ctx) error {
+func settingsSection(priceProviderManager *managing.PriceProviderManager, marketManager *managing.MarketManager, cfg *config.Manager) func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		if c.Get("HX-Request") != "true" {
 			return c.Render("main", fiber.Map{
@@ -86,7 +86,7 @@ func settingsSection(priceProviderManager *managing.PriceProviderManager, market
 
 		return c.Render("settingsSection", fiber.Map{
 			"Today":          time.Now().Format("Mon Jan 02 15:04 2006"),
-			"Uncommon":       cfg.GetUncommonPairs(),
+			"Uncommon":       cfg.Get().UncommonPairs,
 			"PriceProviders": providers,
 			"MarketTraders":  traders,
 		})

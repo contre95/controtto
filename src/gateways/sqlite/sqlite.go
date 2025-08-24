@@ -1,11 +1,11 @@
 package sqlite
 
 import (
+	"controtto/src/app/config"
 	"controtto/src/domain/pnl"
 	"database/sql"
 	"fmt"
 	"log/slog"
-	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -156,14 +156,15 @@ type SQLiteStorage struct {
 }
 
 // NewStorage creates a new instance of SQLite.
-func NewSQLite(dbPath string) (*SQLiteStorage, error) {
-	db, err := sql.Open("sqlite3", dbPath)
+func NewSQLite(cfg *config.Manager) (*SQLiteStorage, error) {
+	db, err := sql.Open("sqlite3", cfg.Get().DBPath)
 	if err != nil {
 		return nil, err
 	}
 	// Create the Pair and Trade tables if they don't exist.
 	qString := tables
-	if os.Getenv("LOAD_SAMPLE_DATA") == "true" {
+	if cfg.Get().LoadSampleData {
+		slog.Info("Loading sample data into the database.")
 		qString += demo
 	}
 	_, err = db.Exec(qString)

@@ -1,11 +1,8 @@
 package config
 
-// Service just hols all the managing use cases
-type Service struct {
-	ConfigManager *ConfigManager
-}
-
-// NewService is the interctor for all Managing Use cases
-func NewService(cfg *ConfigManager) Service {
-	return Service{cfg}
+type Config struct {
+	Port           int    // CONTROTTO_PORT
+	DBPath         string // CONTROTTO_DB_PATH
+	UncommonPairs  bool   // CONTROTTO_UNCOMMON_PAIRS
+	LoadSampleData bool   // CONTROTTO_LOAD_SAMPLE_DATA
 }

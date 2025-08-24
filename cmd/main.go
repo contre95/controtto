@@ -8,7 +8,6 @@ import (
 	"controtto/src/gateways/sqlite"
 	"controtto/src/rest"
 	"log/slog"
-	"os"
 )
 
 const (
@@ -21,23 +20,25 @@ const (
 )
 
 func main() {
-	// Database
-	dbPath := "pnl.db"
-	if dbPathEnv := os.Getenv("CONTROTTO_DB_PATH"); dbPathEnv != "" {
-		dbPath = dbPathEnv
+	// Load configuration
+	cfg, err := config.LoadFromEnv()
+	if err != nil {
+		slog.Error("Error loading config from env:", "error", err)
+		panic("Bye")
 	}
-	slog.Info("Initiating SQLite path", "path", dbPath)
-	sqliteDB, err := sqlite.NewSQLite(dbPath)
+	cfgManager := config.NewManager(cfg)
+
+	// Database
+	slog.Info("Initiating SQLite path", "path", cfgManager.Get().DBPath)
+	sqliteDB, err := sqlite.NewSQLite(cfgManager)
 	if err != nil {
 		slog.Error("Error creating SQLite:", "error", err)
 		panic("Bye")
 	}
 
-	// Load configuration
-	cfg := config.NewConfig(PREFIX)
-	config := config.NewService(cfg)
+	// Use Cases
 	ac := managing.NewAssetCreator(sqliteDB)
-	pc := managing.NewPairManager(cfg, sqliteDB, sqliteDB)
+	pc := managing.NewPairManager(cfgManager, sqliteDB, sqliteDB)
 	pq := querying.NewPairQuerier(sqliteDB)
 	mm := managing.NewMarketManager(marketsConfig)
 	ppm := managing.NewPriceProviderManager(pricers)
@@ -47,9 +48,8 @@ func main() {
 	tr := trading.NewTradeRecorder(sqliteDB)
 	at := trading.NewAssetTrader(mm, sqliteDB)
 	trader := trading.NewService(*at, *tr)
-	// *trading.NewAssetTrader(markets map[string]pnl.Market)
 
 	port := cfg.Port
 	slog.Info("Initiating server", "port", port)
-	rest.Run(&config, &manager, &querier, &trader)
+	rest.Run(cfgManager, &manager, &querier, &trader)
 }

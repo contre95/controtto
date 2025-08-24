@@ -29,7 +29,7 @@ go mod tidy
 # Set the .env
 mv .env.example .env
 # Source the env variables
-. <(cat .env | grep -v -e '^$' | grep -v "#")
+export $(grep -v '^#' .env | grep -v '^$' | xargs)
 ```
 
 ## Build and Run 
