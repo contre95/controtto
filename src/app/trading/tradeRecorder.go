@@ -64,7 +64,7 @@ func (tpm *TradeRecorder) RecordTrade(req RecordTradeReq) (*RecordTradeResp, err
 	if !isValidTradeType(req.Type) {
 		return nil, fmt.Errorf("invalid trade type: %s", req.Type)
 	}
-	fmt.Println("RecordTradeReq", req)
+	fmt.Printf("RecordTradeReq: %+v\n", req)
 	tradingPair, err := tpm.tradingPairs.GetPair(req.PairID)
 	if err != nil {
 		slog.Error("Failed to get trading pair",

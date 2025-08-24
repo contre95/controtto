@@ -98,11 +98,11 @@
       </div>
 
       <div id="bfee" class="w-full">
-        <label class="text-gray-700 dark:text-gray-200" for="tfee">
+        <label class="text-gray-700 dark:text-gray-200" for="bfee">
           Fee in
           <span style="color:{{ .Pair.BaseAsset.Color }}">{{ .Pair.BaseAsset.Symbol }}</span>
         </label>
-        <input name="tfee" value="0"
+        <input name="bfee" value="0"
           style="border: solid 1px {{ .Pair.BaseAsset.Color }}; box-shadow: 0 -1px 5px {{ .Pair.BaseAsset.Color }};"
           class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="number" placeholder="0.0004 {{ .Pair.BaseAsset.Symbol }}" />
@@ -112,11 +112,11 @@
       </div>
 
       <div id="qfee" class="hidden w-full">
-        <label class="text-gray-700 dark:text-gray-200" for="wfee">
+        <label class="text-gray-700 dark:text-gray-200" for="qfee">
           Fee in
           <span style="color:{{ .Pair.QuoteAsset.Color }}">{{ .Pair.QuoteAsset.Symbol }}</span>
         </label>
-        <input name="wfee" value="0"
+        <input name="qfee" value="0"
           style="border: solid 1px {{ .Pair.QuoteAsset.Color }}; box-shadow: 0 -1px 5px {{ .Pair.QuoteAsset.Color }};"
           class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-neutral-200 rounded-md dark:bg-neutral-900 dark:text-gray-300 dark:border-neutral-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
           type="number" placeholder="0.0002 {{ .Pair.QuoteAsset.Symbol }}" />
