@@ -90,4 +90,18 @@ var marketsConfig = map[string]pnl.Market{
 		MarketLogo:           "/assets/img/" + trading212 + ".png",
 		Init:                 markets.NewTrading212API,
 	},
+	coinbase: {
+		IsSet:                os.Getenv(PREFIX+strings.ToUpper(coinbase)+MARKET_SUFIX) != "",
+		Env:                  PREFIX + strings.ToUpper(coinbase) + MARKET_SUFIX,
+		MarketName:           "Coinbase",
+		MarketKey:            coinbase + "_trader",
+		Details:              "",
+		Color:                "#00AAE4",
+		MarketTradingSymbols: []string{"USD", "EUR"},
+		Type:                 pnl.Exchange,
+		Token:                os.Getenv(PREFIX + strings.ToUpper(coinbase) + MARKET_SUFIX),
+		ProviderURL:          "https://docs.cdp.coinbase.com/coinbase-app/authentication-authorization/api-key-authentication",
+		MarketLogo:           "/assets/img/" + coinbase + ".png",
+		Init:                 markets.NewCoinbaseAPI,
+	},
 }
