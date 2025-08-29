@@ -5,6 +5,7 @@ go 1.24
 require (
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/gofiber/template/html/v2 v2.0.5
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/uuid v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.17
 )
