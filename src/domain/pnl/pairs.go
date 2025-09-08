@@ -38,22 +38,20 @@ func (tp *Pair) NewTrade(baseAmount, quoteAmount, tFee, wFee float64, timestamp 
 	return trade.Validate()
 }
 
-type InvalidTrade error
-
 // Validate validates a Pair, if all fields are valid it returns itself, otherwise it returns an InvalidPair error.
 func (t *Trade) Validate() (*Trade, error) {
 	// Perform any necessary validation or business logic checks here.
 	// if t.FeeInBase > 0 && t.FeeInQuote > 0 {
 	// 	slog.Error("Trade Validation error", "error", "Invalid fee, can't have both on a single trade.", "FeeInQuote", t.FeeInQuote, "FeeInBase", t.FeeInBase)
-	// 	return nil, InvalidTrade(errors.New("Invalid fees can only be eith amounts"))
+	// 	return nil, errors.New("Invalid fees can only be eith amounts")
 	// }
 	if t.BaseAmount <= 0 || t.QuoteAmount <= 0 {
 		slog.Error("Trade Validation error", "error", "Invalid base/quote amount")
-		return nil, InvalidTrade(errors.New("Invalid base/quote amounts"))
+		return nil, errors.New("Invalid base/quote amounts")
 	}
 	if !slices.Contains(GetValidTradeTypes(), t.TradeType) {
 		slog.Error("Trade Validation error", "error", "Invalid trade type")
-		return nil, InvalidTrade(errors.New("Invalid trade"))
+		return nil, errors.New("Invalid trade")
 	}
 	return t, nil
 }
